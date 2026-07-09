@@ -1,81 +1,59 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8"><title>Détails Robe - {{ robe.nom_modele }}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-50 min-h-screen">
+{% extends 'atelier/base.html' %}
 
-    <nav class="bg-white shadow-sm border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 h-16 flex justify-between items-center">
-            <span class="text-xl font-bold text-gray-800">🧵 Fiche Technique</span>
-            <a href="{% url 'dashboard' %}" class="text-sm text-indigo-600 hover:text-indigo-900 bg-indigo-50 px-3 py-2 rounded-md font-medium">← Retour au Dashboard</a>
+{% block title %}{{ robe.nom_modele }} — Cohen Haute Couture{% endblock %}
+
+{% block header_actions %}
+<a href="{% url 'dashboard' %}">← Retour au tableau de bord</a>
+{% endblock %}
+
+{% block content %}
+<main class="page">
+
+    <div class="hero-card">
+        <div>
+            <span class="eyebrow">Fiche technique</span>
+            <h1>{{ robe.nom_modele }}</h1>
+            <p style="margin: 6px 0 0; color: var(--ink-soft);">Cliente — <strong style="color: var(--ink);">{{ robe.client }}</strong></p>
         </div>
-    </nav>
+        <div class="hero-card__meta">
+            <span class="eyebrow">Livraison attendue</span>
+            <div><strong>{{ robe.date_livraison|date:"d F Y" }}</strong></div>
+        </div>
+    </div>
 
-    <main class="max-w-5xl mx-auto px-4 py-10">
-        <div class="bg-white p-6 rounded-lg shadow border border-gray-200 mb-8 md:flex md:justify-between md:items-center">
-            <div>
-                <h1 class="text-3xl font-bold text-gray-900">{{ robe.nom_modele }}</h1>
-                <p class="text-gray-500 mt-1">Cliente : <span class="font-semibold text-gray-700">{{ robe.client }}</span></p>
-            </div>
-            <div class="mt-4 md:mt-0 bg-gray-100 p-3 rounded-lg text-center">
-                <p class="text-xs text-gray-500 uppercase font-bold tracking-wider">Livraison attendue</p>
-                <p class="text-sm font-semibold text-gray-800 mt-1">{{ robe.date_livraison|date:"d F Y" }}</p>
-            </div>
+    <div class="detail-grid">
+
+        <div class="card" style="height: fit-content;">
+            <h4>Suivi financier</h4>
+            <div class="finance-line"><span>Tissu / fournitures</span><strong>{{ robe.cout_tissu }} €</strong></div>
+            <div class="finance-line"><span>Main d'œuvre</span><strong>{{ robe.cout_main_doeuvre }} €</strong></div>
+            <div class="finance-total"><span class="eyebrow">Prix total facturé</span><strong>{{ robe.prix_total }} €</strong></div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            
-            <div class="bg-white p-6 rounded-lg shadow border border-gray-200 h-fit space-y-4">
-                <h3 class="text-lg font-bold text-gray-900 border-b pb-2">💰 Suivi Financier</h3>
-                <div>
-                    <span class="text-xs text-gray-500 block">Coût Tissu / Fournitures</span>
-                    <span class="text-lg font-semibold text-gray-800">{{ robe.cout_tissu }} €</span>
-                </div>
-                <div>
-                    <span class="text-xs text-gray-500 block">Main d'œuvre</span>
-                    <span class="text-lg font-semibold text-gray-800">{{ robe.cout_main_doeuvre }} €</span>
-                </div>
-                <div class="bg-indigo-50 p-3 rounded-md">
-                    <span class="text-xs text-indigo-600 block font-semibold">Prix Total Facturé</span>
-                    <span class="text-2xl font-bold text-indigo-900">{{ robe.prix_total }} €</span>
-                </div>
-            </div>
-
-            <div class="md:col-span-2 bg-white p-6 rounded-lg shadow border border-gray-200 space-y-6">
-                <h3 class="text-lg font-bold text-gray-900 border-b pb-2">📋 Étapes de Confection</h3>
-
-                <div class="border border-gray-200 rounded-md overflow-hidden">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            {% for tache in taches %}
-                            <tr>
-                                <td class="px-4 py-3 text-sm text-gray-900">
-                                    {{ tache.libelle }}
-                                </td>
-                                <td class="px-4 py-3 text-right text-sm font-medium">
-                                    {% if tache.est_faite %}
-                                        <span class="text-green-600 bg-green-50 px-2 py-1 rounded-full text-xs">Terminé</span>
-                                    {% else %}
-                                        <span class="text-orange-600 bg-orange-50 px-2 py-1 rounded-full text-xs">En cours</span>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td class="px-4 py-6 text-center text-sm text-gray-500">
-                                    Le tableau est vide. Aucune étape configurée pour cette robe.
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
+        <div class="card">
+            <h4>Étapes de confection</h4>
+            <table class="steps-table">
+                <tbody>
+                    {% for tache in taches %}
+                    <tr>
+                        <td>{{ tache.libelle }}</td>
+                        <td style="text-align: right;">
+                            {% if tache.est_faite %}
+                                <span class="pill-toggle pill-toggle--done">Terminé</span>
+                            {% else %}
+                                <span class="pill-toggle pill-toggle--todo">En cours</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="2" class="empty-state"><em>Aucune étape configurée pour cette robe.</em></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
-    </main>
 
-</body>
-</html>
+    </div>
+</main>
+{% endblock %}

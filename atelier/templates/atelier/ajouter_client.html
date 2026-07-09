@@ -1,21 +1,26 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8"><title>Ajouter une Cliente</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-50 min-h-screen py-10">
-    <div class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow border border-gray-200">
-        <h2 class="text-2xl font-bold text-gray-900 mb-6">🧵 Nouvelle Fiche Cliente & Mensurations</h2>
-        
-        <form method="POST">
-            {% csrf_token %} <div class="space-y-4">
-                {{ form.as_p }} </div>
-            <div class="mt-6 flex justify-end space-x-3">
-                <a href="{% url 'dashboard' %}" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200">Annuler</a>
-                <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">Enregistrer la Cliente</button>
-            </div>
-        </form>
+{% extends 'atelier/base.html' %}
+
+{% block title %}Nouvelle cliente — Cohen Haute Couture{% endblock %}
+
+{% block content %}
+<main class="page" style="max-width: 760px;">
+    <div class="form-card">
+        <div class="form-card__inner">
+            <span class="eyebrow">Fiche cliente</span>
+            <h2>Nouvelle cliente &amp; mensurations</h2>
+            <p style="color: var(--ink-soft); font-size: 13.5px; margin: 0 0 26px;">
+                Ces informations serviront de base à chaque nouvelle confection pour cette cliente.
+            </p>
+
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="form-actions">
+                    <a href="{% url 'dashboard' %}" class="btn btn--outline">Annuler</a>
+                    <button type="submit" class="btn btn--primary">Enregistrer la cliente</button>
+                </div>
+            </form>
+        </div>
     </div>
-</body>
-</html>
+</main>
+{% endblock %}

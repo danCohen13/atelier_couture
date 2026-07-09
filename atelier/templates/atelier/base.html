@@ -1,0 +1,41 @@
+{% load static %}<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Cohen Haute Couture{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'atelier/css/style.css' %}">
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="site-header__inner">
+            <a href="{% url 'dashboard' %}" class="brand">
+                <svg class="brand__mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="20" cy="20" r="18.5" stroke="#211D1A" stroke-width="1"/>
+                    <path d="M12 24C15 16 25 16 28 24" stroke="#A17F2D" stroke-width="1.4" stroke-linecap="round"/>
+                    <circle cx="12" cy="24" r="1.6" fill="#33526E"/>
+                    <circle cx="28" cy="24" r="1.6" fill="#33526E"/>
+                    <line x1="20" y1="9" x2="20" y2="14" stroke="#211D1A" stroke-width="1"/>
+                </svg>
+                <span class="brand__text">
+                    <span class="brand__name">Cohen Haute Couture</span>
+                    <span class="brand__tagline">Maison &amp; atelier de confection</span>
+                </span>
+            </a>
+            <div class="header-actions">
+                {% block header_actions %}
+                <a href="{% url 'dashboard' %}">Tableau de bord</a>
+                {% endblock %}
+            </div>
+        </div>
+    </header>
+
+    {% block content %}{% endblock %}
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,623 @@
+/* ======================================================================
+   COHEN HAUTE COUTURE — Système de design "Patron d'atelier"
+   Univers visuel : papier à patron, craie de tailleur, fil, encoches,
+   ruban de couturière. Palette sourde, typographie éditoriale, un seul
+   geste signature (les encoches de patron) — le reste reste épuré.
+   ====================================================================== */
+
+:root {
+  /* Couleurs */
+  --paper: #eee8da;
+  --paper-light: #f8f5ee;
+  --paper-deep: #e2dbc8;
+  --ink: #211d1a;
+  --ink-soft: #6b6355;
+  --ink-faint: #a89d87;
+  --line: #d8cfb8;
+  --blueprint: #33526e;
+  --blueprint-dark: #22394d;
+  --gold: #a17f2d;
+  --gold-light: #c9a24f;
+  --wine: #8a2e3d;
+  --wine-bg: #f4e4e2;
+  --amber: #96631c;
+  --amber-bg: #f3e6d2;
+  --moss: #4c5f3f;
+  --moss-bg: #e4e9da;
+  --shadow: 0 1px 2px rgba(33, 29, 26, 0.06), 0 6px 20px -8px rgba(33, 29, 26, 0.18);
+
+  /* Typographie */
+  --font-display: 'Cormorant Garamond', 'Times New Roman', serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-font-smoothing: antialiased; }
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at 1px 1px, rgba(33,29,26,0.05) 1px, transparent 0) 0 0/20px 20px,
+    var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+a { color: inherit; text-decoration: none; }
+
+:focus-visible {
+  outline: 2px solid var(--blueprint);
+  outline-offset: 2px;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+/* ---------------------------------------------------------------------
+   En-tête — étiquette de maison
+   --------------------------------------------------------------------- */
+.site-header {
+  background: var(--paper-light);
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+
+.site-header__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 28px;
+  height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.brand__mark {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+}
+
+.brand__text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.brand__name {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+}
+
+.brand__tagline {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-top: 3px;
+}
+
+.header-actions a {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  border: 1px solid var(--line);
+  padding: 9px 16px;
+  border-radius: 2px;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.header-actions a:hover {
+  border-color: var(--blueprint);
+  color: var(--blueprint);
+}
+
+/* ---------------------------------------------------------------------
+   Structure de page
+   --------------------------------------------------------------------- */
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 48px 28px 80px;
+}
+
+.page-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 34px;
+}
+
+.page-head h1 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 42px;
+  margin: 6px 0 0;
+  color: var(--ink);
+  letter-spacing: 0.005em;
+}
+
+.page-head p {
+  margin: 8px 0 0;
+  color: var(--ink-soft);
+  font-size: 14px;
+  max-width: 46ch;
+}
+
+.page-head__actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* ---------------------------------------------------------------------
+   Boutons
+   --------------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 12px 20px;
+  border-radius: 2px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.15s ease, border-color 0.15s ease, color .15s ease;
+}
+.btn:active { transform: translateY(1px); }
+
+.btn--primary {
+  background: var(--ink);
+  color: var(--paper-light);
+  border-color: var(--ink);
+}
+.btn--primary:hover { background: var(--blueprint-dark); border-color: var(--blueprint-dark); }
+
+.btn--gold {
+  background: var(--gold);
+  color: var(--paper-light);
+  border-color: var(--gold);
+}
+.btn--gold:hover { background: #8c6c24; }
+
+.btn--outline {
+  background: transparent;
+  color: var(--ink-soft);
+  border-color: var(--line);
+}
+.btn--outline:hover { color: var(--ink); border-color: var(--ink-soft); }
+
+/* ---------------------------------------------------------------------
+   Barre de filtres — bande de légende de patron
+   --------------------------------------------------------------------- */
+.legend-strip {
+  background: var(--paper-light);
+  border-top: 1px dashed var(--ink-faint);
+  border-bottom: 1px dashed var(--ink-faint);
+  padding: 16px 22px;
+  margin-bottom: 28px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.filter-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+.filter-chip {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+  transition: all 0.15s ease;
+}
+.filter-chip:hover { border-color: var(--blueprint); color: var(--blueprint); }
+.filter-chip.is-active {
+  background: var(--blueprint);
+  border-color: var(--blueprint);
+  color: var(--paper-light);
+}
+
+.sort-group { display: flex; align-items: center; gap: 14px; }
+.sort-link {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  padding-bottom: 2px;
+  border-bottom: 1px solid transparent;
+}
+.sort-link:hover { color: var(--gold); }
+.sort-link.is-active { color: var(--gold); border-bottom-color: var(--gold); }
+.sort-sep { color: var(--line); }
+
+/* ---------------------------------------------------------------------
+   Table "pièces de patron" — geste signature
+   --------------------------------------------------------------------- */
+.swatch-table-wrap {
+  background: var(--paper-light);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+table.swatch-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.swatch-table thead th {
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  font-weight: 500;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.swatch-row {
+  cursor: pointer;
+  position: relative;
+  border-bottom: 1px solid var(--line);
+  transition: background 0.15s ease;
+}
+.swatch-row:hover { background: var(--paper); }
+
+/* encoches de patron sur le bord gauche de chaque ligne */
+.swatch-row td:first-child { position: relative; padding-left: 28px; }
+.swatch-row td:first-child::before,
+.swatch-row td:first-child::after {
+  content: "";
+  position: absolute;
+  left: 8px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+}
+.swatch-row td:first-child::before {
+  top: 10px;
+  border-width: 5px 0 5px 6px;
+  border-color: transparent transparent transparent var(--gold-light);
+}
+.swatch-row td:first-child::after {
+  bottom: 10px;
+  border-width: 5px 0 5px 6px;
+  border-color: transparent transparent transparent var(--gold-light);
+}
+
+.swatch-table td { padding: 16px 20px; vertical-align: middle; font-size: 13.5px; }
+
+.model-name {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.client-name { color: var(--ink-soft); }
+
+.price-cell {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--ink);
+}
+
+/* étiquettes de statut / délai */
+.tag {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
+  display: inline-block;
+  white-space: nowrap;
+}
+.tag--urgent { color: var(--wine); background: var(--wine-bg); }
+.tag--soon   { color: var(--amber); background: var(--amber-bg); }
+.tag--ok     { color: var(--moss); background: var(--moss-bg); }
+.tag--done   { color: var(--blueprint); background: #e2eaf0; }
+
+/* barre de progression — ruban de couturière */
+.tape {
+  position: relative;
+  width: 100%;
+  height: 8px;
+  background:
+    repeating-linear-gradient(90deg, var(--ink-faint) 0 1px, transparent 1px 10%),
+    var(--paper-deep);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.tape-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--blueprint), var(--gold-light));
+  transition: width 0.7s ease;
+}
+.tape-row { display: flex; align-items: center; gap: 10px; }
+.tape-pct {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  min-width: 32px;
+  text-align: right;
+}
+
+/* ---------------------------------------------------------------------
+   Tiroir de détails
+   --------------------------------------------------------------------- */
+.drawer-row { background: var(--paper); }
+.drawer-row.is-hidden { display: none; }
+.drawer-cell { padding: 26px 32px !important; border-left: 3px solid var(--gold); }
+
+.drawer-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+@media (min-width: 768px) {
+  .drawer-grid { grid-template-columns: 260px 1fr; }
+}
+
+.card {
+  background: var(--paper-light);
+  border: 1px solid var(--line);
+  padding: 18px;
+}
+
+.card h4 {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  border-bottom: 1px dashed var(--line);
+  padding-bottom: 10px;
+  margin: 0 0 12px;
+}
+
+.finance-line {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--ink-soft);
+  padding: 5px 0;
+}
+.finance-line strong { color: var(--ink); font-family: var(--font-mono); }
+.finance-total {
+  margin-top: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.finance-total strong {
+  font-family: var(--font-mono);
+  font-size: 20px;
+  color: var(--blueprint-dark);
+}
+
+.step-quickbar {
+  background: var(--paper);
+  border: 1px dashed var(--line);
+  padding: 12px 14px;
+  margin-bottom: 16px;
+}
+
+.step-chip {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: var(--paper-light);
+  border: 1px solid var(--line);
+  color: var(--blueprint-dark);
+  padding: 6px 11px;
+  border-radius: 2px;
+  transition: all 0.15s ease;
+}
+.step-chip:hover { border-color: var(--gold); color: var(--gold); }
+
+.step-custom-form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+.step-custom-form input[type="text"] {
+  flex: 1;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--ink-faint);
+  padding: 6px 2px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--ink);
+}
+.step-custom-form input[type="text"]:focus {
+  outline: none;
+  border-bottom-color: var(--blueprint);
+}
+.step-custom-form input::placeholder { color: var(--ink-faint); }
+
+.steps-list { max-height: 200px; overflow-y: auto; }
+.step-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12.5px;
+  padding: 9px 2px;
+  border-bottom: 1px solid var(--line);
+}
+.step-item:last-child { border-bottom: none; }
+.step-item__label { color: var(--ink); font-weight: 500; }
+
+.pill-toggle {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 4px 11px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+.pill-toggle--done { color: var(--moss); background: var(--moss-bg); }
+.pill-toggle--todo { color: var(--gold); background: #f2e9d4; }
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--ink-soft);
+  font-size: 13.5px;
+}
+.empty-state em { font-style: italic; color: var(--ink-faint); }
+
+/* ---------------------------------------------------------------------
+   Formulaires — fiche mesures / commande
+   --------------------------------------------------------------------- */
+.form-card {
+  max-width: 640px;
+  margin: 0 auto;
+  background: var(--paper-light);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  padding: 44px;
+  position: relative;
+}
+.form-card::before {
+  content: "";
+  position: absolute;
+  top: 26px;
+  bottom: 26px;
+  left: 0;
+  width: 1px;
+  border-left: 1px dashed var(--ink-faint);
+}
+.form-card__inner { padding-left: 20px; }
+
+.form-card h2 {
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 600;
+  margin: 4px 0 6px;
+}
+
+.form-card .eyebrow { display: block; margin-bottom: 4px; }
+
+.form-card form p { margin: 0 0 18px; }
+
+.form-card form label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 6px;
+}
+
+.field-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--line);
+  padding: 9px 2px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--ink);
+  border-radius: 0;
+}
+.field-input:focus {
+  outline: none;
+  border-bottom: 1px solid var(--blueprint);
+}
+textarea.field-input { border: 1px solid var(--line); padding: 10px; min-height: 80px; }
+
+.form-actions {
+  margin-top: 30px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  border-top: 1px solid var(--line);
+  padding-top: 22px;
+}
+
+/* ---------------------------------------------------------------------
+   Fiche technique (détails robe)
+   --------------------------------------------------------------------- */
+.hero-card {
+  background: var(--paper-light);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  padding: 28px 32px;
+  margin-bottom: 32px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+.hero-card h1 { font-family: var(--font-display); font-size: 34px; margin: 4px 0 0; }
+.hero-card__meta { text-align: right; }
+.hero-card__meta .eyebrow { margin-bottom: 4px; }
+.hero-card__meta strong { font-family: var(--font-mono); font-size: 14px; color: var(--ink); }
+
+.detail-grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
+@media (min-width: 860px) { .detail-grid { grid-template-columns: 280px 1fr; } }
+
+.steps-table { width: 100%; border-collapse: collapse; }
+.steps-table td { padding: 12px 14px; border-bottom: 1px solid var(--line); font-size: 13.5px; }
+.steps-table tr:last-child td { border-bottom: none; }
+
+@media (max-width: 640px) {
+  .page-head h1 { font-size: 32px; }
+  .swatch-table thead { display: none; }
+  .swatch-table, .swatch-table tbody, .swatch-table tr, .swatch-table td { display: block; width: 100%; }
+  .swatch-table td { border-bottom: none; padding: 4px 20px; }
+  .swatch-row { padding: 10px 0; }
+}
