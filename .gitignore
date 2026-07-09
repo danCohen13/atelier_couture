@@ -1,0 +1,21 @@
+# Environnement virtuel
+venv/
+.venv/
+env/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Base de données locale (si jamais une traîne, même si on utilise PostgreSQL)
+*.sqlite3
+
+# Environnement et secrets
+.env
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+.vscode/
