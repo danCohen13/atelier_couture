@@ -7,8 +7,8 @@
         <div>
             <span class="eyebrow">Dossier Cliente</span>
             <h1>{{ cliente.nom.upper }} {{ cliente.prenom }}</h1>
-            <p style="margin: 6px 0 0; color: var(--ink-soft);">
-                {% if cliente.telephone %}{{ cliente.telephone }} | {% endif %}
+            <p style="margin: 6px 0 0; color: var(--ink-soft); font-size: 13.5px;">
+                {% if cliente.telephone %}📞 {{ cliente.telephone }} | {% endif %}
                 {% if cliente.date_naissance %}Née le {{ cliente.date_naissance|date:"d/m/Y" }}{% endif %}
             </p>
         </div>
@@ -20,14 +20,10 @@
     <div class="detail-grid">
         <div class="card" style="height: fit-content;">
             <h4>📏 Mensurations enregistrées</h4>
-            <div class="finance-line"><span>Tour de poitrine</span><strong>{% if cliente.tour_poitrine %}{{
-                    cliente.tour_poitrine }} cm{% else %}-{% endif %}</strong></div>
-            <div class="finance-line"><span>Tour de taille</span><strong>{% if cliente.tour_taille %}{{
-                    cliente.tour_taille }} cm{% else %}-{% endif %}</strong></div>
-            <div class="finance-line"><span>Tour de hanches</span><strong>{% if cliente.tour_hanches %}{{
-                    cliente.tour_hanches }} cm{% else %}-{% endif %}</strong></div>
-            <div class="finance-line"><span>Hauteur buste</span><strong>{% if cliente.hauteur_buste %}{{
-                    cliente.hauteur_buste }} cm{% else %}-{% endif %}</strong></div>
+            <div class="finance-line"><span>Tour de poitrine</span><strong>{% if cliente.tour_poitrine %}{{ cliente.tour_poitrine }} cm{% else %}-{% endif %}</strong></div>
+            <div class="finance-line"><span>Tour de taille</span><strong>{% if cliente.tour_taille %}{{ cliente.tour_taille }} cm{% else %}-{% endif %}</strong></div>
+            <div class="finance-line"><span>Tour de hanches</span><strong>{% if cliente.tour_hanches %}{{ cliente.tour_hanches }} cm{% else %}-{% endif %}</strong></div>
+            <div class="finance-line"><span>Hauteur buste</span><strong>{% if cliente.tour_buste %}{{ cliente.tour_buste }} cm{% else %}-{% endif %}</strong></div>
             {% if cliente.notes_morphologie %}
             <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed var(--line);">
                 <span class="eyebrow">Notes spécifiques</span>
@@ -36,29 +32,148 @@
             {% endif %}
         </div>
 
-        <div class="card">
-            <h4>👗 Historique des commandes</h4>
-            <table class="steps-table">
-                <tbody>
-                    {% for robe in robes %}
-                    <tr>
-                        <td>
-                            <strong style="color: var(--ink);">{{ robe.nom_modele }}</strong><br>
-                            <span style="font-size: 11px; color: var(--ink-soft);">Livraison : {{
-                                robe.date_livraison|date:"d/m/Y" }}</span>
-                        </td>
-                        <td style="text-align: right; font-family: var(--font-mono); font-weight: 600;">
-                            {{ robe.prix_total }} {{ robe.symbole_devise }}
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="2" class="empty-state"><em>Aucune commande pour le moment.</em></td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+            <span class="eyebrow" style="margin-left: 2px;">👗 Confections & Suivi d'atelier</span>
+            
+            <div class="swatch-table-wrap">
+                <table class="swatch-table">
+                    <thead>
+                        <tr>
+                            <th>Modèle</th>
+                            <th>Livraison</th>
+                            <th>Délai</th>
+                            <th style="width: 180px;">Avancement</th>
+                            <th>Prix total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for robe in robes %}
+                        
+                        <tr class="swatch-row" data-robe-id="{{ robe.id }}" onclick="toggleRobeDetails(this)">
+                            <td><span class="model-name">{{ robe.nom_modele }}</span></td>
+                            <td><span class="client-name">{{ robe.date_livraison|date:"d/m/Y" }}</span></td>
+                            <td>
+                                {% if robe.jours_restants < 0 %}
+                                    <span class="tag tag--done">Livrée</span>
+                                {% elif robe.jours_restants <= 14 %}
+                                    <span class="tag tag--urgent">{{ robe.jours_restants }} jours</span>
+                                {% elif robe.jours_restants <= 30 %}
+                                    <span class="tag tag--soon">{{ robe.jours_restants }} jours</span>
+                                {% else %}
+                                    <span class="tag tag--ok">{{ robe.jours_restants }} jours</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="tape-row">
+                                    <div class="tape">
+                                        <div class="tape-fill progress-bar" data-progress="{{ robe.progression }}"></div>
+                                    </div>
+                                    <span class="tape-pct">{{ robe.progression }}%</span>
+                                </div>
+                            </td>
+                            <td><span class="price-cell">{{ robe.prix_total }} {{ robe.symbole_devise }}</span></td>
+                        </tr>
+
+                        <tr id="tiroir-{{ robe.id }}" class="drawer-row is-hidden">
+                            <td colspan="5" class="drawer-cell">
+                                <div class="drawer-grid" style="grid-template-columns: 220px 1fr;">
+                                    
+                                    <div class="card" style="background: var(--paper);">
+                                        <h4>Finances</h4>
+                                        <div class="finance-line"><span>Tissu</span><strong>{{ robe.cout_tissu }} {{ robe.symbole_devise }}</strong></div>
+                                        <div class="finance-line"><span>Atelier</span><strong>{{ robe.cout_main_doeuvre }} {{ robe.symbole_devise }}</strong></div>
+                                        <div class="finance-total"><span class="eyebrow">Total</span><strong>{{ robe.prix_total }} {{ robe.symbole_devise }}</strong></div>
+                                        
+                                        <div style="margin-top: 15px; text-align: right;">
+                                            <a href="{% url 'supprimer_robe' robe.id %}" onclick="return confirm('Supprimer définitivement cette confection ?');" class="btn btn--outline" style="color: var(--wine); border-color: var(--wine); padding: 4px 8px; font-size: 9px;">
+                                                ✖ Supprimer
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div class="card">
+                                        <h4>Étapes de fabrication</h4>
+
+                                        <div class="step-quickbar">
+                                            <div class="filter-group" style="margin-bottom: 0;">
+                                                <span class="eyebrow" style="margin-right:2px;">Ajouter</span>
+                                                <a href="{% url 'ajouter_tache_rapide' robe.id 'toile' %}" class="step-chip">+ Toile</a>
+                                                <a href="{% url 'ajouter_tache_rapide' robe.id 'coupe' %}" class="step-chip">+ Coupe</a>
+                                                <a href="{% url 'ajouter_tache_rapide' robe.id 'assemblage' %}" class="step-chip">+ Assemblage</a>
+                                                <a href="{% url 'ajouter_tache_rapide' robe.id 'finitions' %}" class="step-chip">+ Finitions</a>
+                                            </div>
+
+                                            <form method="POST" action="{% url 'ajouter_tache_personnalisee' robe.id %}" class="step-custom-form">
+                                                {% csrf_token %}
+                                                <input type="text" name="libelle" placeholder="Étape sur mesure…" required>
+                                                <button type="submit" class="btn btn--gold" style="padding:6px 12px;">Ajouter</button>
+                                            </form>
+                                        </div>
+
+                                        <div class="steps-list">
+                                            {% for tache in robe.taches.all %}
+                                            <div class="step-item">
+                                                <span class="step-item__label">{{ tache.libelle }}</span>
+                                                <div style="display: flex; align-items: center; gap: 12px;">
+                                                    <a href="{% url 'toggle_tache' tache.id %}">
+                                                        {% if tache.est_faite %}
+                                                            <span class="pill-toggle pill-toggle--done">Terminé</span>
+                                                        {% else %}
+                                                            <span class="pill-toggle pill-toggle--todo">À faire</span>
+                                                        {% endif %}
+                                                    </a>
+                                                    <a href="{% url 'supprimer_tache' tache.id %}" onclick="return confirm('Supprimer l\'étape « {{ tache.libelle }} » ?');" style="color: var(--wine); font-family: var(--font-mono); font-size: 13px; font-weight: bold; text-decoration: none; padding: 2px 4px;">
+                                                        ✕
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            {% empty %}
+                                            <p class="empty-state" style="padding: 14px 2px; text-align:left;"><em>Aucune étape configurée.</em></p>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </td>
+                        </tr>
+
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="empty-state">Aucune confection enregistrée pour cette cliente.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Gère l'ouverture et fermeture des tiroirs
+    function toggleRobeDetails(element) {
+        const id = element.getAttribute('data-robe-id');
+        const tiroir = document.getElementById('tiroir-' + id);
+        tiroir.classList.toggle('is-hidden');
+    }
+
+    // Gère l'animation des rubans de progression au chargement de la page
+    window.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.progress-bar').forEach(bar => {
+            const pourcentage = bar.getAttribute('data-progress');
+            bar.style.width = pourcentage + '%';
+        });
+
+        // Permet de maintenir ouvert le tiroir après une action de rechargement (via l'ancre #tiroir-id)
+        if (window.location.hash) {
+            const tiroirCible = document.querySelector(window.location.hash);
+            if (tiroirCible) {
+                tiroirCible.classList.remove('is-hidden');
+                tiroirCible.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+    });
+</script>
 {% endblock %}

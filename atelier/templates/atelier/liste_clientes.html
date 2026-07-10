@@ -13,6 +13,21 @@
         </div>
     </div>
 
+    <div class="legend-strip">
+        <form method="GET" action="{% url 'liste_clientes' %}" style="display: flex; width: 100%; gap: 15px; align-items: center; flex-wrap: wrap;">
+            <span class="eyebrow">Rechercher</span>
+            <input type="text" name="q" value="{{ search_query }}" placeholder="Saisir un nom ou un prénom..." class="field-input" style="flex: 1; max-width: 400px; margin-bottom: 0;">
+            
+            <button type="submit" class="btn btn--primary" style="padding: 8px 16px;">Filtrer</button>
+            
+            {% if search_query %}
+                <a href="{% url 'liste_clientes' %}" class="btn btn--outline" style="padding: 8px 16px; color: var(--wine); border-color: var(--line);">
+                    ✕ Effacer
+                </a>
+            {% endif %}
+        </form>
+    </div>
+
     <div class="detail-grid" style="grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));">
         {% for cliente in clientes %}
         <a href="{% url 'fiche_cliente' cliente.id %}" class="card hover:border-blueprint transition-colors cursor-pointer" style="text-decoration: none; display: block;">
@@ -26,7 +41,9 @@
             </div>
         </a>
         {% empty %}
-        <p class="empty-state">Aucune cliente enregistrée pour le moment.</p>
+        <div class="empty-state" style="grid-column: 1 / -1;">
+            Aucune cliente ne correspond à « <em>{{ search_query }}</em> ».
+        </div>
         {% endfor %}
     </div>
 </main>

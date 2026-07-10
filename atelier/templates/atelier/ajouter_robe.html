@@ -62,4 +62,27 @@
         </div>
     </div>
 </main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const coutTissu = document.getElementById('id_cout_tissu');
+        const coutMain = document.getElementById('id_cout_main_doeuvre');
+        const prixTotal = document.getElementById('id_prix_total');
+
+        function calculerTotal() {
+            // Convertit la saisie en nombre, ou prend 0 si le champ est vide
+            const tissu = parseFloat(coutTissu.value) || 0;
+            const main = parseFloat(coutMain.value) || 0;
+            
+            // Met à jour le champ du Prix Total avec 2 chiffres après la virgule
+            prixTotal.value = (tissu + main).toFixed(2);
+        }
+
+        // Écoute les frappes de touches sur les deux composants de coût
+        if (coutTissu && coutMain) {
+            coutTissu.addEventListener('input', calculerTotal);
+            coutMain.addEventListener('input', calculerTotal);
+        }
+    });
+</script>
 {% endblock %}

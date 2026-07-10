@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Client, Robe, Tache
 from .forms import ClientForm, RobeForm
+from django.db.models import Q
 import datetime
 
 # 1. Vue du Tableau de Bord Principal (avec Filtres et Tris)
@@ -119,15 +120,106 @@ def supprimer_robe(request, robe_id):
 
 # 8. Afficher le répertoire de toutes les clientes
 def liste_clientes(request):
-    clientes = Client.objects.all().order_by('nom')
-    return render(request, 'atelier/liste_clientes.html', {'clientes': clientes})
+    # On récupère le texte saisi dans le champ nommé "q"
+    query = request.GET.get('q', '').strip()
+    
+    if query:
+        # On filtre : le nom contient la recherche OU le prénom contient la recherche (icontains = insensible à la casse)
+        clientes = Client.objects.filter(
+            Q(nom__icontains=query) | Q(prenom__icontains=query)
+        ).order_by('nom')
+    else:
+        # Si aucune recherche, on affiche tout le monde
+        clientes = Client.objects.all().order_by('nom')
+        
+    return render(request, 'atelier/liste_clientes.html', {
+        'clientes': clientes,
+        'search_query': query  # On renvoie la recherche pour la laisser écrite dans la barre
+    })
 
 # 9. Fiche détaillée d'une cliente (Option C)
+# 9. Fiche détaillée d'une cliente (Option C enrichie)
 def fiche_cliente(request, client_id):
     cliente = get_object_or_404(Client, id=client_id)
-    # On récupère toutes les robes de cette cliente triées par date de livraison
-    robes = cliente.robes.all().order_by('-date_livraison')
+    # On pré-charge les tâches pour éviter les requêtes SQL en boucle (N+1)
+    robes = cliente.robes.prefetch_related('taches').all().order_by('-date_livraison')
+    aujourdhui = datetime.date.today()
+    
+    # Calcul des jours restants et de la progression en mémoire
+    for robe in robes:
+        if robe.date_livraison:
+            delta = robe.date_livraison - aujourdhui
+            robe.jours_restants = delta.days
+        else:
+            robe.jours_restants = None
+            
+        taches = robe.taches.all()
+        total_taches = taches.count()
+        if total_taches > 0:
+            faites = taches.filter(est_faite=True).count()
+            robe.progression = int((faites / total_taches) * 100)
+        else:
+            robe.progression = 0
+
     return render(request, 'atelier/fiche_cliente.html', {'cliente': cliente, 'robes': robes})
+
+
+# 4. Action rapide en 1 clic (Modifiée pour redirection intelligente)
+def ajouter_tache_rapide(request, robe_id, type_tache):
+    robe = get_object_or_404(Robe, id=robe_id)
+    correspondances = {
+        'toile': "Toile d'essai",
+        'coupe': "Coupe du tissu",
+        'assemblage': "Assemblage & Piqûre",
+        'finitions': "Finitions & Ourlet"
+    }
+    if type_tache in correspondances:
+        Tache.objects.create(robe=robe, libelle=correspondances[type_tache], est_faite=False)
+        
+    # Redirection vers la bonne page d'origine
+    referer = request.META.get('HTTP_REFERER', '')
+    if 'clientes' in referer:
+        return redirect(f'/clientes/{robe.client.id}/#tiroir-{robe.id}')
+    return redirect(f'/#tiroir-{robe.id}')
+
+
+# 5. Action pour ajouter une tâche personnalisée (Modifiée)
+def ajouter_tache_personnalisee(request, robe_id):
+    robe = get_object_or_404(Robe, id=robe_id)
+    if request.method == 'POST':
+        texte_saisi = request.POST.get('libelle', '').strip()
+        if texte_saisi:
+            Tache.objects.create(robe=robe, libelle=texte_saisi, est_faite=False)
+            
+    referer = request.META.get('HTTP_REFERER', '')
+    if 'clientes' in referer:
+        return redirect(f'/clientes/{robe.client.id}/#tiroir-{robe.id}')
+    return redirect(f'/#tiroir-{robe.id}')
+
+
+# 6. Inverser le statut d'une tâche (Modifiée)
+def toggle_tache(request, tache_id):
+    tache = get_object_or_404(Tache, id=tache_id)
+    tache.est_faite = not tache.est_faite
+    tache.save()
+    
+    referer = request.META.get('HTTP_REFERER', '')
+    if 'clientes' in referer:
+        return redirect(f'/clientes/{tache.robe.client.id}/#tiroir-{tache.robe.id}')
+    return redirect(f'/#tiroir-{tache.robe.id}')
+
+
+# 10. Supprimer une étape de fabrication (Modifiée)
+def supprimer_tache(request, tache_id):
+    tache = get_object_or_404(Tache, id=tache_id)
+    robe_id = tache.robe.id
+    client_id = tache.robe.client.id
+    tache.delete()
+    
+    referer = request.META.get('HTTP_REFERER', '')
+    if 'clientes' in referer:
+        return redirect(f'/clientes/{client_id}/#tiroir-{robe_id}')
+    return redirect(f'/#tiroir-{robe_id}')
 
 # 10. Supprimer une étape de fabrication (tâche)
 def supprimer_tache(request, tache_id):
