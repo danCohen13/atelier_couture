@@ -20,10 +20,14 @@
     <div class="detail-grid">
         <div class="card" style="height: fit-content;">
             <h4>📏 Mensurations enregistrées</h4>
-            <div class="finance-line"><span>Tour de poitrine</span><strong>{% if cliente.tour_poitrine %}{{ cliente.tour_poitrine }} cm{% else %}-{% endif %}</strong></div>
-            <div class="finance-line"><span>Tour de taille</span><strong>{% if cliente.tour_taille %}{{ cliente.tour_taille }} cm{% else %}-{% endif %}</strong></div>
-            <div class="finance-line"><span>Tour de hanches</span><strong>{% if cliente.tour_hanches %}{{ cliente.tour_hanches }} cm{% else %}-{% endif %}</strong></div>
-            <div class="finance-line"><span>Hauteur buste</span><strong>{% if cliente.hauteur_buste %}{{ cliente.hauteur_buste }} cm{% else %}-{% endif %}</strong></div>
+            <div class="finance-line"><span>Tour de poitrine</span><strong>{% if cliente.tour_poitrine %}{{
+                    cliente.tour_poitrine }} cm{% else %}-{% endif %}</strong></div>
+            <div class="finance-line"><span>Tour de taille</span><strong>{% if cliente.tour_taille %}{{
+                    cliente.tour_taille }} cm{% else %}-{% endif %}</strong></div>
+            <div class="finance-line"><span>Tour de hanches</span><strong>{% if cliente.tour_hanches %}{{
+                    cliente.tour_hanches }} cm{% else %}-{% endif %}</strong></div>
+            <div class="finance-line"><span>Hauteur buste</span><strong>{% if cliente.hauteur_buste %}{{
+                    cliente.hauteur_buste }} cm{% else %}-{% endif %}</strong></div>
             {% if cliente.notes_morphologie %}
             <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed var(--line);">
                 <span class="eyebrow">Notes spécifiques</span>
@@ -40,10 +44,11 @@
                     <tr>
                         <td>
                             <strong style="color: var(--ink);">{{ robe.nom_modele }}</strong><br>
-                            <span style="font-size: 11px; color: var(--ink-soft);">Livraison : {{ robe.date_livraison|date:"d/m/Y" }}</span>
+                            <span style="font-size: 11px; color: var(--ink-soft);">Livraison : {{
+                                robe.date_livraison|date:"d/m/Y" }}</span>
                         </td>
                         <td style="text-align: right; font-family: var(--font-mono); font-weight: 600;">
-                            {{ robe.prix_total }} €
+                            {{ robe.prix_total }} {{ robe.symbole_devise }}
                         </td>
                     </tr>
                     {% empty %}

@@ -128,3 +128,10 @@ def fiche_cliente(request, client_id):
     # On récupère toutes les robes de cette cliente triées par date de livraison
     robes = cliente.robes.all().order_by('-date_livraison')
     return render(request, 'atelier/fiche_cliente.html', {'cliente': cliente, 'robes': robes})
+
+# 10. Supprimer une étape de fabrication (tâche)
+def supprimer_tache(request, tache_id):
+    tache = get_object_or_404(Tache, id=tache_id)
+    robe_id = tache.robe.id  # On mémorise l'ID de la robe pour y retourner
+    tache.delete()
+    return redirect(f'/#tiroir-{robe_id}')    

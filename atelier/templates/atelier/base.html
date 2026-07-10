@@ -12,6 +12,7 @@
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="{% static 'atelier/css/style.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 
 <body>
@@ -43,6 +44,43 @@
     {% block content %}{% endblock %}
 
     {% block scripts %}{% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // 1. Initialisation de Flatpickr pour le calendrier au clic
+            flatpickr(".datepicker", {
+                dateFormat: "d/m/Y",
+                allowInput: true,
+                locale: {
+                    firstDayOfWeek: 1
+                }
+            });
+
+            // 2. Ajout automatique des slashes '/' lors de la saisie manuelle au clavier
+            document.querySelectorAll('.datepicker').forEach(function (input) {
+                input.addEventListener('input', function (e) {
+                    // Si l'utilisateur est en train d'effacer (touche Retour arrière), on interrompt le script
+                    if (e.inputType === 'deleteContentBackward') return;
+
+                    // On extrait uniquement les chiffres de la saisie actuelle
+                    let value = this.value.replace(/\D/g, '');
+
+                    // Si l'utilisateur a tapé le jour (2 chiffres), on ajoute le premier slash
+                    if (value.length === 2) {
+                        this.value = value + '/';
+                    }
+                    // Si l'utilisateur a fini de taper le mois (4 chiffres au total), on ajoute le second slash
+                    else if (value.length === 4) {
+                        this.value = value.slice(0, 2) + '/' + value.slice(2, 4) + '/';
+                    }
+                    // Si l'utilisateur continue de taper l'année, on limite le champ à 10 caractères (jj/mm/aaaa)
+                    else if (value.length > 4) {
+                        this.value = value.slice(0, 2) + '/' + value.slice(2, 4) + '/' + value.slice(4, 8);
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

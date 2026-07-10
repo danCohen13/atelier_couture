@@ -13,7 +13,8 @@
         <div>
             <span class="eyebrow">Fiche technique</span>
             <h1>{{ robe.nom_modele }}</h1>
-            <p style="margin: 6px 0 0; color: var(--ink-soft);">Cliente — <strong style="color: var(--ink);">{{ robe.client }}</strong></p>
+            <p style="margin: 6px 0 0; color: var(--ink-soft);">Cliente — <strong style="color: var(--ink);">{{
+                    robe.client }}</strong></p>
         </div>
         <div class="hero-card__meta">
             <span class="eyebrow">Livraison attendue</span>
@@ -25,9 +26,12 @@
 
         <div class="card" style="height: fit-content;">
             <h4>Suivi financier</h4>
-            <div class="finance-line"><span>Tissu / fournitures</span><strong>{{ robe.cout_tissu }} €</strong></div>
-            <div class="finance-line"><span>Main d'œuvre</span><strong>{{ robe.cout_main_doeuvre }} €</strong></div>
-            <div class="finance-total"><span class="eyebrow">Prix total facturé</span><strong>{{ robe.prix_total }} €</strong></div>
+            <div class="finance-line"><span>Tissu / fournitures</span><strong>{{ robe.cout_tissu }} {{
+                    robe.symbole_devise }}</strong></div>
+            <div class="finance-line"><span>Main d'œuvre</span><strong>{{ robe.cout_main_doeuvre }} {{
+                    robe.symbole_devise }}</strong></div>
+            <div class="finance-total"><span class="eyebrow">Prix total facturé</span><strong>{{ robe.prix_total }} {{
+                    robe.symbole_devise }}</strong></div>
         </div>
 
         <div class="card">
@@ -39,9 +43,9 @@
                         <td>{{ tache.libelle }}</td>
                         <td style="text-align: right;">
                             {% if tache.est_faite %}
-                                <span class="pill-toggle pill-toggle--done">Terminé</span>
+                            <span class="pill-toggle pill-toggle--done">Terminé</span>
                             {% else %}
-                                <span class="pill-toggle pill-toggle--todo">En cours</span>
+                            <span class="pill-toggle pill-toggle--todo">En cours</span>
                             {% endif %}
                         </td>
                     </tr>

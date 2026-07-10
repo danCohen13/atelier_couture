@@ -25,20 +25,33 @@ class Client(models.Model):
 
 
 class Robe(models.Model):
-    # Relation : Une robe appartient à un client. Si le client est supprimé, ses robes aussi (CASCADE).
+    # Liste des devises disponibles
+    DEVISE_CHOICES = [
+        ('ILS', '₪ (Shekel)'),
+        ('EUR', '€ (Euro)'),
+        ('USD', '$ (Dollar)'),
+    ]
+
     client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='robes')
     nom_modele = models.CharField(max_length=200)
     date_commencement = models.DateField()
     date_livraison = models.DateField()
     
-    # Finances (max_digits=8 permet de gérer des montants jusqu'à 999 999.99 €)
     cout_tissu = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
     cout_main_doeuvre = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
     prix_total = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
+    
+    # Nouveau champ avec le Shekel ('ILS') défini par défaut
+    devise = models.CharField(max_length=3, choices=DEVISE_CHOICES, default='ILS', verbose_name="Devise")
+
+    # Propriété magique pour récupérer instantanément le symbole associé
+    @property
+    def symbole_devise(self):
+        mapping = {'ILS': '₪', 'EUR': '€', 'USD': '$'}
+        return mapping.get(self.devise, '₪')
 
     def __str__(self):
         return f"{self.nom_modele} - Client : {self.client.nom}"
-
 
 class Tache(models.Model):
     # Relation : Une tâche est liée à une robe spécifique.

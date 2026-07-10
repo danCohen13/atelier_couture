@@ -19,9 +19,10 @@
         <div class="page-head__actions">
             <a href="{% url 'ajouter_client' %}" class="btn btn--outline">+ Nouvelle cliente</a>
             <a href="{% url 'ajouter_robe' %}" class="btn btn--primary">+ Créer une robe</a>
-            <a href="{% url 'liste_clientes' %}" class="btn btn--outline" style="border-color: var(--blueprint); color: var(--blueprint);">
-        👤 Liste des clientes
-        </a>
+            <a href="{% url 'liste_clientes' %}" class="btn btn--outline"
+                style="border-color: var(--blueprint); color: var(--blueprint);">
+                👤 Liste des clientes
+            </a>
         </div>
     </div>
 
@@ -86,7 +87,7 @@
                             <span class="tape-pct">{{ robe.progression }}%</span>
                         </div>
                     </td>
-                    <td><span class="price-cell">{{ robe.prix_total }} €</span></td>
+                    <td><span class="price-cell">{{ robe.prix_total }} {{ robe.symbole_devise }}</span></td>
                 </tr>
 
                 <tr id="tiroir-{{ robe.id }}" class="drawer-row is-hidden">
@@ -94,13 +95,19 @@
                         <div class="drawer-grid">
                             <div class="card">
                                 <h4>Détails financiers</h4>
-                                <div class="finance-line"><span>Tissu</span><strong>{{ robe.cout_tissu }} €</strong>
+                                <div class="finance-line">
+                                    <span>Tissu</span>
+                                    <strong>{{ robe.cout_tissu }} {{ robe.symbole_devise }}</strong>
                                 </div>
-                                <div class="finance-line"><span>Main d'œuvre</span><strong>{{ robe.cout_main_doeuvre }}
-                                        €</strong></div>
+                                <div class="finance-line">
+                                    <span>Main d'œuvre</span>
+                                    <strong>{{ robe.cout_main_doeuvre }} {{ robe.symbole_devise }}</strong>
+                                </div>
                                 <div class="finance-total">
-                                    <span class="eyebrow">Total facturé</span><strong>{{ robe.prix_total }} €</strong>
+                                    <span class="eyebrow">Total facturé</span>
+                                    <strong>{{ robe.prix_total }} {{ robe.symbole_devise }}</strong>
                                 </div>
+
                                 <div style="margin-top: 15px; text-align: right;">
                                     <a href="{% url 'supprimer_robe' robe.id %}"
                                         onclick="return confirm('Attention ! Voulez-vous vraiment supprimer définitivement cette robe et tout son historique ?');"
@@ -140,13 +147,24 @@
                                     {% for tache in robe.taches.all %}
                                     <div class="step-item">
                                         <span class="step-item__label">{{ tache.libelle }}</span>
-                                        <a href="{% url 'toggle_tache' tache.id %}">
-                                            {% if tache.est_faite %}
-                                            <span class="pill-toggle pill-toggle--done">Terminé</span>
-                                            {% else %}
-                                            <span class="pill-toggle pill-toggle--todo">À faire</span>
-                                            {% endif %}
-                                        </a>
+
+                                        <div style="display: flex; align-items: center; gap: 12px;">
+                                            <a href="{% url 'toggle_tache' tache.id %}">
+                                                {% if tache.est_faite %}
+                                                <span class="pill-toggle pill-toggle--done">Terminé</span>
+                                                {% else %}
+                                                <span class="pill-toggle pill-toggle--todo">À faire</span>
+                                                {% endif %}
+                                            </a>
+
+                                            <a href="{% url 'supprimer_tache' tache.id %}"
+                                                onclick="return confirm('Supprimer l\'étape « {{ tache.libelle }} » ?');"
+                                                style="color: var(--wine); font-family: var(--font-mono); font-size: 13px; font-weight: bold; text-decoration: none; padding: 2px 6px; transition: opacity 0.15s ease;"
+                                                title="Supprimer cette étape" onmouseover="this.style.opacity=0.7"
+                                                onmouseout="this.style.opacity=1">
+                                                ✕
+                                            </a>
+                                        </div>
                                     </div>
                                     {% empty %}
                                     <p class="empty-state" style="padding: 14px 2px; text-align:left;"><em>Aucune étape
