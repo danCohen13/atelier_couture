@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Robe, Tache
+from .models import Client, Robe, Tache
 from .forms import ClientForm, RobeForm
 import datetime
 
@@ -110,3 +110,21 @@ def toggle_tache(request, tache_id):
     tache.est_faite = not tache.est_faite
     tache.save()
     return redirect(f'/#tiroir-{tache.robe.id}')
+
+# 7. Supprimer une robe (avec protection)
+def supprimer_robe(request, robe_id):
+    robe = get_object_or_404(Robe, id=robe_id)
+    robe.delete()
+    return redirect('dashboard')
+
+# 8. Afficher le répertoire de toutes les clientes
+def liste_clientes(request):
+    clientes = Client.objects.all().order_by('nom')
+    return render(request, 'atelier/liste_clientes.html', {'clientes': clientes})
+
+# 9. Fiche détaillée d'une cliente (Option C)
+def fiche_cliente(request, client_id):
+    cliente = get_object_or_404(Client, id=client_id)
+    # On récupère toutes les robes de cette cliente triées par date de livraison
+    robes = cliente.robes.all().order_by('-date_livraison')
+    return render(request, 'atelier/fiche_cliente.html', {'cliente': cliente, 'robes': robes})

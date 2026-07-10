@@ -23,4 +23,25 @@
         </div>
     </div>
 </main>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const coutTissu = document.getElementById('id_cout_tissu');
+        const coutMain = document.getElementById('id_cout_main_doeuvre');
+        const prixTotal = document.getElementById('id_prix_total');
+
+        function calculerTotal() {
+            // Transforme le texte en nombre décimal, ou 0 si c'est vide
+            const tissu = parseFloat(coutTissu.value) || 0;
+            const main = parseFloat(coutMain.value) || 0;
+            // Met à jour le champ Total
+            prixTotal.value = (tissu + main).toFixed(2);
+        }
+
+        // Déclenche le calcul à chaque chiffre tapé
+        if(coutTissu && coutMain) {
+            coutTissu.addEventListener('input', calculerTotal);
+            coutMain.addEventListener('input', calculerTotal);
+        }
+    });
+</script>
 {% endblock %}

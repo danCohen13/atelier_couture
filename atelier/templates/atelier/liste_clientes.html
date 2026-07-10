@@ -1,0 +1,33 @@
+{% extends 'atelier/base.html' %}
+{% block title %}Répertoire des Clientes — Cohen Haute Couture{% endblock %}
+
+{% block content %}
+<main class="page">
+    <div class="page-head">
+        <div>
+            <span class="eyebrow">Répertoire</span>
+            <h1>Fichier Clientes</h1>
+        </div>
+        <div class="page-head__actions">
+            <a href="{% url 'ajouter_client' %}" class="btn btn--primary">+ Nouvelle cliente</a>
+        </div>
+    </div>
+
+    <div class="detail-grid" style="grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));">
+        {% for cliente in clientes %}
+        <a href="{% url 'fiche_cliente' cliente.id %}" class="card hover:border-blueprint transition-colors cursor-pointer" style="text-decoration: none; display: block;">
+            <h4 style="border-bottom: none; margin:0; font-size: 18px; color: var(--ink);">{{ cliente.nom.upper }} {{ cliente.prenom }}</h4>
+            <p style="margin: 8px 0 0; font-size: 13px; color: var(--ink-soft);">
+                {% if cliente.telephone %}📞 {{ cliente.telephone }}<br>{% endif %}
+                {% if cliente.email %}✉️ {{ cliente.email }}{% endif %}
+            </p>
+            <div style="margin-top: 15px; font-family: var(--font-mono); font-size: 11px; color: var(--blueprint);">
+                Voir le dossier complet →
+            </div>
+        </a>
+        {% empty %}
+        <p class="empty-state">Aucune cliente enregistrée pour le moment.</p>
+        {% endfor %}
+    </div>
+</main>
+{% endblock %}

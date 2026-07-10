@@ -1,10 +1,17 @@
 from django.db import models
+from django.core.validators import RegexValidator
 
 class Client(models.Model):
     nom = models.CharField(max_length=100)
     prenom = models.CharField(max_length=100)
-    telephone = models.CharField(max_length=20, blank=True, null=True)
+    
+    # Validation du numéro international (ex: +33612345678)
+    phone_regex = RegexValidator(regex=r'^\+?[1-9]\d{8,14}$', message="Le numéro doit être au format international, ex: '+33612345678'.")
+    telephone = models.CharField(validators=[phone_regex], max_length=17, blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
+    
+    # Ajout de la date de naissance
+    date_naissance = models.DateField(blank=True, null=True)
     
     # Mensurations (DecimalField pour la précision des centimètres)
     tour_poitrine = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)

@@ -19,24 +19,33 @@
         <div class="page-head__actions">
             <a href="{% url 'ajouter_client' %}" class="btn btn--outline">+ Nouvelle cliente</a>
             <a href="{% url 'ajouter_robe' %}" class="btn btn--primary">+ Créer une robe</a>
+            <a href="{% url 'liste_clientes' %}" class="btn btn--outline" style="border-color: var(--blueprint); color: var(--blueprint);">
+        👤 Liste des clientes
+        </a>
         </div>
     </div>
 
     <div class="legend-strip">
         <div class="filter-group">
             <span class="eyebrow">Statut</span>
-            <a href="?status=actifs&amp;tri={{ current_tri }}" class="filter-chip {% if current_status == 'actifs' %}is-active{% endif %}">En cours</a>
-            <a href="?status=termines&amp;tri={{ current_tri }}" class="filter-chip {% if current_status == 'termines' %}is-active{% endif %}">Terminées</a>
-            <a href="?status=toutes&amp;tri={{ current_tri }}" class="filter-chip {% if current_status == 'toutes' %}is-active{% endif %}">Toutes les robes</a>
+            <a href="?status=actifs&amp;tri={{ current_tri }}"
+                class="filter-chip {% if current_status == 'actifs' %}is-active{% endif %}">En cours</a>
+            <a href="?status=termines&amp;tri={{ current_tri }}"
+                class="filter-chip {% if current_status == 'termines' %}is-active{% endif %}">Terminées</a>
+            <a href="?status=toutes&amp;tri={{ current_tri }}"
+                class="filter-chip {% if current_status == 'toutes' %}is-active{% endif %}">Toutes les robes</a>
         </div>
 
         <div class="sort-group">
             <span class="eyebrow">Trier par</span>
-            <a href="?status={{ current_status }}&amp;tri=urgence" class="sort-link {% if current_tri == 'urgence' %}is-active{% endif %}">Délai</a>
+            <a href="?status={{ current_status }}&amp;tri=urgence"
+                class="sort-link {% if current_tri == 'urgence' %}is-active{% endif %}">Délai</a>
             <span class="sort-sep">/</span>
-            <a href="?status={{ current_status }}&amp;tri=prix" class="sort-link {% if current_tri == 'prix' %}is-active{% endif %}">Prix</a>
+            <a href="?status={{ current_status }}&amp;tri=prix"
+                class="sort-link {% if current_tri == 'prix' %}is-active{% endif %}">Prix</a>
             <span class="sort-sep">/</span>
-            <a href="?status={{ current_status }}&amp;tri=modele" class="sort-link {% if current_tri == 'modele' %}is-active{% endif %}">Modèle</a>
+            <a href="?status={{ current_status }}&amp;tri=modele"
+                class="sort-link {% if current_tri == 'modele' %}is-active{% endif %}">Modèle</a>
         </div>
     </div>
 
@@ -60,15 +69,14 @@
                     <td><span class="client-name">{{ robe.client }}</span></td>
                     <td><span class="client-name">{{ robe.date_livraison|date:"d F Y" }}</span></td>
                     <td>
-                        {% if robe.jours_restants < 0 %}
-                            <span class="tag tag--done">Livrée / passé</span>
-                        {% elif robe.jours_restants <= 14 %}
-                            <span class="tag tag--urgent">{{ robe.jours_restants }} jours</span>
-                        {% elif robe.jours_restants <= 30 %}
-                            <span class="tag tag--soon">{{ robe.jours_restants }} jours</span>
-                        {% else %}
-                            <span class="tag tag--ok">{{ robe.jours_restants }} jours</span>
-                        {% endif %}
+                        {% if robe.jours_restants < 0 %} <span class="tag tag--done">Livrée / passé</span>
+                            {% elif robe.jours_restants <= 14 %} <span class="tag tag--urgent">{{ robe.jours_restants }}
+                                jours</span>
+                                {% elif robe.jours_restants <= 30 %} <span class="tag tag--soon">{{ robe.jours_restants
+                                    }} jours</span>
+                                    {% else %}
+                                    <span class="tag tag--ok">{{ robe.jours_restants }} jours</span>
+                                    {% endif %}
                     </td>
                     <td>
                         <div class="tape-row">
@@ -86,9 +94,21 @@
                         <div class="drawer-grid">
                             <div class="card">
                                 <h4>Détails financiers</h4>
-                                <div class="finance-line"><span>Tissu</span><strong>{{ robe.cout_tissu }} €</strong></div>
-                                <div class="finance-line"><span>Main d'œuvre</span><strong>{{ robe.cout_main_doeuvre }} €</strong></div>
-                                <div class="finance-total"><span class="eyebrow">Total facturé</span><strong>{{ robe.prix_total }} €</strong></div>
+                                <div class="finance-line"><span>Tissu</span><strong>{{ robe.cout_tissu }} €</strong>
+                                </div>
+                                <div class="finance-line"><span>Main d'œuvre</span><strong>{{ robe.cout_main_doeuvre }}
+                                        €</strong></div>
+                                <div class="finance-total">
+                                    <span class="eyebrow">Total facturé</span><strong>{{ robe.prix_total }} €</strong>
+                                </div>
+                                <div style="margin-top: 15px; text-align: right;">
+                                    <a href="{% url 'supprimer_robe' robe.id %}"
+                                        onclick="return confirm('Attention ! Voulez-vous vraiment supprimer définitivement cette robe et tout son historique ?');"
+                                        class="btn btn--outline"
+                                        style="color: var(--wine); border-color: var(--wine); padding: 6px 12px; font-size: 10px;">
+                                        ✖ Supprimer la commande
+                                    </a>
+                                </div>
                             </div>
 
                             <div class="card">
@@ -97,16 +117,22 @@
                                 <div class="step-quickbar">
                                     <div class="filter-group" style="margin-bottom: 0;">
                                         <span class="eyebrow" style="margin-right:2px;">Ajouter</span>
-                                        <a href="{% url 'ajouter_tache_rapide' robe.id 'toile' %}" class="step-chip">+ Toile</a>
-                                        <a href="{% url 'ajouter_tache_rapide' robe.id 'coupe' %}" class="step-chip">+ Coupe</a>
-                                        <a href="{% url 'ajouter_tache_rapide' robe.id 'assemblage' %}" class="step-chip">+ Assemblage</a>
-                                        <a href="{% url 'ajouter_tache_rapide' robe.id 'finitions' %}" class="step-chip">+ Finitions</a>
+                                        <a href="{% url 'ajouter_tache_rapide' robe.id 'toile' %}" class="step-chip">+
+                                            Toile</a>
+                                        <a href="{% url 'ajouter_tache_rapide' robe.id 'coupe' %}" class="step-chip">+
+                                            Coupe</a>
+                                        <a href="{% url 'ajouter_tache_rapide' robe.id 'assemblage' %}"
+                                            class="step-chip">+ Assemblage</a>
+                                        <a href="{% url 'ajouter_tache_rapide' robe.id 'finitions' %}"
+                                            class="step-chip">+ Finitions</a>
                                     </div>
 
-                                    <form method="POST" action="{% url 'ajouter_tache_personnalisee' robe.id %}" class="step-custom-form">
+                                    <form method="POST" action="{% url 'ajouter_tache_personnalisee' robe.id %}"
+                                        class="step-custom-form">
                                         {% csrf_token %}
                                         <input type="text" name="libelle" placeholder="Étape sur mesure…" required>
-                                        <button type="submit" class="btn btn--gold" style="padding:8px 16px;">Ajouter</button>
+                                        <button type="submit" class="btn btn--gold"
+                                            style="padding:8px 16px;">Ajouter</button>
                                     </form>
                                 </div>
 
@@ -116,14 +142,15 @@
                                         <span class="step-item__label">{{ tache.libelle }}</span>
                                         <a href="{% url 'toggle_tache' tache.id %}">
                                             {% if tache.est_faite %}
-                                                <span class="pill-toggle pill-toggle--done">Terminé</span>
+                                            <span class="pill-toggle pill-toggle--done">Terminé</span>
                                             {% else %}
-                                                <span class="pill-toggle pill-toggle--todo">À faire</span>
+                                            <span class="pill-toggle pill-toggle--todo">À faire</span>
                                             {% endif %}
                                         </a>
                                     </div>
                                     {% empty %}
-                                    <p class="empty-state" style="padding: 14px 2px; text-align:left;"><em>Aucune étape configurée.</em></p>
+                                    <p class="empty-state" style="padding: 14px 2px; text-align:left;"><em>Aucune étape
+                                            configurée.</em></p>
                                     {% endfor %}
                                 </div>
                             </div>
