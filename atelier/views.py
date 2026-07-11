@@ -237,3 +237,37 @@ def supprimer_tache(request, tache_id):
     robe_id = tache.robe.id  # On mémorise l'ID de la robe pour y retourner
     tache.delete()
     return redirect(f'/#tiroir-{robe_id}')    
+
+# 11. Modifier une cliente existante
+@login_required
+def modifier_client(request, client_id):
+    cliente = get_object_or_404(Client, id=client_id)
+    if request.method == 'POST':
+        # On passe 'instance=cliente' pour que Django sache qu'il s'agit d'une mise à jour et non d'une création
+        form = ClientForm(request.POST, instance=cliente)
+        if form.is_valid():
+            form.save()
+            return redirect('fiche_cliente', client_id=cliente.id)
+    else:
+        form = ClientForm(instance=cliente) # Pré-remplit le formulaire avec les données actuelles
+        
+    return render(request, 'atelier/modifier_client.html', {'form': form, 'cliente': cliente})
+
+
+# 12. Modifier une confection (Robe)
+@login_required
+def modifier_robe(request, robe_id):
+    robe = get_object_or_404(Robe, id=robe_id)
+    if request.method == 'POST':
+        form = RobeForm(request.POST, instance=robe)
+        if form.is_valid():
+            form.save()
+            # Redirection intelligente : si on vient de la fiche cliente, on y retourne
+            referer = request.META.get('HTTP_REFERER', '')
+            if 'clientes' in referer:
+                return redirect(f'/clientes/{robe.client.id}/#tiroir-{robe.id}')
+            return redirect('dashboard')
+    else:
+        form = RobeForm(instance=robe)
+        
+    return render(request, 'atelier/modifier_robe.html', {'form': form, 'robe': robe})    

@@ -18,8 +18,14 @@
     </div>
 
     <div class="detail-grid">
+        <!-- Colonne Gauche : Mensurations avec bouton d'édition -->
         <div class="card" style="height: fit-content;">
-            <h4>📏 Mensurations enregistrées</h4>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--line); margin-bottom: 12px; padding-bottom: 6px;">
+                <h4 style="margin: 0; border-bottom: none;">📏 Mensurations</h4>
+                <a href="{% url 'modifier_client' cliente.id %}" style="font-size: 11px; color: var(--blueprint); text-decoration: none; font-weight: 500;">
+                    ✏️ Ajuster la fiche
+                </a>
+            </div>
             <div class="finance-line"><span>Tour de poitrine</span><strong>{% if cliente.tour_poitrine %}{{ cliente.tour_poitrine }} cm{% else %}-{% endif %}</strong></div>
             <div class="finance-line"><span>Tour de taille</span><strong>{% if cliente.tour_taille %}{{ cliente.tour_taille }} cm{% else %}-{% endif %}</strong></div>
             <div class="finance-line"><span>Tour de hanches</span><strong>{% if cliente.tour_hanches %}{{ cliente.tour_hanches }} cm{% else %}-{% endif %}</strong></div>
@@ -32,6 +38,7 @@
             {% endif %}
         </div>
 
+        <!-- Colonne Droite : Liste des commandes -->
         <div style="display: flex; flex-direction: column; gap: 12px;">
             <span class="eyebrow" style="margin-left: 2px;">👗 Confections & Suivi d'atelier</span>
             
@@ -78,14 +85,18 @@
                             <td colspan="5" class="drawer-cell">
                                 <div class="drawer-grid" style="grid-template-columns: 220px 1fr;">
                                     
+                                    <!-- Carte Finances avec boutons Modifier et Supprimer -->
                                     <div class="card" style="background: var(--paper);">
                                         <h4>Finances</h4>
                                         <div class="finance-line"><span>Tissu</span><strong>{{ robe.cout_tissu }} {{ robe.symbole_devise }}</strong></div>
                                         <div class="finance-line"><span>Atelier</span><strong>{{ robe.cout_main_doeuvre }} {{ robe.symbole_devise }}</strong></div>
                                         <div class="finance-total"><span class="eyebrow">Total</span><strong>{{ robe.prix_total }} {{ robe.symbole_devise }}</strong></div>
                                         
-                                        <div style="margin-top: 15px; text-align: right;">
-                                            <a href="{% url 'supprimer_robe' robe.id %}" onclick="return confirm('Supprimer définitivement cette confection ?');" class="btn btn--outline" style="color: var(--wine); border-color: var(--wine); padding: 4px 8px; font-size: 9px;">
+                                        <div style="margin-top: 15px; display: flex; justify-content: space-between; gap: 10px;">
+                                            <a href="{% url 'modifier_robe' robe.id %}" class="btn btn--outline" style="padding: 4px 8px; font-size: 9px; flex: 1; text-align: center; text-decoration: none;">
+                                                ⚙️ Modifier
+                                            </a>
+                                            <a href="{% url 'supprimer_robe' robe.id %}" onclick="return confirm('Supprimer définitivement cette confection ?');" class="btn btn--outline" style="color: var(--wine); border-color: var(--wine); padding: 4px 8px; font-size: 9px; flex: 1; text-align: center; text-decoration: none;">
                                                 ✖ Supprimer
                                             </a>
                                         </div>

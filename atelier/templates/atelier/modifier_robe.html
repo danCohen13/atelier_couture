@@ -1,15 +1,14 @@
 {% extends 'atelier/base.html' %}
-
-{% block title %}Nouvelle confection — Cohen Haute Couture{% endblock %}
+{% block title %}Modifier commande — {{ robe.nom_modele }}{% endblock %}
 
 {% block content %}
 <main class="page" style="max-width: 760px;">
     <div class="form-card">
         <div class="form-card__inner">
-            <span class="eyebrow">Nouvelle commande</span>
-            <h2>Lancer une confection</h2>
-            <p style="color: var(--ink-soft); font-size: 13.5px; margin: 0 0 26px;">
-                Renseigne le modèle, les délais et les coûts pour ouvrir le suivi de production.
+            <span class="eyebrow">Ajustement d'atelier</span>
+            <h2>Modifier la confection : {{ robe.nom_modele }}</h2>
+            <p style="color: var(--ink-soft); font-size: 13.5px; margin-bottom: 26px;">
+                Modifie le modèle, décalez les dates ou réajustez les coûts de production.
             </p>
 
             <form method="POST" enctype="multipart/form-data">
@@ -64,7 +63,7 @@
 
                 <div class="form-actions">
                     <a href="{% url 'dashboard' %}" class="btn btn--outline">Annuler</a>
-                    <button type="submit" class="btn btn--primary">Créer la robe</button>
+                    <button type="submit" class="btn btn--primary">Sauvegarder</button>
                 </div>
             </form>
         </div>
@@ -78,15 +77,11 @@
         const prixTotal = document.getElementById('id_prix_total');
 
         function calculerTotal() {
-            // Convertit la saisie en nombre, ou prend 0 si le champ est vide
             const tissu = parseFloat(coutTissu.value) || 0;
             const main = parseFloat(coutMain.value) || 0;
-
-            // Met à jour le champ du Prix Total avec 2 chiffres après la virgule
             prixTotal.value = (tissu + main).toFixed(2);
         }
 
-        // Écoute les frappes de touches sur les deux composants de coût
         if (coutTissu && coutMain) {
             coutTissu.addEventListener('input', calculerTotal);
             coutMain.addEventListener('input', calculerTotal);

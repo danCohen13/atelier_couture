@@ -108,12 +108,17 @@
                                     <strong>{{ robe.prix_total }} {{ robe.symbole_devise }}</strong>
                                 </div>
 
-                                <div style="margin-top: 15px; text-align: right;">
+                                <div
+                                    style="margin-top: 15px; display: flex; justify-content: space-between; gap: 10px;">
+                                    <a href="{% url 'modifier_robe' robe.id %}" class="btn btn--outline"
+                                        style="padding: 4px 8px; font-size: 9px; flex: 1; text-align: center;">
+                                        ⚙️ Modifier
+                                    </a>
                                     <a href="{% url 'supprimer_robe' robe.id %}"
-                                        onclick="return confirm('Attention ! Voulez-vous vraiment supprimer définitivement cette robe et tout son historique ?');"
+                                        onclick="return confirm('Supprimer définitivement cette confection ?');"
                                         class="btn btn--outline"
-                                        style="color: var(--wine); border-color: var(--wine); padding: 6px 12px; font-size: 10px;">
-                                        ✖ Supprimer la commande
+                                        style="color: var(--wine); border-color: var(--wine); padding: 4px 8px; font-size: 9px; flex: 1; text-align: center;">
+                                        ✖ Supprimer
                                     </a>
                                 </div>
                             </div>

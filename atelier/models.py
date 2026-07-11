@@ -44,6 +44,10 @@ class Robe(models.Model):
     # Nouveau champ avec le Shekel ('ILS') défini par défaut
     devise = models.CharField(max_length=3, choices=DEVISE_CHOICES, default='ILS', verbose_name="Devise")
 
+    # Nouveaux champs pour les visuels (blank=True, null=True car ils sont facultatifs)
+    croquis = models.ImageField(upload_to='atelier/croquis/', blank=True, null=True)
+    photo_tissu = models.ImageField(upload_to='atelier/tissus/', blank=True, null=True)
+
     # Propriété magique pour récupérer instantanément le symbole associé
     @property
     def symbole_devise(self):
