@@ -1,5 +1,4 @@
 asgiref==3.8.1
-backports.zoneinfo==0.2.1
 certifi==2026.6.17
 charset-normalizer==3.4.9
 cloudinary==1.45.0
