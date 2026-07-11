@@ -8,9 +8,7 @@
     <title>{% block title %}Cohen Haute Couture{% endblock %}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'atelier/css/style.css' %}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
@@ -32,11 +30,19 @@
                     <span class="brand__tagline">Maison &amp; atelier de confection</span>
                 </span>
             </a>
-            <div class="header-actions">
-                {% block header_actions %}
-                <a href="{% url 'liste_clientes' %}">Répertoire Clientes</a>
-                <a href="{% url 'dashboard' %}">Tableau de bord</a>
-                {% endblock %}
+            
+            <!-- Zone d'actions de l'en-tête sécurisée et fixe -->
+            <div class="header-actions" style="display: flex; align-items: center; gap: 20px;">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}" style="color: var(--ink); text-decoration: none; font-size: 13px; font-weight: 500;">Tableau de bord</a>
+                    <a href="{% url 'liste_clientes' %}" style="color: var(--ink); text-decoration: none; font-size: 13px; font-weight: 500;">Répertoire</a>
+                    <a href="{% url 'logout' %}" style="color: var(--wine); text-decoration: none; font-size: 13px; font-weight: 600; margin-right: 10px;">👋 Quitter</a>
+                {% endif %}
+                
+                <!-- Bouton d'administration harmonisé avec ton design -->
+                <a href="/admin/" style="display: inline-block; padding: 8px 16px; border: 1px solid var(--ink); color: var(--ink); text-decoration: none; font-size: 11px; letter-spacing: 1px; font-weight: 500; text-transform: uppercase; transition: all 0.2s ease;" onmouseover="this.style.background='var(--line)'" onmouseout="this.style.background='transparent'">
+                    Accéder à l'admin
+                </a>
             </div>
         </div>
     </header>
@@ -59,21 +65,16 @@
             // 2. Ajout automatique des slashes '/' lors de la saisie manuelle au clavier
             document.querySelectorAll('.datepicker').forEach(function (input) {
                 input.addEventListener('input', function (e) {
-                    // Si l'utilisateur est en train d'effacer (touche Retour arrière), on interrompt le script
                     if (e.inputType === 'deleteContentBackward') return;
 
-                    // On extrait uniquement les chiffres de la saisie actuelle
                     let value = this.value.replace(/\D/g, '');
 
-                    // Si l'utilisateur a tapé le jour (2 chiffres), on ajoute le premier slash
                     if (value.length === 2) {
                         this.value = value + '/';
-                    }
-                    // Si l'utilisateur a fini de taper le mois (4 chiffres au total), on ajoute le second slash
+                    } 
                     else if (value.length === 4) {
                         this.value = value.slice(0, 2) + '/' + value.slice(2, 4) + '/';
-                    }
-                    // Si l'utilisateur continue de taper l'année, on limite le champ à 10 caractères (jj/mm/aaaa)
+                    } 
                     else if (value.length > 4) {
                         this.value = value.slice(0, 2) + '/' + value.slice(2, 4) + '/' + value.slice(4, 8);
                     }

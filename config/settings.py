@@ -134,3 +134,5 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 # --- CONFIGURATION PAR DÉFAUT DES CLÉS PRIMAIRES ---
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_URL = 'login'

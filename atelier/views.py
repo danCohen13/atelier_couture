@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required  # <-- IMPORT DE SÉCURITÉ
 from .models import Client, Robe, Tache
 from .forms import ClientForm, RobeForm
 from django.db.models import Q
 import datetime
 
+@login_required
 # 1. Vue du Tableau de Bord Principal (avec Filtres et Tris)
 def dashboard(request):
     # Récupération de toutes les robes et de leurs tâches en 1 seule requête SQL
@@ -61,6 +63,7 @@ def dashboard(request):
     }
     return render(request, 'atelier/dashboard.html', context)
 
+@login_required
 # 2. Vue pour ajouter une cliente depuis le front-end
 def ajouter_client(request):
     if request.method == 'POST':
@@ -72,6 +75,7 @@ def ajouter_client(request):
         form = ClientForm()
     return render(request, 'atelier/ajouter_client.html', {'form': form})
 
+@login_required
 # 3. Vue pour ajouter une robe depuis le front-end
 def ajouter_robe(request):
     if request.method == 'POST':
@@ -83,6 +87,7 @@ def ajouter_robe(request):
         form = RobeForm()
     return render(request, 'atelier/ajouter_robe.html', {'form': form})
 
+@login_required
 # 4. Action rapide en 1 clic pour injecter une tâche prédéfinie
 def ajouter_tache_rapide(request, robe_id, type_tache):
     robe = get_object_or_404(Robe, id=robe_id)
@@ -96,6 +101,7 @@ def ajouter_tache_rapide(request, robe_id, type_tache):
         Tache.objects.create(robe=robe, libelle=correspondances[type_tache], est_faite=False)
     return redirect(f'/#tiroir-{robe.id}')
 
+@login_required
 # 5. Action pour ajouter une tâche personnalisée saisie au clavier
 def ajouter_tache_personnalisee(request, robe_id):
     robe = get_object_or_404(Robe, id=robe_id)
@@ -105,6 +111,7 @@ def ajouter_tache_personnalisee(request, robe_id):
             Tache.objects.create(robe=robe, libelle=texte_saisi, est_faite=False)
     return redirect(f'/#tiroir-{robe.id}')
 
+@login_required
 # 6. Inverser le statut d'une tâche (Cocher / Décocher)
 def toggle_tache(request, tache_id):
     tache = get_object_or_404(Tache, id=tache_id)
@@ -112,12 +119,14 @@ def toggle_tache(request, tache_id):
     tache.save()
     return redirect(f'/#tiroir-{tache.robe.id}')
 
+@login_required
 # 7. Supprimer une robe (avec protection)
 def supprimer_robe(request, robe_id):
     robe = get_object_or_404(Robe, id=robe_id)
     robe.delete()
     return redirect('dashboard')
 
+@login_required
 # 8. Afficher le répertoire de toutes les clientes
 def liste_clientes(request):
     # On récupère le texte saisi dans le champ nommé "q"
@@ -137,8 +146,8 @@ def liste_clientes(request):
         'search_query': query  # On renvoie la recherche pour la laisser écrite dans la barre
     })
 
+@login_required
 # 9. Fiche détaillée d'une cliente (Option C)
-# 9. Fiche détaillée d'une cliente (Option C enrichie)
 def fiche_cliente(request, client_id):
     cliente = get_object_or_404(Client, id=client_id)
     # On pré-charge les tâches pour éviter les requêtes SQL en boucle (N+1)
@@ -163,7 +172,7 @@ def fiche_cliente(request, client_id):
 
     return render(request, 'atelier/fiche_cliente.html', {'cliente': cliente, 'robes': robes})
 
-
+@login_required
 # 4. Action rapide en 1 clic (Modifiée pour redirection intelligente)
 def ajouter_tache_rapide(request, robe_id, type_tache):
     robe = get_object_or_404(Robe, id=robe_id)
@@ -182,7 +191,7 @@ def ajouter_tache_rapide(request, robe_id, type_tache):
         return redirect(f'/clientes/{robe.client.id}/#tiroir-{robe.id}')
     return redirect(f'/#tiroir-{robe.id}')
 
-
+@login_required
 # 5. Action pour ajouter une tâche personnalisée (Modifiée)
 def ajouter_tache_personnalisee(request, robe_id):
     robe = get_object_or_404(Robe, id=robe_id)
@@ -196,7 +205,7 @@ def ajouter_tache_personnalisee(request, robe_id):
         return redirect(f'/clientes/{robe.client.id}/#tiroir-{robe.id}')
     return redirect(f'/#tiroir-{robe.id}')
 
-
+@login_required
 # 6. Inverser le statut d'une tâche (Modifiée)
 def toggle_tache(request, tache_id):
     tache = get_object_or_404(Tache, id=tache_id)
@@ -208,7 +217,7 @@ def toggle_tache(request, tache_id):
         return redirect(f'/clientes/{tache.robe.client.id}/#tiroir-{tache.robe.id}')
     return redirect(f'/#tiroir-{tache.robe.id}')
 
-
+@login_required
 # 10. Supprimer une étape de fabrication (Modifiée)
 def supprimer_tache(request, tache_id):
     tache = get_object_or_404(Tache, id=tache_id)
@@ -221,6 +230,7 @@ def supprimer_tache(request, tache_id):
         return redirect(f'/clientes/{client_id}/#tiroir-{robe_id}')
     return redirect(f'/#tiroir-{robe_id}')
 
+@login_required
 # 10. Supprimer une étape de fabrication (tâche)
 def supprimer_tache(request, tache_id):
     tache = get_object_or_404(Tache, id=tache_id)
