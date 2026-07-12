@@ -36,8 +36,9 @@
                     <div style="flex: 1; text-align: center; display: flex; flex-direction: column;">
                         <span class="eyebrow" style="font-size: 9px; margin-bottom: 4px;">Croquis</span>
                         {% if robe.croquis %}
-                            <a href="{{ robe.croquis.url }}" target="_blank" style="display: block; flex: 1;">
-                                <img src="{{ robe.croquis.url }}" alt="Croquis" style="width: 100%; height: 110px; object-fit: cover; border-radius: 4px; border: 1px solid var(--line);">
+                            <!-- Correction ici : .url supprimé pour l'URLField -->
+                            <a href="{{ robe.croquis }}" target="_blank" style="display: block; flex: 1;">
+                                <img src="{{ robe.croquis }}" alt="Croquis" style="width: 100%; height: 110px; object-fit: cover; border-radius: 4px; border: 1px solid var(--line);">
                             </a>
                         {% else %}
                             <a href="{% url 'modifier_robe' robe.id %}" style="display: block; flex: 1; text-decoration: none;">
@@ -50,9 +51,10 @@
 
                     <div style="flex: 1; text-align: center; display: flex; flex-direction: column;">
                         <span class="eyebrow" style="font-size: 9px; margin-bottom: 4px;">Tissu</span>
-                        {% if robe.photo_tissu %}
-                            <a href="{{ robe.photo_tissu.url }}" target="_blank" style="display: block; flex: 1;">
-                                <img src="{{ robe.photo_tissu.url }}" alt="Échantillon" style="width: 100%; height: 110px; object-fit: cover; border-radius: 4px; border: 1px solid var(--line);">
+                        {% if robe.photo_tissus %}
+                            <!-- Correction ici : Changement pour photo_tissus (avec un s) et suppression du .url -->
+                            <a href="{{ robe.photo_tissus }}" target="_blank" style="display: block; flex: 1;">
+                                <img src="{{ robe.photo_tissus }}" alt="Échantillon" style="width: 100%; height: 110px; object-fit: cover; border-radius: 4px; border: 1px solid var(--line);">
                             </a>
                         {% else %}
                             <a href="{% url 'modifier_robe' robe.id %}" style="display: block; flex: 1; text-decoration: none;">
