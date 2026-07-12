@@ -127,7 +127,7 @@ USE_TZ = True
 
 # --- FICHIERS STATIQUES (CSS, JS, IMAGES) ---
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 # Dossier où Django va rassembler tous les assets pour la production
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
