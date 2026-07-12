@@ -91,41 +91,95 @@
                 </tr>
 
                 <tr id="tiroir-{{ robe.id }}" class="drawer-row is-hidden">
-                    <td colspan="6" class="drawer-cell">
-                        <div class="drawer-grid">
-                            <div class="card">
-                                <h4>Détails financiers</h4>
+                    <td colspan="5" class="drawer-cell">
+                        <div class="drawer-grid" style="grid-template-columns: 220px 240px 1fr; gap: 15px;">
+
+                            <!-- 1. Carte Finances (Version blindée contre le formatage automatique) -->
+                            <div class="card" style="background: var(--paper);">
+                                <h4>Finances</h4>
+
                                 <div class="finance-line">
                                     <span>Tissu</span>
                                     <strong>{{ robe.cout_tissu }} {{ robe.symbole_devise }}</strong>
                                 </div>
+
                                 <div class="finance-line">
-                                    <span>Main d'œuvre</span>
+                                    <span>Atelier</span>
                                     <strong>{{ robe.cout_main_doeuvre }} {{ robe.symbole_devise }}</strong>
                                 </div>
+
                                 <div class="finance-total">
-                                    <span class="eyebrow">Total facturé</span>
+                                    <span class="eyebrow">Total</span>
                                     <strong>{{ robe.prix_total }} {{ robe.symbole_devise }}</strong>
                                 </div>
 
                                 <div
                                     style="margin-top: 15px; display: flex; justify-content: space-between; gap: 10px;">
                                     <a href="{% url 'modifier_robe' robe.id %}" class="btn btn--outline"
-                                        style="padding: 4px 8px; font-size: 9px; flex: 1; text-align: center;">
+                                        style="padding: 4px 8px; font-size: 9px; flex: 1; text-align: center; text-decoration: none;">
                                         ⚙️ Modifier
                                     </a>
                                     <a href="{% url 'supprimer_robe' robe.id %}"
                                         onclick="return confirm('Supprimer définitivement cette confection ?');"
                                         class="btn btn--outline"
-                                        style="color: var(--wine); border-color: var(--wine); padding: 4px 8px; font-size: 9px; flex: 1; text-align: center;">
+                                        style="color: var(--wine); border-color: var(--wine); padding: 4px 8px; font-size: 9px; flex: 1; text-align: center; text-decoration: none;">
                                         ✖ Supprimer
                                     </a>
                                 </div>
                             </div>
 
+                            <!-- 2. Carte Carnet de style -->
+                            <div class="card"
+                                style="display: flex; flex-direction: column; justify-content: space-between; gap: 12px;">
+                                <h4 style="margin-bottom: 5px;">🎨 Carnet de style</h4>
+                                <div style="display: flex; gap: 10px; height: 100%;">
+
+                                    <div style="flex: 1; text-align: center; display: flex; flex-direction: column;">
+                                        <span class="eyebrow" style="font-size: 9px; margin-bottom: 4px;">Croquis</span>
+                                        {% if robe.croquis %}
+                                        <a href="{{ robe.croquis.url }}" target="_blank"
+                                            style="display: block; flex: 1;">
+                                            <img src="{{ robe.croquis.url }}" alt="Croquis"
+                                                style="width: 100%; height: 110px; object-fit: cover; border-radius: 4px; border: 1px solid var(--line);">
+                                        </a>
+                                        {% else %}
+                                        <a href="{% url 'modifier_robe' robe.id %}"
+                                            style="display: block; flex: 1; text-decoration: none;">
+                                            <div style="height: 110px; background: var(--line); border: 1px dashed var(--ink-soft); display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--ink-soft); border-radius: 4px; transition: background 0.2s;"
+                                                onmouseover="this.style.background='#e8e2dc'"
+                                                onmouseout="this.style.background='var(--line)'">
+                                                <span style="font-weight: 500;">+ Ajouter</span>
+                                            </div>
+                                        </a>
+                                        {% endif %}
+                                    </div>
+
+                                    <div style="flex: 1; text-align: center; display: flex; flex-direction: column;">
+                                        <span class="eyebrow" style="font-size: 9px; margin-bottom: 4px;">Tissu</span>
+                                        {% if robe.photo_tissu %}
+                                        <a href="{{ robe.photo_tissu.url }}" target="_blank"
+                                            style="display: block; flex: 1;">
+                                            <img src="{{ robe.photo_tissu.url }}" alt="Échantillon"
+                                                style="width: 100%; height: 110px; object-fit: cover; border-radius: 4px; border: 1px solid var(--line);">
+                                        </a>
+                                        {% else %}
+                                        <a href="{% url 'modifier_robe' robe.id %}"
+                                            style="display: block; flex: 1; text-decoration: none;">
+                                            <div style="height: 110px; background: var(--line); border: 1px dashed var(--ink-soft); display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--ink-soft); border-radius: 4px; transition: background 0.2s;"
+                                                onmouseover="this.style.background='#e8e2dc'"
+                                                onmouseout="this.style.background='var(--line)'">
+                                                <span style="font-weight: 500;">+ Ajouter</span>
+                                            </div>
+                                        </a>
+                                        {% endif %}
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <!-- 3. Carte Étapes de fabrication -->
                             <div class="card">
                                 <h4>Étapes de fabrication</h4>
-
                                 <div class="step-quickbar">
                                     <div class="filter-group" style="margin-bottom: 0;">
                                         <span class="eyebrow" style="margin-right:2px;">Ajouter</span>
@@ -138,13 +192,12 @@
                                         <a href="{% url 'ajouter_tache_rapide' robe.id 'finitions' %}"
                                             class="step-chip">+ Finitions</a>
                                     </div>
-
                                     <form method="POST" action="{% url 'ajouter_tache_personnalisee' robe.id %}"
                                         class="step-custom-form">
                                         {% csrf_token %}
                                         <input type="text" name="libelle" placeholder="Étape sur mesure…" required>
                                         <button type="submit" class="btn btn--gold"
-                                            style="padding:8px 16px;">Ajouter</button>
+                                            style="padding:6px 12px;">Ajouter</button>
                                     </form>
                                 </div>
 
@@ -152,7 +205,6 @@
                                     {% for tache in robe.taches.all %}
                                     <div class="step-item">
                                         <span class="step-item__label">{{ tache.libelle }}</span>
-
                                         <div style="display: flex; align-items: center; gap: 12px;">
                                             <a href="{% url 'toggle_tache' tache.id %}">
                                                 {% if tache.est_faite %}
@@ -161,12 +213,9 @@
                                                 <span class="pill-toggle pill-toggle--todo">À faire</span>
                                                 {% endif %}
                                             </a>
-
                                             <a href="{% url 'supprimer_tache' tache.id %}"
                                                 onclick="return confirm('Supprimer l\'étape « {{ tache.libelle }} » ?');"
-                                                style="color: var(--wine); font-family: var(--font-mono); font-size: 13px; font-weight: bold; text-decoration: none; padding: 2px 6px; transition: opacity 0.15s ease;"
-                                                title="Supprimer cette étape" onmouseover="this.style.opacity=0.7"
-                                                onmouseout="this.style.opacity=1">
+                                                style="color: var(--wine); font-family: var(--font-mono); font-size: 13px; font-weight: bold; text-decoration: none; padding: 2px 4px;">
                                                 ✕
                                             </a>
                                         </div>
@@ -177,10 +226,10 @@
                                     {% endfor %}
                                 </div>
                             </div>
+
                         </div>
                     </td>
                 </tr>
-
                 {% empty %}
                 <tr>
                     <td colspan="6" class="empty-state">Aucune robe ne correspond aux critères de sélection.</td>
