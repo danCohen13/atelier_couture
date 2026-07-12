@@ -85,6 +85,73 @@
         });
     </script>
     <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
+    <!-- 1. Script officiel Cloudinary (Le Widget) -->
+    <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
+
+    <!-- 2. Le script qui remplace la ligne de texte grise par un bouton propre -->
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+            // ⚠️ MODIFIE CES DEUX LIGNES AVEC TES INFOS
+            const cloudName = "t2foyjp2"; // Mets ton vrai Cloud Name ici
+            const uploadPreset = "ml_default"; // Le nom du preset non signé créé sur Cloudinary
+
+            function transformToCloudinaryButton(fieldId, buttonLabel) {
+                const inputField = document.getElementById(fieldId);
+                if (!inputField) return;
+
+                // On cache la zone de texte grise
+                inputField.style.display = "none";
+
+                // On crée un vrai bouton cliquable
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.innerText = inputField.value ? "🔄 Modifier la photo" : buttonLabel;
+                
+                // Un style simple et propre pour le bouton (tu pourras changer les couleurs)
+                btn.style.padding = "10px 20px";
+                btn.style.backgroundColor = "#111";
+                btn.style.color = "#fff";
+                btn.style.border = "none";
+                btn.style.cursor = "pointer";
+                btn.style.marginTop = "8px";
+
+                // On crée un petit texte pour savoir si une photo est déjà là
+                const status = document.createElement("span");
+                status.style.marginLeft = "12px";
+                status.style.fontSize = "14px";
+                status.style.color = "#666";
+                status.innerText = inputField.value ? "Image enregistrée" : "Aucun fichier choisi";
+
+                // On insère le bouton dans la page
+                inputField.parentNode.insertBefore(btn, inputField.nextSibling);
+                btn.parentNode.insertBefore(status, btn.nextSibling);
+
+                // Action au clic : ouvre ton explorateur de fichiers
+                btn.addEventListener("click", function() {
+                    cloudinary.openUploadWidget({
+                        cloudName: cloudName,
+                        uploadPreset: uploadPreset,
+                        sources: ['local'],
+                        multiple: false,
+                        clientAllowedFormats: ["png", "jpg", "jpeg", "webp"]
+                    }, (error, result) => {
+                        if (!error && result && result.event === "success") {
+                            // On stocke l'URL de l'image dans le champ caché pour Django
+                            inputField.value = result.info.secure_url;
+                            status.innerHTML = "✨ <strong>Image prête !</strong>";
+                            btn.innerText = "🔄 Changer la photo";
+                        }
+                    });
+                });
+            }
+
+            // On applique le bouton sur tes deux champs de formulaires Django
+            transformToCloudinaryButton("id_croquis", "📁 Choisir un croquis");
+            transformToCloudinaryButton("id_photo_tissus", "📁 Choisir un tissu");
+        });
+    </script>
+</body>
+</html>
 </body>
 
 </html>
