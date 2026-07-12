@@ -130,7 +130,7 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 # Dossier où Django va rassembler tous les assets pour la production
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 
 # --- CONFIGURATION PAR DÉFAUT DES CLÉS PRIMAIRES ---
