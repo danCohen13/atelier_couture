@@ -1,14 +1,11 @@
 {% extends 'atelier/base.html' %}
-{% block title %}Connexion — Atelier Couture{% endblock %}
-
-<!-- On vide la barre de navigation pour les personnes non connectées -->
-{% block header_actions %}{% endblock %}
+{% block title %}Connexion — Cohen Haute Couture{% endblock %}
 
 {% block content %}
-<main class="page" style="max-width: 450px; margin: 60px auto;">
+<main class="page login-page">
     <div class="form-card">
-        <div class="form-card__inner" style="text-align: center;">
-            <span class="eyebrow">Accès Restreint</span>
+        <div class="form-card__inner">
+            <span class="eyebrow">Accès restreint</span>
             <h2>Atelier Cohen</h2>
             <p style="color: var(--ink-soft); font-size: 13px; margin-bottom: 24px;">
                 Veuillez vous connecter pour accéder aux fiches clientes et aux suivis de confection.
@@ -16,26 +13,22 @@
 
             <form method="POST">
                 {% csrf_token %}
-                
+
                 {% if form.errors %}
-                    <p style="color: var(--wine); font-size: 13px; margin-bottom: 15px; font-weight: bold;">
-                        Identifiants incorrects. Veuillez réessayer.
-                    </p>
+                    <p class="form-error">Identifiants incorrects. Veuillez réessayer.</p>
                 {% endif %}
 
-                <p style="text-align: left;">
+                <p>
                     <label for="id_username">Nom d'utilisateur</label>
                     <input type="text" name="username" autofocus required class="field-input" id="id_username">
                 </p>
-                
-                <p style="text-align: left; margin-top: 15px;">
+
+                <p>
                     <label for="id_password">Mot de passe</label>
                     <input type="password" name="password" required class="field-input" id="id_password">
                 </p>
 
-                <button type="submit" class="btn btn--primary" style="width: 100%; margin-top: 20px; padding: 12px;">
-                    Se connecter
-                </a>
+                <button type="submit" class="btn btn--primary btn--block">Se connecter</button>
             </form>
         </div>
     </div>

@@ -137,6 +137,31 @@ a { color: inherit; text-decoration: none; }
   color: var(--blueprint);
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.header-link {
+  border: none !important;
+  padding: 0 !important;
+  color: var(--ink) !important;
+  font-family: var(--font-body) !important;
+  font-size: 13px !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  font-weight: 500;
+}
+.header-link:hover { color: var(--blueprint) !important; }
+
+.header-link--logout {
+  color: var(--wine) !important;
+  font-weight: 600;
+  margin-right: 4px;
+}
+.header-link--logout:hover { color: var(--wine) !important; opacity: 0.75; }
+
 /* ---------------------------------------------------------------------
    Structure de page
    --------------------------------------------------------------------- */
@@ -216,6 +241,9 @@ a { color: inherit; text-decoration: none; }
   border-color: var(--line);
 }
 .btn--outline:hover { color: var(--ink); border-color: var(--ink-soft); }
+
+.btn--outline-accent { color: var(--blueprint); border-color: var(--blueprint); }
+.btn--outline-accent:hover { background: #e2eaf0; }
 
 /* ---------------------------------------------------------------------
    Barre de filtres — bande de légende de patron
@@ -621,3 +649,242 @@ textarea.field-input { border: 1px solid var(--line); padding: 10px; min-height:
   .swatch-table td { border-bottom: none; padding: 4px 20px; }
   .swatch-row { padding: 10px 0; }
 }
+
+/* ---------------------------------------------------------------------
+   Champs select — même ligne chalk-underline que field-input
+   --------------------------------------------------------------------- */
+select.field-input {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%236B6355' stroke-width='1.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 4px center;
+  padding-right: 22px;
+  cursor: pointer;
+}
+
+/* ---------------------------------------------------------------------
+   Lignes de formulaire côte à côte (dates, coûts)
+   --------------------------------------------------------------------- */
+.form-row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+.form-row > div { flex: 1; min-width: 130px; }
+.form-row--tight { gap: 15px; align-items: flex-end; }
+
+/* ---------------------------------------------------------------------
+   Tiroir élargi (finances / carnet de style / étapes)
+   Colonne gauche empilée (finances + carnet) / colonne droite (étapes)
+   --------------------------------------------------------------------- */
+.drawer-grid--wide {
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+@media (min-width: 680px) {
+  .drawer-grid--wide { grid-template-columns: minmax(240px, 300px) 1fr; align-items: start; }
+}
+
+.drawer-col { display: flex; flex-direction: column; gap: 16px; }
+
+.card--flush { background: var(--paper); }
+
+.card-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px dashed var(--line);
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+}
+.card-header-row h4 { margin: 0; border-bottom: none; padding-bottom: 0; }
+
+.card-link {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--blueprint);
+  font-weight: 500;
+}
+.card-link:hover { color: var(--gold); }
+
+.drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-bottom: 14px;
+  margin-bottom: 20px;
+  border-bottom: 1px dashed var(--ink-faint);
+}
+.drawer-header__actions { display: flex; gap: 8px; }
+.drawer-header__actions .btn { padding: 8px 16px; }
+
+.btn--danger-outline { color: var(--wine); border-color: var(--wine); background: transparent; }
+.btn--danger-outline:hover { background: var(--wine-bg); }
+
+/* Carnet de style — croquis / tissu */
+.style-notebook { display: flex; flex-direction: column; }
+.style-notebook__slots { display: flex; gap: 10px; }
+.style-slot { flex: 1; min-width: 0; text-align: center; display: flex; flex-direction: column; }
+.style-slot__label { font-size: 9px; margin-bottom: 4px; }
+.style-slot__img {
+  display: block;
+  width: 100%;
+  height: 110px;
+  object-fit: cover;
+  border-radius: 2px;
+  border: 1px solid var(--line);
+  background: var(--paper-deep);
+}
+.style-slot__placeholder,
+.style-slot__broken {
+  height: 110px;
+  width: 100%;
+  background: var(--paper-deep);
+  border: 1px dashed var(--ink-faint);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  border-radius: 2px;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.style-slot__placeholder:hover { background: var(--line); border-color: var(--gold); color: var(--gold); }
+.style-slot__broken { display: none; color: var(--wine); border-color: var(--wine); }
+
+/* Le symbole de devise (₪ notamment) n'existe pas dans la police mono :
+   on retombe sur une police système qui couvre correctement ces glyphes. */
+.currency-symbol {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+}
+
+/* Étapes — actions secondaires */
+.step-item__actions { display: flex; align-items: center; gap: 12px; }
+.delete-link {
+  color: var(--wine);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 2px 4px;
+  opacity: 0.7;
+  transition: opacity 0.15s ease;
+}
+.delete-link:hover { opacity: 1; }
+
+/* ---------------------------------------------------------------------
+   Répertoire des clientes
+   --------------------------------------------------------------------- */
+.client-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+
+.client-card {
+  display: block;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+.client-card:hover { border-color: var(--blueprint); transform: translateY(-2px); }
+.client-card h4 { border-bottom: none; margin: 0; font-size: 18px; color: var(--ink); font-family: var(--font-display); font-weight: 600; }
+.client-card__meta { margin: 8px 0 0; font-size: 12.5px; color: var(--ink-soft); line-height: 1.6; }
+.client-card__cta {
+  margin-top: 15px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: var(--blueprint);
+}
+.client-card:hover .client-card__cta { color: var(--gold); }
+
+.search-form {
+  display: flex;
+  width: 100%;
+  gap: 15px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.search-form input.field-input { flex: 1; max-width: 400px; margin-bottom: 0; }
+
+/* Colonnes verticales simples (fiche cliente) */
+.column-stack { display: flex; flex-direction: column; gap: 12px; }
+.column-stack__label { margin-left: 2px; }
+.notes-block { margin-top: 15px; padding-top: 15px; border-top: 1px dashed var(--line); }
+.notes-block p { font-size: 13px; color: var(--ink-soft); margin-top: 5px; }
+
+/* ---------------------------------------------------------------------
+   Page de connexion
+   --------------------------------------------------------------------- */
+.login-page { max-width: 440px; margin: 64px auto; }
+.login-page .form-card__inner { text-align: center; }
+.login-page form p { text-align: left; }
+.form-error {
+  color: var(--wine);
+  font-size: 12.5px;
+  margin-bottom: 16px;
+  font-family: var(--font-mono);
+  letter-spacing: 0.02em;
+}
+.btn--block { width: 100%; justify-content: center; padding: 13px; margin-top: 20px; }
+
+/* ---------------------------------------------------------------------
+   Thème Flatpickr — recalé sur la palette atelier
+   --------------------------------------------------------------------- */
+.flatpickr-calendar {
+  background: var(--paper-light) !important;
+  border: 1px solid var(--line) !important;
+  box-shadow: var(--shadow) !important;
+  border-radius: 2px !important;
+  font-family: var(--font-body) !important;
+}
+.flatpickr-calendar.arrowTop:before,
+.flatpickr-calendar.arrowTop:after { border-bottom-color: var(--line) !important; }
+.flatpickr-months .flatpickr-month {
+  background: var(--paper-light) !important;
+  color: var(--ink) !important;
+  fill: var(--ink) !important;
+}
+.flatpickr-current-month .flatpickr-monthDropdown-months {
+  font-family: var(--font-mono) !important;
+}
+.flatpickr-current-month input.cur-year { font-family: var(--font-mono) !important; color: var(--ink) !important; }
+.flatpickr-weekday {
+  background: var(--paper-light) !important;
+  color: var(--ink-soft) !important;
+  font-family: var(--font-mono) !important;
+  font-size: 10px !important;
+  text-transform: uppercase !important;
+}
+.flatpickr-day { color: var(--ink) !important; border-radius: 2px !important; }
+.flatpickr-day.today { border-color: var(--gold) !important; }
+.flatpickr-day:hover { background: var(--paper-deep) !important; }
+.flatpickr-day.selected {
+  background: var(--blueprint) !important;
+  border-color: var(--blueprint) !important;
+  color: var(--paper-light) !important;
+}
+.flatpickr-day.flatpickr-disabled,
+.flatpickr-day.prevMonthDay,
+.flatpickr-day.nextMonthDay { color: var(--ink-faint) !important; }
+.flatpickr-prev-month svg, .flatpickr-next-month svg { fill: var(--ink-soft) !important; }
+
+/* ---------------------------------------------------------------------
+   Bouton d'import Cloudinary (croquis / tissu)
+   --------------------------------------------------------------------- */
+.cloud-upload-btn {
+  margin-top: 4px;
+}
+.cloud-upload-status {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.03em;
+  color: var(--ink-soft);
+}
+.cloud-upload-status--ready { color: var(--moss); }

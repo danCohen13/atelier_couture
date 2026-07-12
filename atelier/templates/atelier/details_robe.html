@@ -2,10 +2,6 @@
 
 {% block title %}{{ robe.nom_modele }} — Cohen Haute Couture{% endblock %}
 
-{% block header_actions %}
-<a href="{% url 'dashboard' %}">← Retour au tableau de bord</a>
-{% endblock %}
-
 {% block content %}
 <main class="page">
 
@@ -26,12 +22,9 @@
 
         <div class="card" style="height: fit-content;">
             <h4>Suivi financier</h4>
-            <div class="finance-line"><span>Tissu / fournitures</span><strong>{{ robe.cout_tissu }} {{
-                    robe.symbole_devise }}</strong></div>
-            <div class="finance-line"><span>Main d'œuvre</span><strong>{{ robe.cout_main_doeuvre }} {{
-                    robe.symbole_devise }}</strong></div>
-            <div class="finance-total"><span class="eyebrow">Prix total facturé</span><strong>{{ robe.prix_total }} {{
-                    robe.symbole_devise }}</strong></div>
+            <div class="finance-line"><span>Tissu / fournitures</span><strong>{{ robe.cout_tissu }} <span class="currency-symbol">{{ robe.symbole_devise }}</span></strong></div>
+            <div class="finance-line"><span>Main d'œuvre</span><strong>{{ robe.cout_main_doeuvre }} <span class="currency-symbol">{{ robe.symbole_devise }}</span></strong></div>
+            <div class="finance-total"><span class="eyebrow">Prix total facturé</span><strong>{{ robe.prix_total }} <span class="currency-symbol">{{ robe.symbole_devise }}</span></strong></div>
         </div>
 
         <div class="card">

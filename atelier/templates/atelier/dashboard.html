@@ -3,10 +3,6 @@
 
 {% block title %}Tableau de bord — Cohen Haute Couture{% endblock %}
 
-{% block header_actions %}
-<a href="/admin/">Accéder à l'admin</a>
-{% endblock %}
-
 {% block content %}
 <main class="page">
     <!-- ... Conserve l'intégralité de ton bloc page-head et legend-strip à l'identique ... -->
@@ -19,7 +15,7 @@
         <div class="page-head__actions">
             <a href="{% url 'ajouter_client' %}" class="btn btn--outline">+ Nouvelle cliente</a>
             <a href="{% url 'ajouter_robe' %}" class="btn btn--primary">+ Créer une robe</a>
-            <a href="{% url 'liste_clientes' %}" class="btn btn--outline" style="border-color: var(--blueprint); color: var(--blueprint);">👤 Liste des clientes</a>
+            <a href="{% url 'liste_clientes' %}" class="btn btn--outline btn--outline-accent">Liste des clientes</a>
         </div>
     </div>
 

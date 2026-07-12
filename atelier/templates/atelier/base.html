@@ -30,27 +30,25 @@
                     <span class="brand__tagline">Maison &amp; atelier de confection</span>
                 </span>
             </a>
-            
-            <!-- Zone d'actions avec affichage contextuel des boutons -->
-            <div class="header-actions" style="display: flex; align-items: center; gap: 20px;">
+
+            <!-- Zone d'actions avec affichage contextuel des liens -->
+            <div class="header-actions">
                 {% if user.is_authenticated %}
-                    
+
                     <!-- S'affiche partout SAUF sur le tableau de bord -->
                     {% if request.resolver_match.url_name != 'dashboard' %}
-                        <a href="{% url 'dashboard' %}" style="color: var(--ink); text-decoration: none; font-size: 13px; font-weight: 500;">Tableau de bord</a>
+                        <a href="{% url 'dashboard' %}" class="header-link">Tableau de bord</a>
                     {% endif %}
-                    
+
                     <!-- S'affiche partout SAUF sur la liste des clientes -->
                     {% if request.resolver_match.url_name != 'liste_clientes' %}
-                        <a href="{% url 'liste_clientes' %}" style="color: var(--ink); text-decoration: none; font-size: 13px; font-weight: 500;">Répertoire</a>
+                        <a href="{% url 'liste_clientes' %}" class="header-link">Répertoire</a>
                     {% endif %}
-                    
-                    <a href="{% url 'logout' %}" style="color: var(--wine); text-decoration: none; font-size: 13px; font-weight: 600; margin-right: 10px;">👋 Quitter</a>
+
+                    <a href="{% url 'logout' %}" class="header-link header-link--logout">Déconnexion</a>
                 {% endif %}
-                
-                <a href="/admin/" style="display: inline-block; padding: 8px 16px; border: 1px solid var(--ink); color: var(--ink); text-decoration: none; font-size: 11px; letter-spacing: 1px; font-weight: 500; text-transform: uppercase; transition: all 0.2s ease;" onmouseover="this.style.background='var(--line)'" onmouseout="this.style.background='transparent'">
-                    Accéder à l'admin
-                </a>
+
+                <a href="/admin/">Accéder à l'admin</a>
             </div>
         </div>
     </header>
@@ -58,6 +56,7 @@
     {% block content %}{% endblock %}
 
     {% block scripts %}{% endblock %}
+
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -73,10 +72,10 @@
                     let value = this.value.replace(/\D/g, '');
                     if (value.length === 2) {
                         this.value = value + '/';
-                    } 
+                    }
                     else if (value.length === 4) {
                         this.value = value.slice(0, 2) + '/' + value.slice(2, 4) + '/';
-                    } 
+                    }
                     else if (value.length > 4) {
                         this.value = value.slice(0, 2) + '/' + value.slice(2, 4) + '/' + value.slice(4, 8);
                     }
@@ -84,49 +83,32 @@
             });
         });
     </script>
-    <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
-    <!-- 1. Script officiel Cloudinary (Le Widget) -->
-    <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
 
-    <!-- 2. Le script qui remplace la ligne de texte grise par un bouton propre -->
+    <!-- Widget d'import direct Cloudinary, habillé aux couleurs de l'atelier -->
+    <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
     <script type="text/javascript">
         document.addEventListener("DOMContentLoaded", function() {
-            // ⚠️ MODIFIE CES DEUX LIGNES AVEC TES INFOS
-            const cloudName = "t2foyjp2"; // Mets ton vrai Cloud Name ici
-            const uploadPreset = "ml_default"; // Le nom du preset non signé créé sur Cloudinary
+            const cloudName = "t2foyjp2";
+            const uploadPreset = "ml_default";
 
             function transformToCloudinaryButton(fieldId, buttonLabel) {
                 const inputField = document.getElementById(fieldId);
                 if (!inputField) return;
 
-                // On cache la zone de texte grise
                 inputField.style.display = "none";
 
-                // On crée un vrai bouton cliquable
                 const btn = document.createElement("button");
                 btn.type = "button";
-                btn.innerText = inputField.value ? "🔄 Modifier la photo" : buttonLabel;
-                
-                // Un style simple et propre pour le bouton (tu pourras changer les couleurs)
-                btn.style.padding = "10px 20px";
-                btn.style.backgroundColor = "#111";
-                btn.style.color = "#fff";
-                btn.style.border = "none";
-                btn.style.cursor = "pointer";
-                btn.style.marginTop = "8px";
+                btn.className = "btn btn--outline cloud-upload-btn";
+                btn.innerText = inputField.value ? "Modifier la photo" : buttonLabel;
 
-                // On crée un petit texte pour savoir si une photo est déjà là
                 const status = document.createElement("span");
-                status.style.marginLeft = "12px";
-                status.style.fontSize = "14px";
-                status.style.color = "#666";
+                status.className = "cloud-upload-status" + (inputField.value ? " cloud-upload-status--ready" : "");
                 status.innerText = inputField.value ? "Image enregistrée" : "Aucun fichier choisi";
 
-                // On insère le bouton dans la page
                 inputField.parentNode.insertBefore(btn, inputField.nextSibling);
                 btn.parentNode.insertBefore(status, btn.nextSibling);
 
-                // Action au clic : ouvre ton explorateur de fichiers
                 btn.addEventListener("click", function() {
                     cloudinary.openUploadWidget({
                         cloudName: cloudName,
@@ -136,22 +118,19 @@
                         clientAllowedFormats: ["png", "jpg", "jpeg", "webp"]
                     }, (error, result) => {
                         if (!error && result && result.event === "success") {
-                            // On stocke l'URL de l'image dans le champ caché pour Django
                             inputField.value = result.info.secure_url;
-                            status.innerHTML = "✨ <strong>Image prête !</strong>";
-                            btn.innerText = "🔄 Changer la photo";
+                            status.innerText = "Image prête";
+                            status.className = "cloud-upload-status cloud-upload-status--ready";
+                            btn.innerText = "Changer la photo";
                         }
                     });
                 });
             }
 
-            // On applique le bouton sur tes deux champs de formulaires Django
-            transformToCloudinaryButton("id_croquis", "📁 Choisir un croquis");
-            transformToCloudinaryButton("id_photo_tissus", "📁 Choisir un tissu");
+            transformToCloudinaryButton("id_croquis", "Choisir un croquis");
+            transformToCloudinaryButton("id_photo_tissus", "Choisir un tissu");
         });
     </script>
-</body>
-</html>
 </body>
 
 </html>

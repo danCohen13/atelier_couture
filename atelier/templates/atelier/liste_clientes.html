@@ -1,12 +1,12 @@
 {% extends 'atelier/base.html' %}
-{% block title %}Répertoire des Clientes — Cohen Haute Couture{% endblock %}
+{% block title %}Répertoire des clientes — Cohen Haute Couture{% endblock %}
 
 {% block content %}
 <main class="page">
     <div class="page-head">
         <div>
             <span class="eyebrow">Répertoire</span>
-            <h1>Fichier Clientes</h1>
+            <h1>Fichier clientes</h1>
         </div>
         <div class="page-head__actions">
             <a href="{% url 'ajouter_client' %}" class="btn btn--primary">+ Nouvelle cliente</a>
@@ -14,31 +14,25 @@
     </div>
 
     <div class="legend-strip">
-        <form method="GET" action="{% url 'liste_clientes' %}" style="display: flex; width: 100%; gap: 15px; align-items: center; flex-wrap: wrap;">
+        <form method="GET" action="{% url 'liste_clientes' %}" class="search-form">
             <span class="eyebrow">Rechercher</span>
-            <input type="text" name="q" value="{{ search_query }}" placeholder="Saisir un nom ou un prénom..." class="field-input" style="flex: 1; max-width: 400px; margin-bottom: 0;">
-            
-            <button type="submit" class="btn btn--primary" style="padding: 8px 16px;">Filtrer</button>
-            
+            <input type="text" name="q" value="{{ search_query }}" placeholder="Saisir un nom ou un prénom…" class="field-input">
+            <button type="submit" class="btn btn--primary">Filtrer</button>
             {% if search_query %}
-                <a href="{% url 'liste_clientes' %}" class="btn btn--outline" style="padding: 8px 16px; color: var(--wine); border-color: var(--line);">
-                    ✕ Effacer
-                </a>
+                <a href="{% url 'liste_clientes' %}" class="btn btn--outline" style="color: var(--wine);">Effacer</a>
             {% endif %}
         </form>
     </div>
 
-    <div class="detail-grid" style="grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));">
+    <div class="detail-grid client-grid">
         {% for cliente in clientes %}
-        <a href="{% url 'fiche_cliente' cliente.id %}" class="card hover:border-blueprint transition-colors cursor-pointer" style="text-decoration: none; display: block;">
-            <h4 style="border-bottom: none; margin:0; font-size: 18px; color: var(--ink);">{{ cliente.nom.upper }} {{ cliente.prenom }}</h4>
-            <p style="margin: 8px 0 0; font-size: 13px; color: var(--ink-soft);">
-                {% if cliente.telephone %}📞 {{ cliente.telephone }}<br>{% endif %}
-                {% if cliente.email %}✉️ {{ cliente.email }}{% endif %}
+        <a href="{% url 'fiche_cliente' cliente.id %}" class="card client-card">
+            <h4>{{ cliente.nom.upper }} {{ cliente.prenom }}</h4>
+            <p class="client-card__meta">
+                {% if cliente.telephone %}{{ cliente.telephone }}<br>{% endif %}
+                {% if cliente.email %}{{ cliente.email }}{% endif %}
             </p>
-            <div style="margin-top: 15px; font-family: var(--font-mono); font-size: 11px; color: var(--blueprint);">
-                Voir le dossier complet →
-            </div>
+            <div class="client-card__cta">Voir le dossier complet →</div>
         </a>
         {% empty %}
         <div class="empty-state" style="grid-column: 1 / -1;">
