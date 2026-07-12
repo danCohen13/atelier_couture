@@ -1,0 +1,66 @@
+{% csrf_token %}
+<p>
+    <label for="{{ form.client.id_for_label }}">Cliente</label>
+    {{ form.client }}
+</p>
+<p>
+    <label for="{{ form.nom_modele.id_for_label }}">Nom du modèle</label>
+    {{ form.nom_modele }}
+</p>
+<p>
+    <label for="{{ form.croquis.id_for_label }}">Croquis du modèle</label>
+    {{ form.croquis }}
+</p>
+<p>
+    <label for="{{ form.photo_tissu.id_for_label }}">Échantillon de tissu</label>
+    {{ form.photo_tissu }}
+</p>
+
+<div style="display: flex; gap: 20px; margin-bottom: 18px;">
+    <div style="flex: 1;">
+        <label for="{{ form.date_commencement.id_for_label }}">Date de commencement</label>
+        {{ form.date_commencement }}
+    </div>
+    <div style="flex: 1;">
+        <label for="{{ form.date_livraison.id_for_label }}">Date de livraison</label>
+        {{ form.date_livraison }}
+    </div>
+</div>
+
+<div style="display: flex; gap: 15px; align-items: flex-end; margin-bottom: 18px;">
+    <div style="flex: 2;">
+        <label for="{{ form.cout_tissu.id_for_label }}">Coût tissu</label>
+        {{ form.cout_tissu }}
+    </div>
+    <div style="flex: 2;">
+        <label for="{{ form.cout_main_doeuvre.id_for_label }}">Main d'œuvre</label>
+        {{ form.cout_main_doeuvre }}
+    </div>
+    <div style="flex: 2;">
+        <label for="{{ form.prix_total.id_for_label }}">Prix total</label>
+        {{ form.prix_total }}
+    </div>
+    <div style="flex: 1.5;">
+        <label for="{{ form.devise.id_for_label }}">Devise</label>
+        {{ form.devise }}
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const coutTissu = document.getElementById('id_cout_tissu');
+        const coutMain = document.getElementById('id_cout_main_doeuvre');
+        const prixTotal = document.getElementById('id_prix_total');
+
+        function calculerTotal() {
+            const tissu = parseFloat(coutTissu.value) || 0;
+            const main = parseFloat(coutMain.value) || 0;
+            prixTotal.value = (tissu + main).toFixed(2);
+        }
+
+        if (coutTissu && coutMain) {
+            coutTissu.addEventListener('input', calculerTotal);
+            coutMain.addEventListener('input', calculerTotal);
+        }
+    });
+</script>

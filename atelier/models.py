@@ -1,3 +1,4 @@
+import datetime
 from django.db import models
 from django.core.validators import RegexValidator
 
@@ -25,7 +26,6 @@ class Client(models.Model):
 
 
 class Robe(models.Model):
-    # Liste des devises disponibles
     DEVISE_CHOICES = [
         ('ILS', '₪ (Shekel)'),
         ('EUR', '€ (Euro)'),
@@ -40,19 +40,32 @@ class Robe(models.Model):
     cout_tissu = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
     cout_main_doeuvre = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
     prix_total = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
-    
-    # Nouveau champ avec le Shekel ('ILS') défini par défaut
     devise = models.CharField(max_length=3, choices=DEVISE_CHOICES, default='ILS', verbose_name="Devise")
-
-    # Nouveaux champs pour les visuels (blank=True, null=True car ils sont facultatifs)
     croquis = models.ImageField(upload_to='atelier/croquis/', blank=True, null=True)
     photo_tissu = models.ImageField(upload_to='atelier/tissus/', blank=True, null=True)
 
-    # Propriété magique pour récupérer instantanément le symbole associé
     @property
     def symbole_devise(self):
         mapping = {'ILS': '₪', 'EUR': '€', 'USD': '$'}
         return mapping.get(self.devise, '₪')
+
+    # NOUVEAU : Calcul dynamique du délai restant
+    @property
+    def jours_restants(self):
+        if self.date_livraison:
+            delta = self.date_livraison - datetime.date.today()
+            return delta.days
+        return None
+
+    # NOUVEAU : Calcul dynamique de la progression
+    @property
+    def progression(self):
+        taches = self.taches.all()
+        total_taches = taches.count()
+        if total_taches > 0:
+            faites = taches.filter(est_faite=True).count()
+            return int((faites / total_taches) * 100)
+        return 0
 
     def __str__(self):
         return f"{self.nom_modele} - Client : {self.client.nom}"
