@@ -2,11 +2,8 @@
 # exit on error
 set -o errexit
 
-# Installer les dépendances
 pip install -r requirements.txt
 
-# Collecter les fichiers statiques pour Tailwind / CSS
-python manage.py collectstatic --no-input
-
-# Appliquer les migrations sur la base PostgreSQL de Render
+# Le drapeau --clear nettoie les résidus des builds précédents
+python manage.py collectstatic --no-input --clear
 python manage.py migrate
