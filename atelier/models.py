@@ -41,9 +41,9 @@ class Robe(models.Model):
     cout_main_doeuvre = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
     prix_total = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
     devise = models.CharField(max_length=3, choices=DEVISE_CHOICES, default='ILS', verbose_name="Devise")
-    croquis = models.ImageField(upload_to='atelier/croquis/', blank=True, null=True)
-    photo_tissu = models.ImageField(upload_to='atelier/tissus/', blank=True, null=True)
-
+    croquis = models.URLField(max_length=500, blank=True, null=True)
+    photo_tissus = models.URLField(max_length=500, blank=True, null=True)
+    
     @property
     def symbole_devise(self):
         mapping = {'ILS': '₪', 'EUR': '€', 'USD': '$'}
