@@ -143,11 +143,13 @@ LOGIN_URL = 'login'
 #DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 STORAGES = {
+    # Cloudinary gère toujours tes croquis et tissus de manière dynamique
     "default": {
         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
     },
+    # WhiteNoise gère ton CSS et JS de manière simple, stable et directe
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+        "BACKEND": "whitenoise.storage.StaticFilesStorage",  # <-- MODIFIE CETTE LIGNE
     },
 }
 
