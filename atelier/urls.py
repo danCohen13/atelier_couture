@@ -1,27 +1,28 @@
 from django.urls import path
-from django.contrib.auth import views as auth_views  # <-- Import des outils d'authentification
-from . import views
+from django.contrib.auth import views as auth_views  # Protège tes écrans de connexion
+from . import views_atelier
+from . import views_finances
 
 urlpatterns = [
-    path('', views.dashboard, name='dashboard'),
-    path('client/ajouter/', views.ajouter_client, name='ajouter_client'),
-    path('robe/ajouter/', views.ajouter_robe, name='ajouter_robe'),
-    path('robe/<int:robe_id>/tache-rapide/<str:type_tache>/', views.ajouter_tache_rapide, name='ajouter_tache_rapide'),
-    path('robe/<int:robe_id>/tache-personnalisee/', views.ajouter_tache_personnalisee, name='ajouter_tache_personnalisee'),
-    path('tache/<int:tache_id>/toggle/', views.toggle_tache, name='toggle_tache'),
-    path('robe/<int:robe_id>/supprimer/', views.supprimer_robe, name='supprimer_robe'),
-    path('clientes/', views.liste_clientes, name='liste_clientes'),
-    path('clientes/<int:client_id>/', views.fiche_cliente, name='fiche_cliente'),
-    path('tache/<int:tache_id>/supprimer/', views.supprimer_tache, name='supprimer_tache'),
+    # --- RACINE & ATELIER (views_atelier) ---
+    path('', views_atelier.dashboard, name='dashboard'),  # Remet le dashboard à la racine du site
+    path('client/ajouter/', views_atelier.ajouter_client, name='ajouter_client'),
+    path('robe/ajouter/', views_atelier.ajouter_robe, name='ajouter_robe'),
+    path('robe/<int:robe_id>/tache-rapide/<str:type_tache>/', views_atelier.ajouter_tache_rapide, name='ajouter_tache_rapide'),
+    path('robe/<int:robe_id>/tache-personnalisee/', views_atelier.ajouter_tache_personnalisee, name='ajouter_tache_personnalisee'),
+    path('tache/<int:tache_id>/toggle/', views_atelier.toggle_tache, name='toggle_tache'),
+    path('robe/<int:robe_id>/supprimer/', views_atelier.supprimer_robe, name='supprimer_robe'),
+    path('clientes/', views_atelier.liste_clientes, name='liste_clientes'),
+    path('clientes/<int:client_id>/', views_atelier.fiche_cliente, name='fiche_cliente'),
+    path('tache/<int:tache_id>/supprimer/', views_atelier.supprimer_tache, name='supprimer_tache'),
+    path('client/<int:client_id>/modifier/', views_atelier.modifier_client, name='modifier_client'),
+    path('robe/<int:robe_id>/modifier/', views_atelier.modifier_robe, name='modifier_robe'),
     
-    # Écrans de sécurité
+    # --- MODULE FINANCES (views_finances) ---
+    path('finances/', views_finances.finances_view, name='finances'),
+    path('finances/ajouter/', views_finances.ajouter_transaction_view, name='ajouter_transaction'),
+    
+    # --- ÉCRANS DE SÉCURITÉ ---
     path('login/', auth_views.LoginView.as_view(template_name='atelier/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
-
-    path('client/<int:client_id>/modifier/', views.modifier_client, name='modifier_client'),
-    path('robe/<int:robe_id>/modifier/', views.modifier_robe, name='modifier_robe'),
-
-    path('finances/', views.finances_view, name='finances'),
-    path('finances/ajouter/', views.ajouter_transaction_view, name='ajouter_transaction'),
-
 ]

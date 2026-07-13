@@ -52,10 +52,10 @@
             <tbody>
                 {% for robe in robes %}
                     <!-- Inclusion DRY de la ligne principale du tableau -->
-                    {% include 'atelier/_robe_row.html' with show_client=True %}
+                    {% include 'atelier/confection/_robe_row.html' with show_client=True %}
                     
                     <!-- Inclusion DRY du tiroir déroulant d'atelier -->
-                    {% include 'atelier/_tiroir_robe.html' %}
+                    {% include 'atelier/confection/_tiroir_robe.html' %}
                 {% empty %}
                 <tr>
                     <td colspan="6" class="empty-state">Aucune robe ne correspond aux critères de sélection.</td>
