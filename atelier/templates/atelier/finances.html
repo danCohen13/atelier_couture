@@ -1,0 +1,114 @@
+{% extends 'atelier/base.html' %}
+
+{% block title %}Finances - Cohen Haute Couture{% endblock %}
+
+{% block content %}
+<div style="display: flex; flex-direction: column; gap: 30px;">
+    
+    <!-- 🧭 EN-TÊTE DU MODULE & ACTION -->
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 32px; color: #211D1A; margin: 0;">📊 Comptabilité de l'Atelier</h2>
+            <p style="color: #555; font-size: 14px; margin: 4px 0 0 0;">Suivi en temps réel des recettes, des charges et de la rentabilité de ton activité.</p>
+        </div>
+        <a href="{% url 'ajouter_transaction' %}" class="btn" style="background-color: #211D1A; color: #fff; padding: 10px 20px; text-decoration: none; font-size: 13px; font-weight: 600; border-radius: 4px; transition: background 0.2s;" onmouseover="this.style.backgroundColor='#3a332e'" onmouseout="this.style.backgroundColor='#211D1A'">
+            + Enregistrer une opération
+        </a>
+    </div>
+
+    <!-- 🏛️ ZONE 1 : LE BANDEAU DES SCORES (LES TOTAUX) -->
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+        
+        <!-- Carte Chiffre d'Affaires -->
+        <div class="card" style="background: #f5f2eb; padding: 25px; border: 1px solid #dcd7ca; border-radius: 6px;">
+            <span style="font-size: 11px; font-weight: 600; text-transform: uppercase; color: #555; letter-spacing: 0.5px;">Chiffre d'Affaires</span>
+            <div style="font-size: 26px; font-weight: 700; color: #2e7d32; margin-top: 8px; font-family: 'IBM Plex Mono', monospace;">
+                {{ total_recettes }} ₪
+            </div>
+        </div>
+
+        <!-- Carte Dépenses -->
+        <div class="card" style="background: #f5f2eb; padding: 25px; border: 1px solid #dcd7ca; border-radius: 6px;">
+            <span style="font-size: 11px; font-weight: 600; text-transform: uppercase; color: #555; letter-spacing: 0.5px;">Dépenses Totales</span>
+            <div style="font-size: 26px; font-weight: 700; color: #b83232; margin-top: 8px; font-family: 'IBM Plex Mono', monospace;">
+                {{ total_depenses }} ₪
+            </div>
+        </div>
+
+        <!-- Carte Bénéfice Net -->
+        <div class="card" style="background: #f5f2eb; padding: 25px; border: 1px solid #dcd7ca; border-radius: 6px;">
+            <span style="font-size: 11px; font-weight: 600; text-transform: uppercase; color: #555; letter-spacing: 0.5px;">Bénéfice Net</span>
+            <!-- Correction ici : On sépare les blocs HTML pour éviter le conflit CSS dans l'éditeur -->
+            {% if benefice_net >= 0 %}
+                <div style="font-size: 26px; font-weight: 700; color: #a17f2d; margin-top: 8px; font-family: 'IBM Plex Mono', monospace;">
+            {% else %}
+                <div style="font-size: 26px; font-weight: 700; color: #b83232; margin-top: 8px; font-family: 'IBM Plex Mono', monospace;">
+            {% endif %}
+                {{ benefice_net }} ₪
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 📋 ZONE 3 : LE REGISTRE DES MOUVEMENTS -->
+    <div class="card" style="background: #f5f2eb; padding: 25px; border: 1px solid #dcd7ca; border-radius: 6px;">
+        <h4 style="margin: 0 0 20px 0; font-family: 'Cormorant Garamond', serif; font-size: 22px; color: #211D1A;">📜 Historique du grand livre des comptes</h4>
+        
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; font-family: 'Inter', sans-serif; font-size: 13px; text-align: left;">
+                <thead>
+                    <tr style="border-bottom: 2px solid #dcd7ca; color: #555;">
+                        <th style="padding: 12px 8px; font-weight: 600;">Date</th>
+                        <th style="padding: 12px 8px; font-weight: 600;">Type</th>
+                        <th style="padding: 12px 8px; font-weight: 600;">Catégorie</th>
+                        <th style="padding: 12px 8px; font-weight: 600;">Désignation</th>
+                        <th style="padding: 12px 8px; font-weight: 600;">Modèle lié</th>
+                        <th style="padding: 12px 8px; font-weight: 600; text-align: right;">Montant</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for transaction in transactions %}
+                    <tr style="border-bottom: 1px solid #dcd7ca; transition: background 0.1s;" onmouseover="this.style.backgroundColor='#e8e2dc'" onmouseout="this.style.backgroundColor='transparent'">
+                        <td style="padding: 14px 8px; color: #555; font-family: 'IBM Plex Mono', monospace;">{{ transaction.date|date:"d/m/Y" }}</td>
+                        <td style="padding: 14px 8px;">
+                            {% if transaction.type == 'RECETTE' %}
+                                <span style="color: #2e7d32; font-weight: 600; background: #e8f5e9; padding: 4px 8px; border-radius: 4px; font-size: 11px;">🟢 Recette</span>
+                            {% else %}
+                                <span style="color: #b83232; font-weight: 600; background: #ffebee; padding: 4px 8px; border-radius: 4px; font-size: 11px;">🔴 Dépense</span>
+                            {% endif %}
+                        </td>
+                        <td style="padding: 14px 8px; color: #211D1A;">{{ transaction.get_categorie_display }}</td>
+                        <td style="padding: 14px 8px; font-weight: 500; color: #211D1A;">{{ transaction.designation }}</td>
+                        <td style="padding: 14px 8px; color: #555;">
+                            {% if transaction.robe %}
+                                👗 {{ transaction.robe.nom_modele }}
+                            {% else %}
+                                <span style="opacity: 0.4;">—</span>
+                            {% endif %}
+                        </td>
+                        <!-- Correction ici : Duplication propre de la cellule pour isoler la couleur CSS -->
+                        {% if transaction.type == 'RECETTE' %}
+                            <td style="padding: 14px 8px; text-align: right; font-weight: 600; font-family: 'IBM Plex Mono', monospace; color: #2e7d32;">
+                                +{{ transaction.montant }} ₪
+                            </td>
+                        {% else %}
+                            <td style="padding: 14px 8px; text-align: right; font-weight: 600; font-family: 'IBM Plex Mono', monospace; color: #b83232;">
+                                -{{ transaction.montant }} ₪
+                            </td>
+                        {% endif %}
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" style="padding: 40px; text-align: center; color: #555;">
+                            <span style="font-size: 24px; display: block; margin-bottom: 10px;">🍃</span>
+                            <em>Aucune transaction n'a été enregistrée pour le moment.</em>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

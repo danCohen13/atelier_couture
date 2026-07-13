@@ -1,5 +1,5 @@
 from django import forms
-from .models import Client, Robe
+from .models import Client, Robe, Transaction
 
 class ClientForm(forms.ModelForm):
     # On configure la date de naissance pour accepter et afficher le format jj/mm/aaaa
@@ -57,3 +57,18 @@ class RobeForm(forms.ModelForm):
             # Si self.instance.pk existe, cela signifie qu'on modifie une robe : on laisse Django charger les vrais prix !
             if not self.instance.pk:
                 self.initial[field_name] = None
+
+class TransactionForm(forms.ModelForm):
+    class Meta:
+        model = Transaction
+        fields = ['type', 'montant', 'categorie', 'designation', 'date', 'robe']
+        
+        widgets = {
+            'type': forms.Select(attrs={'class': 'form-input'}),
+            'categorie': forms.Select(attrs={'class': 'form-input'}),
+            'montant': forms.NumberInput(attrs={'class': 'form-input', 'placeholder': '0.00'}),
+            'designation': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Ex: Achat fils dorés, Acompte...'}),
+            # On ajoute 'datepicker' pour activer Flatpickr automatiquement à l'écran
+            'date': forms.TextInput(attrs={'class': 'datepicker form-input'}),
+            'robe': forms.Select(attrs={'class': 'form-input'}),
+        }

@@ -1,6 +1,7 @@
 import datetime
 from django.db import models
 from django.core.validators import RegexValidator
+from django.utils import timezone
 
 class Client(models.Model):
     nom = models.CharField(max_length=100)
@@ -78,3 +79,40 @@ class Tache(models.Model):
 
     def __str__(self):
         return f"{self.libelle} ({'Fait' if self.est_faite else 'À faire'})"
+
+class Transaction(models.Model):
+    TYPE_CHOICES = [
+        ('RECETTE', '🟢 Recette (Entrée d\'argent)'),
+        ('DEPENSE', '🔴 Dépense (Sortie d\'argent)'),
+    ]
+    
+    CATEGORIE_CHOICES = [
+        ('PAIEMENT_CLIENT', 'Paiement de cliente'),
+        ('TISSU', 'Achat de tissu'),
+        ('FOURNITURES', 'Fournitures (Fils, fermetures, boutons...)'),
+        ('MATERIEL', 'Matériel & Machines (Entretien, achat...)'),
+        ('AUTRE', 'Autre frais / Divers'),
+    ]
+
+    type = models.CharField(max_length=10, choices=TYPE_CHOICES)
+    montant = models.DecimalField(max_digits=10, decimal_places=2)
+    categorie = models.CharField(max_length=20, choices=CATEGORIE_CHOICES)
+    designation = models.CharField(max_length=255, help_text="Ex: Acompte robe Salome, Achat fils noirs...")
+    date = models.DateField(default=timezone.now)
+    
+    # 🔗 LIAISON OPTIONNELLE AVEC UNE ROBE
+    # Si on supprime une robe de l'atelier, on ne veut SURTOUT PAS effacer l'argent dans la compta.
+    # On utilise models.SET_NULL pour garder la trace financière même si la robe disparaît.
+    robe = models.ForeignKey(
+        'Robe', 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True, 
+        related_name='transactions'
+    )
+
+    class Meta:
+        ordering = ['-date', '-id'] # Affiche toujours les opérations les plus récentes en premier
+
+    def __str__(self):
+        return f"{self.designation} ({self.montant} ₪)"        

@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Client, Robe, Tache
-from .forms import ClientForm, RobeForm
-from django.db.models import Q
+from .forms import ClientForm, RobeForm, TransactionForm
+from django.db.models import Q, Sum
+from .models import Transaction
 
 @login_required
 def dashboard(request):
@@ -154,3 +155,39 @@ def liste_clientes(request):
     else:
         clientes = Client.objects.all().order_by('nom')
     return render(request, 'atelier/liste_clientes.html', {'clientes': clientes, 'search_query': query})
+
+@login_required
+def finances_view(request):
+    # 1. Calcul du Chiffre d'Affaires (Somme de toutes les recettes)
+    total_recettes = Transaction.objects.filter(type='RECETTE').aggregate(Sum('montant'))['montant__sum'] or 0
+    
+    # 2. Calcul des Sorties d'Argent (Somme de toutes les dépenses)
+    total_depenses = Transaction.objects.filter(type='DEPENSE').aggregate(Sum('montant'))['montant__sum'] or 0
+    
+    # 3. Calcul du Bénéfice Net
+    benefice_net = total_recettes - total_depenses
+    
+    # 4. Récupération de l'historique complet des mouvements
+    # On utilise select_related('robe') pour optimiser la base de données
+    transactions = Transaction.objects.select_related('robe').all()
+
+    context = {
+        'total_recettes': total_recettes,
+        'total_depenses': total_depenses,
+        'benefice_net': benefice_net,
+        'transactions': transactions,
+    }
+    
+    return render(request, 'atelier/finances.html', context)
+
+def ajouter_transaction_view(request):
+    """Vue pour enregistrer une nouvelle recette ou dépense"""
+    if request.method == 'POST':
+        form = TransactionForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('finances') # Redirige vers ton tableau de bord financier
+    else:
+        form = TransactionForm()
+        
+    return render(request, 'atelier/ajouter_transaction.html', {'form': form})    

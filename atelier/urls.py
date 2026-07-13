@@ -20,4 +20,8 @@ urlpatterns = [
 
     path('client/<int:client_id>/modifier/', views.modifier_client, name='modifier_client'),
     path('robe/<int:robe_id>/modifier/', views.modifier_robe, name='modifier_robe'),
+
+    path('finances/', views.finances_view, name='finances'),
+    path('finances/ajouter/', views.ajouter_transaction_view, name='ajouter_transaction'),
+
 ]
