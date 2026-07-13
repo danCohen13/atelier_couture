@@ -1,87 +1,60 @@
 {% extends 'atelier/base.html' %}
 
-{% block title %}Enregistrer une opération - Cohen Haute Couture{% endblock %}
+{% block title %}Opération rapide — Cohen Haute Couture{% endblock %}
 
 {% block content %}
-<div style="max-width: 600px; margin: 0 auto;">
-    
-    <!-- 🎛️ FIL D'ARIANE / RETOUR -->
-    <a href="{% url 'finances' %}" style="display: inline-flex; align-items: center; gap: 6px; color: #555; text-decoration: none; font-family: 'Inter', sans-serif; font-size: 13px; margin-bottom: 20px; transition: color 0.2s;" onmouseover="this.style.color='#211D1A'" onmouseout="this.style.color='#555'">
-        ← Retour à la comptabilité
-    </a>
+<main class="page" style="max-width: 560px;">
 
-    <!-- 💳 CARTE DU FORMULAIRE -->
-    <div class="card" style="background: #f5f2eb; padding: 35px; border: 1px solid #dcd7ca; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.02);">
-        
-        <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 28px; color: #211D1A; margin: 0 0 10px 0;">💰 Nouvelle opération financière</h2>
-        <p style="color: #555; font-size: 14px; margin: 0 0 30px 0;">Enregistre une entrée ou une sortie d'argent pour le grand livre des comptes de l'atelier.</p>
+    <a href="{% url 'finances' %}" class="sort-link" style="display:inline-block; margin-bottom: 18px;">← Retour aux finances</a>
 
-        <form method="POST" action="" style="display: flex; flex-direction: column; gap: 20px; font-family: 'Inter', sans-serif; font-size: 13px;">
-            {% csrf_token %}
+    <div class="form-card">
+        <div class="form-card__inner">
+            <span class="eyebrow">Ajout rapide</span>
+            <h2>Nouvelle opération</h2>
+            <p style="color: var(--ink-soft); font-size: 13px; margin: 0 0 24px;">
+                Pour un frais annexe uniquement — les coûts de tissu, de façon et le prix facturé des robes sont déjà suivis automatiquement.
+            </p>
 
-            <!-- Affichage des erreurs globales si le formulaire est invalide -->
-            {% if form.errors %}
-                <div style="background: #ffebee; border: 1px solid #b83232; color: #b83232; padding: 12px; border-radius: 4px; font-weight: 500;">
-                    Veuillez corriger les erreurs dans le formulaire ci-dessous.
-                </div>
-            {% endif %}
+            <form method="POST">
+                {% csrf_token %}
 
-            <!-- Champ : Type de transaction (Recette / Dépense) -->
-            <div style="display: flex; flex-direction: column; gap: 6px;">
-                <label style="font-weight: 600; color: #211D1A; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px;">Type de mouvement</label>
-                {{ form.type }}
-                {% if form.type.errors %}<span style="color: #b83232; font-size: 12px;">{{ form.type.errors.0 }}</span>{% endif %}
-            </div>
+                {% if form.errors %}
+                    <p class="form-error">Merci de corriger les champs indiqués ci-dessous.</p>
+                {% endif %}
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                <!-- Champ : Montant -->
-                <div style="display: flex; flex-direction: column; gap: 6px;">
-                    <label style="font-weight: 600; color: #211D1A; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px;">Montant (₪)</label>
-                    {{ form.montant }}
-                    {% if form.montant.errors %}<span style="color: #b83232; font-size: 12px;">{{ form.montant.errors.0 }}</span>{% endif %}
+                <div class="type-toggle">
+                    <input type="radio" name="type" value="RECETTE" id="id_type_recette" {% if form.type.value == 'RECETTE' %}checked{% endif %}>
+                    <label class="type-toggle__recette" for="id_type_recette">Recette</label>
+
+                    <input type="radio" name="type" value="DEPENSE" id="id_type_depense" {% if form.type.value == 'DEPENSE' or not form.type.value %}checked{% endif %}>
+                    <label class="type-toggle__depense" for="id_type_depense">Dépense</label>
                 </div>
 
-                <!-- Champ : Date (Flatpickr s'active dessus via sa classe) -->
-                <div style="display: flex; flex-direction: column; gap: 6px;">
-                    <label style="font-weight: 600; color: #211D1A; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px;">Date de l'opération</label>
-                    {{ form.date }}
-                    {% if form.date.errors %}<span style="color: #b83232; font-size: 12px;">{{ form.date.errors.0 }}</span>{% endif %}
+                <div class="quick-form-grid">
+                    <p>
+                        <label for="{{ form.montant.id_for_label }}">Montant (₪)</label>
+                        {{ form.montant }}
+                    </p>
+                    <p>
+                        <label for="{{ form.date.id_for_label }}">Date</label>
+                        {{ form.date }}
+                    </p>
+                    <p class="span-2">
+                        <label for="{{ form.categorie.id_for_label }}">Catégorie</label>
+                        {{ form.categorie }}
+                    </p>
+                    <p class="span-2">
+                        <label for="{{ form.designation.id_for_label }}">Désignation</label>
+                        {{ form.designation }}
+                    </p>
                 </div>
-            </div>
 
-            <!-- Champ : Catégorie -->
-            <div style="display: flex; flex-direction: column; gap: 6px;">
-                <label style="font-weight: 600; color: #211D1A; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px;">Catégorie comptable</label>
-                {{ form.categorie }}
-                {% if form.categorie.errors %}<span style="color: #b83232; font-size: 12px;">{{ form.categorie.errors.0 }}</span>{% endif %}
-            </div>
-
-            <!-- Champ : Désignation / Libellé -->
-            <div style="display: flex; flex-direction: column; gap: 6px;">
-                <label style="font-weight: 600; color: #211D1A; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px;">Désignation de l'opération</label>
-                {{ form.designation }}
-                {% if form.designation.errors %}<span style="color: #b83232; font-size: 12px;">{{ form.designation.errors.0 }}</span>{% endif %}
-            </div>
-
-            <!-- Champ : Liaison optionnelle avec un modèle de robe -->
-            <div style="display: flex; flex-direction: column; gap: 6px;">
-                <label style="font-weight: 600; color: #211D1A; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px;">Modèle de robe lié <span style="color: #888; font-weight: 400; text-transform: none;">(Optionnel)</span></label>
-                {{ form.robe }}
-                <small style="color: #666; font-size: 11px; margin-top: 2px;">Associer cette opération à une robe permet de calculer automatiquement tes marges nettes par modèle.</small>
-                {% if form.robe.errors %}<span style="color: #b83232; font-size: 12px;">{{ form.robe.errors.0 }}</span>{% endif %}
-            </div>
-
-            <!-- 🔘 BOUTONS D'ACTION -->
-            <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 15px;">
-                <a href="{% url 'finances' %}" class="btn btn--outline" style="padding: 10px 20px; font-size: 13px; text-decoration: none; text-align: center; color: #555;">
-                    Annuler
-                </a>
-                <button type="submit" class="btn" style="background-color: #211D1A; color: #fff; padding: 10px 25px; font-size: 13px; font-weight: 600; border: none; border-radius: 4px; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.backgroundColor='#3a332e'" onmouseout="this.style.backgroundColor='#211D1A'">
-                    Enregistrer l'opération
-                </button>
-            </div>
-
-        </form>
+                <div class="form-actions">
+                    <a href="{% url 'finances' %}" class="btn btn--outline">Annuler</a>
+                    <button type="submit" class="btn btn--primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
+</main>
 {% endblock %}

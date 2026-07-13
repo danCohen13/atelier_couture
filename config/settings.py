@@ -156,9 +156,11 @@ STORAGES = {
     "default": {
         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
     },
-    # WhiteNoise gère ton CSS et JS de manière simple, stable et directe
+    # WhiteNoise gère ton CSS et JS avec un hash de contenu dans le nom
+    # de fichier : dès que le CSS change, l'URL change, et le navigateur
+    # ne peut plus servir une version en cache périmée.
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.StaticFilesStorage",  # <-- MODIFIE CETTE LIGNE
+        "BACKEND": "config.storage.LenientManifestStaticFilesStorage",
     },
 }
 

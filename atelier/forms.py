@@ -61,14 +61,12 @@ class RobeForm(forms.ModelForm):
 class TransactionForm(forms.ModelForm):
     class Meta:
         model = Transaction
-        fields = ['type', 'montant', 'categorie', 'designation', 'date', 'robe']
-        
+        fields = ['type', 'montant', 'categorie', 'designation', 'date']
+
         widgets = {
-            'type': forms.Select(attrs={'class': 'form-input'}),
-            'categorie': forms.Select(attrs={'class': 'form-input'}),
-            'montant': forms.NumberInput(attrs={'class': 'form-input', 'placeholder': '0.00'}),
-            'designation': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Ex: Achat fils dorés, Acompte...'}),
-            # On ajoute 'datepicker' pour activer Flatpickr automatiquement à l'écran
-            'date': forms.TextInput(attrs={'class': 'datepicker form-input'}),
-            'robe': forms.Select(attrs={'class': 'form-input'}),
+            'type': forms.RadioSelect(),
+            'categorie': forms.Select(attrs={'class': 'field-input'}),
+            'montant': forms.NumberInput(attrs={'class': 'field-input', 'placeholder': '0.00', 'step': '0.01', 'autofocus': True}),
+            'designation': forms.TextInput(attrs={'class': 'field-input', 'placeholder': 'Ex : Achat fils dorés, acompte…'}),
+            'date': forms.TextInput(attrs={'class': 'datepicker field-input'}),
         }

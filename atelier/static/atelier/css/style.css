@@ -888,3 +888,136 @@ select.field-input {
   color: var(--ink-soft);
 }
 .cloud-upload-status--ready { color: var(--moss); }
+
+/* ---------------------------------------------------------------------
+   Navigation secondaire — barre latérale (Atelier / Finances)
+   --------------------------------------------------------------------- */
+.app-container {
+  display: flex;
+  align-items: flex-start;
+}
+
+.sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background: var(--paper-light);
+  border-right: 1px solid var(--line);
+  padding: 40px 18px;
+  min-height: calc(100vh - 76px);
+  position: sticky;
+  top: 76px;
+}
+
+.sidebar-title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin: 0 0 14px 4px;
+}
+
+.sidebar-menu { display: flex; flex-direction: column; gap: 4px; }
+
+.sidebar-link {
+  padding: 11px 14px;
+  border-radius: 2px;
+  color: var(--ink-soft);
+  font-size: 13.5px;
+  font-weight: 500;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.sidebar-link:hover { background: var(--paper); color: var(--ink); }
+.sidebar-link.is-active { background: var(--ink); color: var(--paper-light); }
+
+.main-content { flex: 1; min-width: 0; }
+
+/* ---------------------------------------------------------------------
+   Finances — bandeau des totaux
+   --------------------------------------------------------------------- */
+.score-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.score-card {
+  background: var(--paper-light);
+  border: 1px solid var(--line);
+  padding: 22px 24px;
+}
+
+.score-card .value {
+  font-family: var(--font-mono);
+  font-size: 28px;
+  font-weight: 600;
+  margin-top: 8px;
+}
+.score-card .value--positive { color: var(--moss); }
+.score-card .value--negative { color: var(--wine); }
+.score-card .value--neutral { color: var(--blueprint-dark); }
+
+/* ---------------------------------------------------------------------
+   Grand livre des comptes — regroupé par mois
+   --------------------------------------------------------------------- */
+.ledger-month {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 20px 10px;
+  border-top: 1px dashed var(--line);
+}
+.ledger-month:first-child { border-top: none; padding-top: 4px; }
+.ledger-month span { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); }
+
+.ledger-table { width: 100%; border-collapse: collapse; }
+.ledger-table td { padding: 13px 20px; font-size: 13.5px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.ledger-table tr:last-child td { border-bottom: none; }
+
+.ledger-date { font-family: var(--font-mono); font-size: 12px; color: var(--ink-soft); white-space: nowrap; }
+.ledger-desc { color: var(--ink); font-weight: 500; }
+.ledger-model { color: var(--ink-soft); font-size: 12.5px; }
+.ledger-amount { font-family: var(--font-mono); font-weight: 600; text-align: right; white-space: nowrap; }
+.ledger-amount--in { color: var(--moss); }
+.ledger-amount--out { color: var(--wine); }
+
+.tag--recette { color: var(--moss); background: var(--moss-bg); }
+.tag--depense { color: var(--wine); background: var(--wine-bg); }
+
+.tag--auto {
+  color: var(--ink-faint);
+  background: transparent;
+  border: 1px solid var(--line);
+  padding: 3px 8px;
+  font-size: 9px;
+}
+
+/* ---------------------------------------------------------------------
+   Formulaire rapide de transaction — toggle recette / dépense
+   --------------------------------------------------------------------- */
+.type-toggle { display: flex; gap: 10px; margin-bottom: 18px; }
+.type-toggle label {
+  flex: 1;
+  text-align: center;
+  padding: 12px;
+  border: 1px solid var(--line);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  transition: all 0.15s ease;
+}
+.type-toggle input { position: absolute; opacity: 0; pointer-events: none; }
+.type-toggle input:checked + label.type-toggle__recette { background: var(--moss-bg); border-color: var(--moss); color: var(--moss); }
+.type-toggle input:checked + label.type-toggle__depense { background: var(--wine-bg); border-color: var(--wine); color: var(--wine); }
+
+.quick-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 20px;
+}
+.quick-form-grid .span-2 { grid-column: 1 / -1; }
+.quick-form-grid p { margin: 0 !important; }

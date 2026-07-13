@@ -1,9 +1,36 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
+from itertools import groupby
 from .models import Client, Robe, Tache
 from .forms import ClientForm, RobeForm, TransactionForm
 from django.db.models import Q, Sum
 from .models import Transaction
+
+MOIS_FR = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+           "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"]
+
+
+class LigneCompte:
+    """
+    Une ligne du grand livre des comptes.
+    Peut représenter soit une Transaction manuelle réelle, soit une ligne
+    déduite automatiquement des coûts déjà saisis sur une robe (tissu,
+    main d'œuvre, prix facturé) — pour ne jamais avoir à ressaisir ces
+    montants dans le module Finances.
+    """
+    def __init__(self, date, type, categorie_label, designation, robe, montant, devise_symbole='₪', auto=False):
+        self.date = date
+        self.type = type
+        self.categorie_label = categorie_label
+        self.designation = designation
+        self.robe = robe
+        self.montant = montant
+        self.devise_symbole = devise_symbole
+        self.auto = auto
+
+    def get_categorie_display(self):
+        return self.categorie_label
 
 @login_required
 def dashboard(request):
@@ -158,36 +185,79 @@ def liste_clientes(request):
 
 @login_required
 def finances_view(request):
-    # 1. Calcul du Chiffre d'Affaires (Somme de toutes les recettes)
-    total_recettes = Transaction.objects.filter(type='RECETTE').aggregate(Sum('montant'))['montant__sum'] or 0
-    
-    # 2. Calcul des Sorties d'Argent (Somme de toutes les dépenses)
-    total_depenses = Transaction.objects.filter(type='DEPENSE').aggregate(Sum('montant'))['montant__sum'] or 0
-    
-    # 3. Calcul du Bénéfice Net
+    periode = request.GET.get('periode', 'tout')
+    aujourdhui = timezone.now().date()
+
+    lignes = []
+
+    # 1. Lignes déduites automatiquement de chaque robe — le tissu, la façon
+    #    et le prix facturé sont déjà connus dès la création de la robe,
+    #    aucune ressaisie n'est nécessaire ici.
+    for robe in Robe.objects.select_related('client').all():
+        symbole = robe.symbole_devise
+        if robe.cout_tissu:
+            lignes.append(LigneCompte(
+                robe.date_commencement, 'DEPENSE', 'Tissu (auto)',
+                f"Tissu — {robe.nom_modele}", robe, robe.cout_tissu, symbole, auto=True
+            ))
+        if robe.cout_main_doeuvre:
+            lignes.append(LigneCompte(
+                robe.date_commencement, 'DEPENSE', "Façon (auto)",
+                f"Main d'œuvre — {robe.nom_modele}", robe, robe.cout_main_doeuvre, symbole, auto=True
+            ))
+        if robe.prix_total:
+            lignes.append(LigneCompte(
+                robe.date_livraison, 'RECETTE', 'Paiement client (auto)',
+                f"Facturation — {robe.nom_modele}", robe, robe.prix_total, symbole, auto=True
+            ))
+
+    # 2. Lignes saisies manuellement (fournitures, matériel, autres opérations
+    #    non liées directement au coût d'une robe)
+    for t in Transaction.objects.select_related('robe').all():
+        lignes.append(LigneCompte(
+            t.date, t.type, t.get_categorie_display(), t.designation, t.robe, t.montant, '₪', auto=False
+        ))
+
+    # 3. Filtre par période
+    if periode == 'jour':
+        lignes = [l for l in lignes if l.date == aujourdhui]
+    elif periode == 'mois':
+        lignes = [l for l in lignes if l.date.year == aujourdhui.year and l.date.month == aujourdhui.month]
+    elif periode == 'annee':
+        lignes = [l for l in lignes if l.date.year == aujourdhui.year]
+
+    # 4. Totaux sur la période sélectionnée
+    total_recettes = sum((l.montant for l in lignes if l.type == 'RECETTE'), 0)
+    total_depenses = sum((l.montant for l in lignes if l.type == 'DEPENSE'), 0)
     benefice_net = total_recettes - total_depenses
-    
-    # 4. Récupération de l'historique complet des mouvements
-    # On utilise select_related('robe') pour optimiser la base de données
-    transactions = Transaction.objects.select_related('robe').all()
+
+    # 5. Tri antéchronologique puis regroupement par mois pour une lecture
+    #    claire du grand livre (jour / mois / année).
+    lignes.sort(key=lambda l: l.date, reverse=True)
+    groupes = [
+        {'label': f"{MOIS_FR[mois - 1]} {annee}", 'lignes': list(lignes_du_mois)}
+        for (annee, mois), lignes_du_mois in groupby(lignes, key=lambda l: (l.date.year, l.date.month))
+    ]
 
     context = {
         'total_recettes': total_recettes,
         'total_depenses': total_depenses,
         'benefice_net': benefice_net,
-        'transactions': transactions,
+        'groupes': groupes,
+        'periode': periode,
     }
-    
+
     return render(request, 'atelier/finances.html', context)
 
+@login_required
 def ajouter_transaction_view(request):
-    """Vue pour enregistrer une nouvelle recette ou dépense"""
+    """Vue pour enregistrer rapidement une opération manuelle (fournitures, matériel, etc.)"""
     if request.method == 'POST':
         form = TransactionForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('finances') # Redirige vers ton tableau de bord financier
+            return redirect('finances')
     else:
-        form = TransactionForm()
-        
-    return render(request, 'atelier/ajouter_transaction.html', {'form': form})    
+        form = TransactionForm(initial={'date': timezone.now().date(), 'type': 'DEPENSE'})
+
+    return render(request, 'atelier/ajouter_transaction.html', {'form': form})
