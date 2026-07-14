@@ -31,6 +31,26 @@
         </div>
     </div>
 
+    <div class="card chart-card">
+        <div class="card-header-row">
+            <h4>Évolution des flux</h4>
+            <div class="filter-group">
+                <button type="button" class="filter-chip" data-granularite="semaine">Semaine</button>
+                <button type="button" class="filter-chip is-active" data-granularite="mois">Mois</button>
+                <button type="button" class="filter-chip" data-granularite="annee">Année</button>
+            </div>
+        </div>
+        <div class="chart-legend">
+            <span><i class="chart-dot chart-dot--in"></i>Recettes</span>
+            <span><i class="chart-dot chart-dot--out"></i>Dépenses</span>
+        </div>
+        <div class="chart-wrap">
+            <canvas id="flux-chart"></canvas>
+        </div>
+    </div>
+
+    {{ chart_data|json_script:"chart-data" }}
+
     <div class="legend-strip">
         <div class="filter-group">
             <span class="eyebrow">Période</span>
@@ -77,4 +97,62 @@
     </div>
 
 </main>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const donnees = JSON.parse(document.getElementById('chart-data').textContent);
+        const ctx = document.getElementById('flux-chart');
+
+        const chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: donnees.mois.labels,
+                datasets: [
+                    {
+                        label: 'Recettes',
+                        data: donnees.mois.recettes,
+                        backgroundColor: '#4c5f3f',
+                        borderRadius: 2,
+                        maxBarThickness: 28,
+                    },
+                    {
+                        label: 'Dépenses',
+                        data: donnees.mois.depenses,
+                        backgroundColor: '#8a2e3d',
+                        borderRadius: 2,
+                        maxBarThickness: 28,
+                    },
+                ],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { grid: { display: false }, ticks: { font: { family: 'IBM Plex Mono', size: 10 }, color: '#6b6355' } },
+                    y: { grid: { color: '#d8cfb8' }, ticks: { font: { family: 'IBM Plex Mono', size: 10 }, color: '#6b6355' } },
+                },
+            },
+        });
+
+        document.querySelectorAll('[data-granularite]').forEach(function (bouton) {
+            bouton.addEventListener('click', function () {
+                const granularite = bouton.getAttribute('data-granularite');
+
+                document.querySelectorAll('[data-granularite]').forEach(function (b) {
+                    b.classList.remove('is-active');
+                });
+                bouton.classList.add('is-active');
+
+                chart.data.labels = donnees[granularite].labels;
+                chart.data.datasets[0].data = donnees[granularite].recettes;
+                chart.data.datasets[1].data = donnees[granularite].depenses;
+                chart.update();
+            });
+        });
+    });
+</script>
 {% endblock %}

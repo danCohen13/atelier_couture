@@ -31,7 +31,7 @@ def finances_view(request):
 
     lignes = []
 
-    # 1. Traitement des écritures automatisées issues des confections
+    # 1. Génération automatique des écritures issues des caractéristiques des robes
     for robe in Robe.objects.select_related('client').all():
         symbole = robe.symbole_devise
         if robe.cout_tissu:
@@ -50,13 +50,13 @@ def finances_view(request):
                 f"Facturation — {robe.nom_modele}", robe, robe.prix_total, symbole, auto=True
             ))
 
-    # 2. Intégration des transactions manuelles du grand livre
+    # 2. Injection des écritures manuelles du grand livre des comptes
     for t in Transaction.objects.select_related('robe').all():
         lignes.append(LigneCompte(
             t.date, t.type, t.get_categorie_display(), t.designation, t.robe, t.montant, '₪', auto=False
         ))
 
-    # 3. Filtrage par période
+    # 3. Filtrage temporel
     if periode == 'jour':
         lignes = [l for l in lignes if l.date == aujourdhui]
     elif periode == 'mois':
@@ -64,12 +64,12 @@ def finances_view(request):
     elif periode == 'annee':
         lignes = [l for l in lignes if l.date.year == aujourdhui.year]
 
-    # 4. Calcul des indicateurs financiers de performance
+    # 4. Calculs des bilans de la période
     total_recettes = sum((l.montant for l in lignes if l.type == 'RECETTE'), 0)
     total_depenses = sum((l.montant for l in lignes if l.type == 'DEPENSE'), 0)
     benefice_net = total_recettes - total_depenses
 
-    # 5. Tri et segmentation par groupes mensuels
+    # 5. Tri chronologique inversé et regroupement par mois de calendrier
     lignes.sort(key=lambda l: l.date, reverse=True)
     groupes = [
         {'label': f"{MOIS_FR[mois - 1]} {annee}", 'lignes': list(lignes_du_mois)}
