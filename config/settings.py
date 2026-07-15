@@ -156,11 +156,21 @@ STORAGES = {
     "default": {
         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
     },
-    # WhiteNoise gère ton CSS et JS avec un hash de contenu dans le nom
-    # de fichier : dès que le CSS change, l'URL change, et le navigateur
-    # ne peut plus servir une version en cache périmée.
+    # En production (DEBUG=False), WhiteNoise hache le contenu du CSS/JS
+    # dans le nom de fichier : dès que le CSS change, l'URL change, et le
+    # navigateur ne peut plus servir une version en cache périmée.
+    #
+    # En local/tests (DEBUG=True), on garde le stockage simple de Django :
+    # le stockage haché exige d'avoir lancé `collectstatic` au préalable,
+    # ce que `manage.py runserver` et `manage.py test` ne font jamais
+    # automatiquement — sans cette distinction, les tests plantent avec
+    # "the file could not be found" dès qu'une page utilise {% static %}.
     "staticfiles": {
-        "BACKEND": "config.storage.LenientManifestStaticFilesStorage",
+        "BACKEND": (
+            "config.storage.LenientManifestStaticFilesStorage"
+            if not DEBUG else
+            "django.contrib.staticfiles.storage.StaticFilesStorage"
+        ),
     },
 }
 

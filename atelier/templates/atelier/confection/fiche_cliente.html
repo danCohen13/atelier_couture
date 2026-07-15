@@ -51,8 +51,8 @@
                     </thead>
                     <tbody>
                         {% for robe in robes %}
-                            {% include 'atelier/_robe_row.html' with show_client=False %}
-                            {% include 'atelier/_tiroir_robe.html' %}
+                            {% include 'atelier/confection/_robe_row.html' with show_client=False %}
+                            {% include 'atelier/confection/_tiroir_robe.html' %}
                         {% empty %}
                         <tr>
                             <td colspan="5" class="empty-state">Aucune confection enregistrée pour cette cliente.</td>
