@@ -1,11 +1,11 @@
 from django.urls import path
-from django.contrib.auth import views as auth_views  # Protège tes écrans de connexion
+from django.contrib.auth import views as auth_views
 from . import views_atelier
 from . import views_finances
 
 urlpatterns = [
     # --- RACINE & ATELIER (views_atelier) ---
-    path('', views_atelier.dashboard, name='dashboard'),  # Remet le dashboard à la racine du site
+    path('', views_atelier.dashboard, name='dashboard'),
     path('client/ajouter/', views_atelier.ajouter_client, name='ajouter_client'),
     path('robe/ajouter/', views_atelier.ajouter_robe, name='ajouter_robe'),
     path('robe/<int:robe_id>/tache-rapide/<str:type_tache>/', views_atelier.ajouter_tache_rapide, name='ajouter_tache_rapide'),
@@ -22,7 +22,12 @@ urlpatterns = [
     path('finances/', views_finances.finances_view, name='finances'),
     path('finances/ajouter/', views_finances.ajouter_transaction_view, name='ajouter_transaction'),
     
+    # LA NOUVELLE ROUTE IA ICI : 
+    # Elle pointe vers ta fonction d'analyse et permet d'appeler l'URL en AJAX depuis le template
+    path('finances/analyser-ia/', views_finances.analyser_texte_ia, name='analyser_texte_ia'),
+    
     # --- ÉCRANS DE SÉCURITÉ ---
     path('login/', auth_views.LoginView.as_view(template_name='atelier/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
+    path('client/analyser-mesures/', views_atelier.analyser_mesures_ia, name='analyser_mesures_ia'),
 ]

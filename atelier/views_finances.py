@@ -1,5 +1,10 @@
+import os
+import json
+import requests
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse
 from django.utils import timezone
 from itertools import groupby
 from datetime import date, timedelta
@@ -165,3 +170,71 @@ def ajouter_transaction_view(request):
         form = TransactionForm(initial={'date': timezone.now().date(), 'type': 'DEPENSE'})
 
     return render(request, 'atelier/finances/ajouter_transaction.html', {'form': form})
+
+
+@login_required
+@require_POST
+def analyser_texte_ia(request):
+    """
+    Reçoit une phrase libre en AJAX, l'envoie à l'IA Gemini et renvoie un JSON 
+    structuré pour pré-remplir le formulaire d'ajout de transaction.
+    """
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Format JSON invalide'}, status=400)
+
+    phrase_utilisateur = data.get('phrase', '').strip()
+    if not phrase_utilisateur:
+        return JsonResponse({'error': 'Aucun texte fourni'}, status=400)
+
+    # Récupération de la clé API
+    api_key = os.environ.get('GEMINI_API_KEY')
+    if not api_key:
+        return JsonResponse({'error': 'Clé API Gemini manquante (GEMINI_API_KEY non configurée)'}, status=500)
+
+    aujourdhui = timezone.now().date().isoformat()
+    prompt_systeme = f"""
+    Tu es un assistant comptable pour un atelier de haute couture. 
+    Analyse la phrase de l'utilisateur et extrait les données sous la forme d'un objet JSON pur.
+    La date d'aujourd'hui est le {aujourdhui}.
+    
+    Tu dois obligatoirement répondre UNIQUEMENT avec un objet JSON respectant exactement cette structure, sans aucun texte explicatif autour et sans balises markdown (pas de ```json) :
+    {{
+        "date": "YYYY-MM-DD (déduis la date par rapport à aujourd'hui, si non précisé utilise {aujourdhui})",
+        "type": "RECETTE ou DEPENSE (en majuscules)",
+        "categorie": "Fournitures, Matériel, Acompte, ou Autre (choisis la plus de pertinente)",
+        "designation": "Description courte de l'opération (ex: Achat fil de soie)",
+        "montant": 125.50 (un nombre décimal ou entier, sans symbole de devise)
+    }}
+    """
+
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key={api_key}"
+    headers = {'Content-Type': 'application/json'}    
+    payload = {
+        "contents": [{
+            "parts": [
+                {"text": prompt_systeme},
+                {"text": f"Phrase à analyser : {phrase_utilisateur}"}
+            ]
+        }]
+    }
+
+    try:
+        response = requests.post(url, headers=headers, json=payload, timeout=10)
+        response.raise_for_status()
+        resultat_ia = response.json()
+        
+        texte_reponse = resultat_ia['candidates'][0]['content']['parts'][0]['text'].strip()
+        
+        # Nettoyage des backticks markdown si jamais le modèle en génère malgré la consigne
+        if texte_reponse.startswith("```"):
+            texte_reponse = texte_reponse.strip("```").strip("json").strip()
+
+        donnees_structurees = json.loads(texte_reponse)
+        return JsonResponse(donnees_structurees)
+
+    except requests.exceptions.RequestException as e:
+        return JsonResponse({'error': f"Erreur de communication avec l'API : {str(e)}"}, status=502)
+    except (json.JSONDecodeError, KeyError, IndexError) as e:
+        return JsonResponse({'error': f"Impossible de décoder la réponse de l'IA : {str(e)}"}, status=500)

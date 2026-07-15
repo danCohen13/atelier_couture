@@ -1,23 +1,58 @@
 {% extends 'atelier/base.html' %}
-{% block title %}Ajuster Dossier — {{ cliente.nom }}{% endblock %}
+{% block title %}Modifier commande — {{ robe.nom_modele }}{% endblock %}
 
 {% block content %}
-<main class="page" style="max-width: 600px;">
+<main class="page" style="max-width: 760px;">
     <div class="form-card">
         <div class="form-card__inner">
-            <span class="eyebrow">Mise à jour</span>
-            <h2>Modifier la fiche de {{ cliente.prenom }}</h2>
-            
-            <form method="POST" style="margin-top: 20px;">
-                {% csrf_token %}
-                {{ form.as_p }}
+            <span class="eyebrow">Ajustement d'atelier</span>
+            <h2>Modifier la confection : {{ robe.nom_modele }}</h2>
+            <p style="color: var(--ink-soft); font-size: 13.5px; margin-bottom: 26px;">
+                Modifie le modèle, décalez les dates ou réajustez les coûts de production.
+            </p>
+
+            <!-- 🎙️ BLOC DE DICTÉE VOCALE DES MESURES -->
+            <div style="background-color: #fcfbf9; border: 1px solid #e6dfd3; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
+                <h3 style="margin-top: 0; margin-bottom: 8px; font-size: 1.1em; color: #1a1a1a; display: flex; align-items: center; gap: 8px;">
+                    🎙️ Ajustement rapide des mesures par IA
+                </h3>
+                <p style="color: var(--ink-soft); font-size: 12.5px; margin-bottom: 15px; line-height: 1.4;">
+                    Une retouche à enregistrer ? Cliquez sur le micro pour dicter les nouvelles mesures à appliquer à la robe de votre cliente.
+                </p>
+
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <!-- Bouton Micro -->
+                    <button type="button" id="btn-record" 
+                            style="background-color: #fff; border: 1px solid #dcd5c9; width: 46px; height: 46px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.3em; transition: all 0.3s ease; flex-shrink: 0;">
+                        🎤
+                    </button>
+                    
+                    <!-- Zone de transcription textuelle -->
+                    <input type="text" id="voice-transcript" 
+                           placeholder="Parlez au micro... (ex: nouvelle taille à 68, hanches 96)" 
+                           style="flex-grow: 1; padding: 11px 15px; border: 1px solid #dcd5c9; border-radius: 4px; font-size: 0.95em; background-color: #fff; outline: none; height: 46px; box-sizing: border-box;">
+                    
+                    <!-- Bouton d'analyse IA -->
+                    <button type="button" id="btn-analyser-mesures" class="btn btn--primary" style="height: 46px; padding: 0 20px; font-size: 0.95em;">
+                        Analyser
+                    </button>
+                </div>
                 
-                <div class="form-actions" style="margin-top: 30px;">
-                    <a href="{% url 'fiche_cliente' cliente.id %}" class="btn btn--outline">Annuler</a>
-                    <button type="submit" class="btn btn--primary">Enregistrer les modifications</button>
+                <!-- Statut de l'écoute et de l'analyse -->
+                <div id="voice-status" style="margin-top: 12px; font-size: 12.5px; display: none; font-weight: 500;"></div>
+            </div>
+
+            <!-- FORMULAIRE DJANGO -->
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% include 'atelier/confection/_robe_form.html' %}
+
+                <div class="form-actions">
+                    <a href="{% url 'dashboard' %}" class="btn btn--outline">Annuler</a>
+                    <button type="submit" class="btn btn--primary">Sauvegarder</button>
                 </div>
             </form>
         </div>
     </div>
 </main>
-{% endblock %}
+

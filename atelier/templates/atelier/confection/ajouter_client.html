@@ -12,6 +12,9 @@
                 Ces informations serviront de base à chaque nouvelle confection pour cette cliente.
             </p>
 
+            <!-- ✨ On inclut notre module de dictée vocale réutilisable ici ! -->
+            {% include 'atelier/includes/_dictation_vocale.html' %}
+
             <form method="POST">
                 {% csrf_token %}
                 {{ form.as_p }}

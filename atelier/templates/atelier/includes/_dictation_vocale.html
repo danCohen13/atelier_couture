@@ -1,0 +1,157 @@
+<!-- 🎙️ COMPOSANT AUTONOME : DICTÉE VOCALE DES MESURES -->
+<div style="background-color: #fcfbf9; border: 1px solid #e6dfd3; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
+    <h3 style="margin-top: 0; margin-bottom: 8px; font-size: 1.1em; color: #1a1a1a; display: flex; align-items: center; gap: 8px;">
+        🎙️ Prise de mesures vocale par IA
+    </h3>
+    <p style="color: var(--ink-soft); font-size: 12.5px; margin-bottom: 15px; line-height: 1.4;">
+        Cliquez sur le micro, énoncez les mesures à voix haute, puis cliquez sur Analyser pour pré-remplir la fiche de la cliente.
+    </p>
+
+    <div style="display: flex; gap: 10px; align-items: center;">
+        <!-- Bouton Micro -->
+        <button type="button" id="btn-record" 
+                style="background-color: #fff; border: 1px solid #dcd5c9; width: 46px; height: 46px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.3em; transition: all 0.3s ease; flex-shrink: 0;">
+            🎤
+        </button>
+        
+        <!-- Zone de transcription textuelle -->
+        <input type="text" id="voice-transcript" 
+               placeholder="Parlez au micro... (ex: poitrine 92, taille 70, hanches 98)" 
+               style="flex-grow: 1; padding: 11px 15px; border: 1px solid #dcd5c9; border-radius: 4px; font-size: 0.95em; background-color: #fff; outline: none; height: 46px; box-sizing: border-box;">
+        
+        <!-- Bouton d'analyse IA -->
+        <button type="button" id="btn-analyser-mesures" class="btn btn--primary" style="height: 46px; padding: 0 20px; font-size: 0.95em;">
+            Analyser
+        </button>
+    </div>
+    
+    <!-- Statut de l'écoute et de l'analyse -->
+    <div id="voice-status" style="margin-top: 12px; font-size: 12.5px; display: none; font-weight: 500;"></div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const btnRecord = document.getElementById('btn-record');
+    const voiceTranscript = document.getElementById('voice-transcript');
+    const btnAnalyser = document.getElementById('btn-analyser-mesures');
+    const voiceStatus = document.getElementById('voice-status');
+
+    let recognition = null;
+    let isRecording = false;
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+        recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.lang = 'fr-FR'; // Tu peux mettre 'he-IL' pour dicter en hébreu !
+
+        recognition.onstart = function() {
+            isRecording = true;
+            btnRecord.style.backgroundColor = '#ffcdd2';
+            btnRecord.style.borderColor = '#e53935';
+            updateStatus('🎤 Le micro écoute... Énoncez vos mesures.', '#e53935');
+        };
+
+        recognition.onresult = function(event) {
+            voiceTranscript.value = event.results[0][0].transcript;
+            updateStatus('✅ Dictée capturée ! Cliquez sur "Analyser".', '#2e7d32');
+        };
+
+        recognition.onerror = function(event) {
+            updateStatus('❌ Erreur micro : ' + event.error, '#d9534f');
+            resetMicrophoneStyles();
+        };
+
+        recognition.onend = function() {
+            isRecording = false;
+            resetMicrophoneStyles();
+        };
+    } else {
+        btnRecord.style.display = 'none';
+        updateStatus('⚠️ Dictée vocale non supportée par ce navigateur.', 'var(--ink-soft)');
+    }
+
+    btnRecord.addEventListener('click', function() {
+        if (!recognition) return;
+        if (isRecording) {
+            recognition.stop();
+        } else {
+            recognition.start();
+        }
+    });
+
+    btnAnalyser.addEventListener('click', function() {
+        const texte = voiceTranscript.value.trim();
+        if (!texte) {
+            updateStatus('Veuillez dicter ou écrire des mesures d\'abord.', '#d9534f');
+            return;
+        }
+
+        updateStatus('⚡ Extraction en cours par l\'IA Gemini...', '#8a7762');
+        btnAnalyser.disabled = true;
+
+        fetch("{% url 'analyser_mesures_ia' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ texte: texte })
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('Erreur de connexion serveur');
+            return response.json();
+        })
+        .then(data => {
+            // Mappe les clés du JSON de l'IA aux IDs des champs générés par Django pour la cliente
+            const mapping = {
+                'tour_poitrine': ['id_tour_poitrine', 'id_poitrine'],
+                'tour_taille': ['id_tour_taille', 'id_taille'],
+                'tour_hanches': ['id_tour_hanches', 'id_hanches'],
+                'hauteur_buste': ['id_hauteur_buste', 'id_buste'],
+                'longueur_robe': ['id_longueur_robe', 'id_longueur']
+            };
+
+            let champsRemplisCount = 0;
+
+            for (const [cleJson, idsDjango] of Object.entries(mapping)) {
+                if (data[cleJson] !== undefined && data[cleJson] !== null) {
+                    for (const id of idsDjango) {
+                        const inputEl = document.getElementById(id);
+                        if (inputEl) {
+                            inputEl.value = data[cleJson];
+                            champsRemplisCount++;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (champsRemplisCount > 0) {
+                updateStatus(`🎉 ${champsRemplisCount} mesure(s) injectée(s) avec succès !`, '#2e7d32');
+                voiceTranscript.value = '';
+            } else {
+                updateStatus('🤔 Aucune mesure reconnue. Essayez de formuler clairement (ex: poitrine 94).', '#8a7762');
+            }
+        })
+        .catch(error => {
+            updateStatus('❌ Erreur : ' + error.message, '#d9534f');
+        })
+        .finally(() => {
+            btnAnalyser.disabled = false;
+        });
+    });
+
+    function updateStatus(message, color) {
+        voiceStatus.style.display = 'block';
+        voiceStatus.style.color = color;
+        voiceStatus.textContent = message;
+    }
+
+    function resetMicrophoneStyles() {
+        btnRecord.style.backgroundColor = '#fff';
+        btnRecord.style.borderColor = '#dcd5c9';
+    }
+});
+</script>

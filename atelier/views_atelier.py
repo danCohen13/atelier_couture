@@ -1,3 +1,8 @@
+import os
+import json
+import requests
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
@@ -154,3 +159,73 @@ def liste_clientes(request):
     else:
         clientes = Client.objects.all().order_by('nom')
     return render(request, 'atelier/confection/liste_clientes.html', {'clientes': clientes, 'search_query': query})
+
+@login_required
+@require_POST
+def analyser_mesures_ia(request):
+    """
+    Reçoit une dictée vocale textuelle et extrait les mesures physiques de la cliente.
+    """
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Format JSON invalide'}, status=400)
+
+    texte_mesures = data.get('texte', '').strip()
+    if not texte_mesures:
+        return JsonResponse({'error': 'Aucun texte fourni'}, status=400)
+
+    api_key = os.environ.get('GEMINI_API_KEY')
+    if not api_key:
+        return JsonResponse({'error': 'Clé API Gemini manquante'}, status=500)
+
+    # Prompt d'extraction spécialisé pour la couture
+    prompt_systeme = """
+    Tu es un assistant technique d'atelier de haute couture.
+    Analyse les notes ou la dictée vocale de l'utilisateur et extrait les mesures corporelles de la cliente.
+    
+    Tu dois obligatoirement renvoyer UNIQUEMENT un objet JSON pur avec la structure suivante (si une mesure n'est pas mentionnée, mets null) :
+    {
+        "tour_poitrine": un nombre entier ou décimal,
+        "tour_taille": un nombre entier ou décimal,
+        "tour_hanches": un nombre entier ou décimal,
+        "hauteur_buste": un nombre entier ou décimal,
+        "longueur_robe": un nombre entier ou décimal
+    }
+    
+    Exemples de termes équivalents :
+    - "poitrine", "tour de poitrine", "buste" -> tour_poitrine
+    - "taille", "tour de taille" -> tour_taille
+    - "hanches", "tour de hanches", "fesses" -> tour_hanches
+    - "hauteur buste", "longueur buste", "épaule à taille" -> hauteur_buste
+    - "longueur robe", "longueur jupe", "hauteur totale" -> longueur_robe
+
+    Ne fournis aucune explication, aucune balise de code markdown. Renvoie juste le dictionnaire JSON.
+    """
+
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key={api_key}"
+    headers = {'Content-Type': 'application/json'}
+    payload = {
+        "contents": [{
+            "parts": [
+                {"text": prompt_systeme},
+                {"text": f"Texte à analyser : {texte_mesures}"}
+            ]
+        }]
+    }
+
+    try:
+        response = requests.post(url, headers=headers, json=payload, timeout=20)
+        response.raise_for_status()
+        resultat_ia = response.json()
+        
+        texte_reponse = resultat_ia['candidates'][0]['content']['parts'][0]['text'].strip()
+        
+        if texte_reponse.startswith("```"):
+            texte_reponse = texte_reponse.strip("```").strip("json").strip()
+
+        donnees_mesures = json.loads(texte_reponse)
+        return JsonResponse(donnees_mesures)
+
+    except Exception as e:
+        return JsonResponse({'error': f"Erreur d'analyse : {str(e)}"}, status=500)

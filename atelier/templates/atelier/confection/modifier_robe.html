@@ -12,6 +12,7 @@
             </p>
 
             <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
                 {% include 'atelier/confection/_robe_form.html' %}
 
                 <div class="form-actions">
