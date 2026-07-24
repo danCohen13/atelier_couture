@@ -1,18 +1,15 @@
-<!-- 🎙️ COMPOSANT AUTONOME : DICTÉE VOCALE DES MESURES -->
+<!-- 🎙️ COMPOSANT : DICTÉE VOCALE DES MESURES -->
 <div style="background-color: #fcfbf9; border: 1px solid #e6dfd3; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
     <h3 style="margin-top: 0; margin-bottom: 8px; font-size: 1.1em; color: #1a1a1a; display: flex; align-items: center; gap: 8px;">
         🎙️ Prise de mesures vocale par IA
     </h3>
     <p style="color: var(--ink-soft); font-size: 12.5px; margin-bottom: 15px; line-height: 1.4;">
-        Cliquez sur le micro, énoncez les mesures à voix haute, puis cliquez sur Analyser pour pré-remplir la fiche de la cliente.
+        Cliquez sur le micro, énoncez vos mesures à voix haute, puis cliquez sur Analyser pour pré-remplir la fiche de la cliente.
     </p>
 
     <div style="display: flex; gap: 10px; align-items: center;">
-        <!-- Bouton Micro -->
-        <button type="button" id="btn-record" 
-                style="background-color: #fff; border: 1px solid #dcd5c9; width: 46px; height: 46px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.3em; transition: all 0.3s ease; flex-shrink: 0;">
-            🎤
-        </button>
+        <!-- 🎙️ On appelle le micro générique et on lui dit de remplir "voice-transcript" -->
+        {% include 'atelier/includes/_microphone_generic.html' with btn_id="btn-mic-client" target_id="voice-transcript" %}
         
         <!-- Zone de transcription textuelle -->
         <input type="text" id="voice-transcript" 
@@ -25,61 +22,14 @@
         </button>
     </div>
     
-    <!-- Statut de l'écoute et de l'analyse -->
     <div id="voice-status" style="margin-top: 12px; font-size: 12.5px; display: none; font-weight: 500;"></div>
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const btnRecord = document.getElementById('btn-record');
     const voiceTranscript = document.getElementById('voice-transcript');
     const btnAnalyser = document.getElementById('btn-analyser-mesures');
     const voiceStatus = document.getElementById('voice-status');
-
-    let recognition = null;
-    let isRecording = false;
-
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (SpeechRecognition) {
-        recognition = new SpeechRecognition();
-        recognition.continuous = false;
-        recognition.interimResults = false;
-        recognition.lang = 'fr-FR'; // Tu peux mettre 'he-IL' pour dicter en hébreu !
-
-        recognition.onstart = function() {
-            isRecording = true;
-            btnRecord.style.backgroundColor = '#ffcdd2';
-            btnRecord.style.borderColor = '#e53935';
-            updateStatus('🎤 Le micro écoute... Énoncez vos mesures.', '#e53935');
-        };
-
-        recognition.onresult = function(event) {
-            voiceTranscript.value = event.results[0][0].transcript;
-            updateStatus('✅ Dictée capturée ! Cliquez sur "Analyser".', '#2e7d32');
-        };
-
-        recognition.onerror = function(event) {
-            updateStatus('❌ Erreur micro : ' + event.error, '#d9534f');
-            resetMicrophoneStyles();
-        };
-
-        recognition.onend = function() {
-            isRecording = false;
-            resetMicrophoneStyles();
-        };
-    } else {
-        btnRecord.style.display = 'none';
-        updateStatus('⚠️ Dictée vocale non supportée par ce navigateur.', 'var(--ink-soft)');
-    }
-
-    btnRecord.addEventListener('click', function() {
-        if (!recognition) return;
-        if (isRecording) {
-            recognition.stop();
-        } else {
-            recognition.start();
-        }
-    });
 
     btnAnalyser.addEventListener('click', function() {
         const texte = voiceTranscript.value.trim();
@@ -104,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return response.json();
         })
         .then(data => {
-            // Mappe les clés du JSON de l'IA aux IDs des champs générés par Django pour la cliente
+            // Mappe les clés renvoyées par ton endpoint aux IDs générés par ton formulaire Django
             const mapping = {
                 'tour_poitrine': ['id_tour_poitrine', 'id_poitrine'],
                 'tour_taille': ['id_tour_taille', 'id_taille'],
@@ -122,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (inputEl) {
                             inputEl.value = data[cleJson];
                             champsRemplisCount++;
-                            break;
+                            break; // Passe à la mesure suivante une fois le champ trouvé
                         }
                     }
                 }
@@ -130,7 +80,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (champsRemplisCount > 0) {
                 updateStatus(`🎉 ${champsRemplisCount} mesure(s) injectée(s) avec succès !`, '#2e7d32');
-                voiceTranscript.value = '';
+                voiceTranscript.value = ''; // On vide le champ après succès
             } else {
                 updateStatus('🤔 Aucune mesure reconnue. Essayez de formuler clairement (ex: poitrine 94).', '#8a7762');
             }
@@ -148,10 +98,5 @@ document.addEventListener('DOMContentLoaded', function() {
         voiceStatus.style.color = color;
         voiceStatus.textContent = message;
     }
-
-    function resetMicrophoneStyles() {
-        btnRecord.style.backgroundColor = '#fff';
-        btnRecord.style.borderColor = '#dcd5c9';
-    }
 });
-</script>
+</script></script>

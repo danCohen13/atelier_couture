@@ -15,7 +15,7 @@
                 {% csrf_token %}
 
                 {% if form.errors %}
-                    <p class="form-error">Identifiants incorrects. Veuillez réessayer.</p>
+                <p class="form-error">Identifiants incorrects. Veuillez réessayer.</p>
                 {% endif %}
 
                 <p>
@@ -29,6 +29,9 @@
                 </p>
 
                 <button type="submit" class="btn btn--primary btn--block">Se connecter</button>
+                <div style="margin-top: 15px; text-align: right;">
+                    <a href="{% url 'demander_code_reset' %}">Mot de passe oublié ?</a>
+                </div>
             </form>
         </div>
     </div>

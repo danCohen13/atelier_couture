@@ -9,136 +9,52 @@
 
     <h2 style="color: #1a1a1a; margin-bottom: 30px; font-weight: 600;">Enregistrer une opération</h2>
 
-    <!-- ✨ BLOC DE SAISIE IA -->
+    <!-- ✨ BLOC DE SAISIE RAPIDE PAR IA -->
     <div style="background-color: #fcfbf9; border: 1px solid #e6dfd3; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
         <h3 style="margin-top: 0; margin-bottom: 8px; font-size: 1.1em; color: #1a1a1a; display: flex; align-items: center; gap: 8px;">
             ✨ Saisie rapide par IA
         </h3>
-        <p style="color: #666; font-size: 0.88em; margin-bottom: 15px; line-height: 1.4;">
+        <p style="color: var(--ink-soft); font-size: 12.5px; margin-bottom: 15px; line-height: 1.4;">
             Tapez ou dictez votre opération librement. L'IA s'occupe de remplir tous les champs ci-dessous pour vous.
         </p>
-        
-        <div style="display: flex; gap: 10px;">
-            <input type="text" id="ai-input" 
-                   placeholder="Ex: Achat de 4m de doublure soie à 120 shekels hier..." 
-                   style="flex-grow: 1; padding: 12px; border: 1px solid #dcd5c9; border-radius: 4px; font-size: 0.95em; background-color: #fff; outline: none;">
-            <button type="button" id="btn-ai" 
-                    style="background-color: #1a1a1a; color: #fff; border: none; padding: 0 20px; border-radius: 4px; cursor: pointer; font-weight: 500; font-size: 0.95em; transition: opacity 0.2s;">
-                Analyser
-            </button>
-        </div>
-        
-        <!-- Zone d'état / de chargement -->
-        <div id="ai-status" style="margin-top: 12px; font-size: 0.9em; display: none;"></div>
+
+        <!-- On englobe la saisie IA dans le formulaire principal pour que le bouton "Analyser" envoie bien le texte au serveur -->
+        <form method="POST">
+            {% csrf_token %}
+            
+            <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px;">
+                <!-- 🎙️ On appelle le micro générique et on lui dit de remplir "finance-transcript" -->
+                {% include 'atelier/includes/_microphone_generic.html' with btn_id="btn-mic-finance" target_id="finance-transcript" %}
+                
+                <!-- Zone de saisie -->
+                <input type="text" id="finance-transcript" name="texte_ia" value="{{ texte_ia|default:'' }}"
+                       placeholder="Tapez ou dictez votre opération librement..." 
+                       style="flex-grow: 1; padding: 11px 15px; border: 1px solid #dcd5c9; border-radius: 4px; font-size: 0.95em; background-color: #fff; outline: none; height: 46px; box-sizing: border-box;">
+                
+                <!-- Bouton d'analyse -->
+                <button type="submit" name="analyser" class="btn btn--primary" style="height: 46px; padding: 0 20px; font-size: 0.95em;">
+                    Analyser
+                </button>
+            </div>
+            
+            {% if erreur_ia %}
+            <div style="color: #d9534f; font-size: 12.5px; font-weight: 500; margin-top: -5px; margin-bottom: 15px;">
+                ❌ {{ erreur_ia }}
+            </div>
+            {% endif %}
+
+            <hr style="border: 0; border-top: 1px solid #e6dfd3; margin: 25px 0;">
+
+            <!-- FORMULAIRE DJANGO TRADITIONNEL (rempli automatiquement après analyse) -->
+            {{ form.as_p }}
+
+            <div style="margin-top: 30px;">
+                <button type="submit" name="enregistrer" class="btn btn--primary" style="width: 100%;">
+                    Enregistrer l'opération
+                </button>
+            </div>
+        </form>
     </div>
 
-    <!-- FORMULAIRE TRADITIONNEL -->
-    <form method="POST" style="background-color: #fff; border: 1px solid #e6dfd3; border-radius: 8px; padding: 30px;">
-        {% csrf_token %}
-        
-        {% for field in form %}
-            <div style="margin-bottom: 20px;">
-                <label for="{{ field.id_for_label }}" style="display: block; margin-bottom: 8px; font-weight: 500; color: #333; font-size: 0.95em;">
-                    {{ field.label }}
-                </label>
-                <!-- Django applique automatiquement les classes CSS et les IDs corrects (id_date, id_montant, etc.) -->
-                {{ field }}
-                {% if field.errors %}
-                    <div style="color: #d9534f; font-size: 0.85em; margin-top: 5px;">
-                        {{ field.errors }}
-                    </div>
-                {% endif %}
-            </div>
-        {% endfor %}
-
-        <button type="submit" style="background-color: #1a1a1a; color: #fff; border: none; width: 100%; padding: 14px; border-radius: 4px; font-weight: 600; font-size: 1em; cursor: pointer; margin-top: 10px;">
-            Enregistrer la transaction
-        </button>
-    </form>
 </div>
-
-<!-- SCRIPT JAVASCRIPT DE RACCORDEMENT -->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const btnAi = document.getElementById('btn-ai');
-    const aiInput = document.getElementById('ai-input');
-    const aiStatus = document.getElementById('ai-status');
-
-    // Déclencheur sur la touche Entrée dans le champ de saisie
-    aiInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            btnAi.click();
-        }
-    });
-
-    btnAi.addEventListener('click', function() {
-        const phrase = aiInput.value.trim();
-        if (!phrase) {
-            updateStatus('Veuillez entrer une phrase descriptive.', '#d9534f');
-            return;
-        }
-
-        // 1. Mise en état de chargement
-        updateStatus('⚡ Analyse de l\'écriture comptable par l\'IA...', '#8a7762');
-        btnAi.disabled = true;
-        btnAi.style.opacity = '0.6';
-
-        // 2. Appel AJAX vers la vue Django
-        fetch("{% url 'analyser_texte_ia' %}", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': '{{ csrf_token }}' // Jeton de sécurité Django obligatoire
-            },
-            body: JSON.stringify({ phrase: phrase })
-        })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(err => { throw new Error(err.error || 'Erreur serveur'); });
-            }
-            return response.json();
-        })
-        .then(data => {
-            // 3. Remplissage intelligent des champs générés par Django (id_date, id_type, id_montant, etc.)
-            if (data.date) document.getElementById('id_date').value = data.date;
-            if (data.type) document.getElementById('id_type').value = data.type;
-            if (data.designation) document.getElementById('id_designation').value = data.designation;
-            if (data.montant) document.getElementById('id_montant').value = data.montant;
-            
-            // Traitement spécifique pour le champ déroulant "catégorie"
-            if (data.categorie) {
-                const selectCat = document.getElementById('id_categorie');
-                if (selectCat) {
-                    const options = Array.from(selectCat.options);
-                    // On cherche une option qui correspond textuellement ou en valeur à ce que l'IA a détecté
-                    const matchingOption = options.find(opt => 
-                        opt.value.toLowerCase() === data.categorie.toLowerCase() || 
-                        opt.text.toLowerCase().includes(data.categorie.toLowerCase())
-                    );
-                    if (matchingOption) {
-                        selectCat.value = matchingOption.value;
-                    }
-                }
-            }
-
-            updateStatus('✅ Formulaire pré-rempli ! Relisez puis enregistrez.', '#2e7d32');
-            aiInput.value = ''; // On vide la barre d'IA
-        })
-        .catch(error => {
-            updateStatus('❌ ' + error.message, '#d9534f');
-        })
-        .finally(() => {
-            btnAi.disabled = false;
-            btnAi.style.opacity = '1';
-        });
-    });
-
-    function updateStatus(message, color) {
-        aiStatus.style.display = 'block';
-        aiStatus.style.color = color;
-        aiStatus.textContent = message;
-    }
-});
-</script>
 {% endblock %}

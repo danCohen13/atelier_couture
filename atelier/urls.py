@@ -30,4 +30,19 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='atelier/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
     path('client/analyser-mesures/', views_atelier.analyser_mesures_ia, name='analyser_mesures_ia'),
+
+    # 1. Demande de code par email
+    path('mot-de-passe-oublie/', 
+         views_atelier.demander_code_reset, 
+         name='demander_code_reset'),
+
+    # 2. Saisie du code à 6 chiffres
+    path('mot-de-passe-oublie/verification/', 
+         views_atelier.verifier_code_reset, 
+         name='verifier_code_reset'),
+
+    # 3. Création du nouveau mot de passe
+    path('mot-de-passe-oublie/nouveau/', 
+         views_atelier.nouveau_mot_de_passe, 
+         name='nouveau_mot_de_passe'),
 ]

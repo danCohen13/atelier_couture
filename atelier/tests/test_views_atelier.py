@@ -122,6 +122,17 @@ class ClientCrudTests(TestCase):
         cliente.refresh_from_db()
         self.assertEqual(cliente.telephone, '+33612345678')
 
+    def test_modifier_client_affiche_les_champs_de_la_cliente_pas_dune_robe(self):
+        # Régression : la page avait par erreur hérité du gabarit de robe
+        # (_robe_form.html) au lieu du formulaire de la cliente.
+        cliente = Client.objects.create(nom="Dupont", prenom="Claire")
+        response = self.client.get(reverse('modifier_client', args=[cliente.id]))
+        contenu = response.content.decode()
+        self.assertIn('name="tour_poitrine"', contenu)
+        self.assertIn('name="telephone"', contenu)
+        self.assertNotIn('name="nom_modele"', contenu)
+        self.assertNotIn('name="cout_tissu"', contenu)
+
     def test_recherche_par_nom(self):
         Client.objects.create(nom="Dupont", prenom="Claire")
         Client.objects.create(nom="Martin", prenom="Sophie")

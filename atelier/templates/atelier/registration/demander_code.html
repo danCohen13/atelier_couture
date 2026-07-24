@@ -1,0 +1,40 @@
+{% extends 'atelier/base.html' %}
+
+{% block content %}
+<div style="max-width: 450px; margin: 60px auto; padding: 0 20px;">
+    <div style="background-color: #fff; border: 1px solid #e6dfd3; border-radius: 8px; padding: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+        
+        <h2 style="margin-top: 0; margin-bottom: 10px; color: #1a1a1a; font-size: 1.4em; font-weight: 600;">
+            Mot de passe oublié
+        </h2>
+        
+        <p style="font-size: 13.5px; color: #666; margin-bottom: 25px; line-height: 1.5;">
+            Entrez votre adresse e-mail pour recevoir un code de vérification à 6 chiffres.
+        </p>
+
+        {% if messages %}
+            {% for m in messages %}
+                <div style="color: #d9534f; background-color: #fdf7f7; border: 1px solid #f5c6cb; padding: 10px 12px; border-radius: 4px; font-size: 13px; margin-bottom: 20px;">
+                    {{ m }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            <div style="margin-bottom: 20px;">
+                <label for="email" style="display: block; font-size: 12.5px; font-weight: 600; margin-bottom: 8px; color: #333;">
+                    Adresse e-mail
+                </label>
+                <input type="email" id="email" name="email" placeholder="exemple@domaine.com" required 
+                       style="width: 100%; height: 44px; padding: 0 12px; border: 1px solid #dcd5c9; border-radius: 4px; font-size: 0.95em; outline: none; box-sizing: border-box;">
+            </div>
+
+            <button type="submit" class="btn btn--primary" style="width: 100%; height: 46px; font-size: 0.95em; cursor: pointer;">
+                Envoyer le code
+            </button>
+        </form>
+
+    </div>
+</div>
+{% endblock %}

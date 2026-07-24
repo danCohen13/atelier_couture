@@ -1,0 +1,63 @@
+<!-- 🎙️ COMPOSANT MICROPHONE GÉNÉRIQUE -->
+<button type="button" id="{{ btn_id }}" 
+        style="background-color: #fff; border: 1px solid #dcd5c9; width: 46px; height: 46px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.3em; transition: all 0.3s ease; flex-shrink: 0;">
+    🎤
+</button>
+
+<script>
+(function() {
+    // On utilise une IIFE (fonction auto-exécutée) pour éviter que les variables n'entrent en conflit avec d'autres scripts
+    const btnRecord = document.getElementById('{{ btn_id }}');
+    const targetInput = document.getElementById('{{ target_id }}');
+    let recognition = null;
+    let isRecording = false;
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+        recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        // Permet de surcharger la langue si besoin (fr-FR par défaut, he-IL pour l'hébreu)
+        recognition.lang = "{{ lang|default:'fr-FR' }}"; 
+
+        recognition.onstart = function() {
+            isRecording = true;
+            btnRecord.style.backgroundColor = '#ffcdd2';
+            btnRecord.style.borderColor = '#e53935';
+        };
+
+        recognition.onresult = function(event) {
+            if (targetInput) {
+                targetInput.value = event.results[0][0].transcript;
+                // Déclenche un événement "input" pour avertir les autres scripts si nécessaire
+                targetInput.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+        };
+
+        recognition.onerror = function() {
+            resetStyles();
+        };
+
+        recognition.onend = function() {
+            isRecording = false;
+            resetStyles();
+        };
+    } else {
+        btnRecord.style.display = 'none';
+    }
+
+    btnRecord.addEventListener('click', function() {
+        if (!recognition) return;
+        if (isRecording) {
+            recognition.stop();
+        } else {
+            recognition.start();
+        }
+    });
+
+    function resetStyles() {
+        btnRecord.style.backgroundColor = '#fff';
+        btnRecord.style.borderColor = '#dcd5c9';
+    }
+})();
+</script>

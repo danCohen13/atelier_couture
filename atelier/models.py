@@ -1,7 +1,9 @@
 import datetime
+import random
 from django.db import models
 from django.core.validators import RegexValidator
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 class Client(models.Model):
     nom = models.CharField(max_length=100)
@@ -115,4 +117,18 @@ class Transaction(models.Model):
         ordering = ['-date', '-id'] # Affiche toujours les opérations les plus récentes en premier
 
     def __str__(self):
-        return f"{self.designation} ({self.montant} ₪)"        
+        return f"{self.designation} ({self.montant} ₪)"
+
+
+class CodeReinitialisation(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    code = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def est_valide(self):
+        # Le code expire au bout de 10 minutes
+        return timezone.now() < self.created_at + datetime.timedelta(minutes=10)
+
+    @staticmethod
+    def generer_code():
+        return str(random.randint(100000, 999999))        

@@ -13,7 +13,10 @@
             </p>
         </div>
         <div class="hero-card__meta">
-            <a href="{% url 'ajouter_robe' %}" class="btn btn--gold">Lancer une confection</a>
+            <!-- Dans la fiche de la cliente -->
+            <a href="{% url 'ajouter_robe' %}?client_id={{ cliente.id }}" class="btn btn--primary">
+                Lancer une confection
+            </a>
         </div>
     </div>
 
@@ -23,10 +26,14 @@
                 <h4>Mensurations</h4>
                 <a href="{% url 'modifier_client' cliente.id %}" class="card-link">Ajuster la fiche</a>
             </div>
-            <div class="finance-line"><span>Tour de poitrine</span><strong>{% if cliente.tour_poitrine %}{{ cliente.tour_poitrine }} cm{% else %}—{% endif %}</strong></div>
-            <div class="finance-line"><span>Tour de taille</span><strong>{% if cliente.tour_taille %}{{ cliente.tour_taille }} cm{% else %}—{% endif %}</strong></div>
-            <div class="finance-line"><span>Tour de hanches</span><strong>{% if cliente.tour_hanches %}{{ cliente.tour_hanches }} cm{% else %}—{% endif %}</strong></div>
-            <div class="finance-line"><span>Hauteur buste</span><strong>{% if cliente.hauteur_buste %}{{ cliente.hauteur_buste }} cm{% else %}—{% endif %}</strong></div>
+            <div class="finance-line"><span>Tour de poitrine</span><strong>{% if cliente.tour_poitrine %}{{
+                    cliente.tour_poitrine }} cm{% else %}—{% endif %}</strong></div>
+            <div class="finance-line"><span>Tour de taille</span><strong>{% if cliente.tour_taille %}{{
+                    cliente.tour_taille }} cm{% else %}—{% endif %}</strong></div>
+            <div class="finance-line"><span>Tour de hanches</span><strong>{% if cliente.tour_hanches %}{{
+                    cliente.tour_hanches }} cm{% else %}—{% endif %}</strong></div>
+            <div class="finance-line"><span>Hauteur buste</span><strong>{% if cliente.hauteur_buste %}{{
+                    cliente.hauteur_buste }} cm{% else %}—{% endif %}</strong></div>
             {% if cliente.notes_morphologie %}
             <div class="notes-block">
                 <span class="eyebrow">Notes spécifiques</span>
@@ -51,8 +58,8 @@
                     </thead>
                     <tbody>
                         {% for robe in robes %}
-                            {% include 'atelier/confection/_robe_row.html' with show_client=False %}
-                            {% include 'atelier/confection/_tiroir_robe.html' %}
+                        {% include 'atelier/confection/_robe_row.html' with show_client=False %}
+                        {% include 'atelier/confection/_tiroir_robe.html' %}
                         {% empty %}
                         <tr>
                             <td colspan="5" class="empty-state">Aucune confection enregistrée pour cette cliente.</td>
