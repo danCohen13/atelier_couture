@@ -1,0 +1,330 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <style>
+        /*
+            IMPORTANT : ce document est rendu par xhtml2pdf (moteur reportlab),
+            qui ne supporte PAS : les variables CSS (var/--x), calc(), flexbox,
+            border-radius fiable, ni les <svg> inline, ni @import de polices distantes.
+            Tout est donc écrit ici en tableaux + couleurs en dur + polices de base
+            (Times / Helvetica) pour un rendu garanti.
+
+            Si vous voulez utiliser vos propres polices (ex: Playfair Display),
+            téléchargez les fichiers .ttf, placez-les dans votre dossier static/fonts/
+            et décommentez le bloc @font-face ci-dessous en adaptant les chemins.
+        */
+
+        /*
+        @font-face {
+            font-family: 'PlayfairDisplay';
+            src: url("{% static 'fonts/PlayfairDisplay-Bold.ttf' %}");
+        }
+        */
+
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #FAF6F0;
+            color: #211C17;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 12px;
+        }
+
+        .page-wrap {
+            width: 100%;
+        }
+
+        .page-pad {
+            padding: 36px 46px;
+        }
+
+        /* ============ HEADER / LOGO ============ */
+        .header-table {
+            width: 100%;
+            border-bottom: 1px solid #E4D9C8;
+            padding-bottom: 20px;
+        }
+
+        .logo-name {
+            font-family: Helvetica, sans-serif;
+            font-weight: bold;
+            font-size: 26px;
+            letter-spacing: 4px;
+            color: #211C17;
+        }
+
+        .logo-script {
+            font-family: 'Times New Roman', Times, serif;
+            font-style: italic;
+            font-size: 20px;
+            letter-spacing: 1px;
+            color: #A9834F;
+            padding-top: 2px;
+        }
+
+        .logo-tagline {
+            font-family: Helvetica, sans-serif;
+            font-size: 8px;
+            letter-spacing: 3px;
+            color: #6B6156;
+            padding-top: 8px;
+        }
+
+        .doc-eyebrow {
+            font-family: Helvetica, sans-serif;
+            font-size: 8px;
+            letter-spacing: 3px;
+            color: #A9834F;
+        }
+
+        .doc-title {
+            font-family: 'Times New Roman', Times, serif;
+            font-style: italic;
+            font-size: 19px;
+            color: #211C17;
+            padding-top: 3px;
+        }
+
+        .doc-date {
+            font-family: Helvetica, sans-serif;
+            font-size: 9px;
+            color: #6B6156;
+            padding-top: 4px;
+        }
+
+        /* ============ CLIENT CARD ============ */
+        .client-card {
+            width: 100%;
+            background-color: #FFFDFB;
+            border: 1px solid #E4D9C8;
+            border-left: 3px solid #A9834F;
+            margin-top: 26px;
+        }
+
+        .client-card-inner {
+            padding: 16px 22px;
+        }
+
+        .client-eyebrow {
+            font-family: Helvetica, sans-serif;
+            font-size: 8px;
+            letter-spacing: 3px;
+            color: #A9834F;
+        }
+
+        .client-name {
+            font-family: 'Times New Roman', Times, serif;
+            font-weight: bold;
+            font-size: 18px;
+            color: #211C17;
+            padding-top: 4px;
+            padding-bottom: 8px;
+        }
+
+        .client-info-table {
+            width: 100%;
+        }
+
+        .client-label {
+            font-family: Helvetica, sans-serif;
+            font-size: 9px;
+            letter-spacing: 1px;
+            color: #A9834F;
+            padding-right: 10px;
+        }
+
+        .client-value {
+            font-family: Helvetica, sans-serif;
+            font-size: 10px;
+            color: #6B6156;
+            padding-right: 26px;
+        }
+
+        /* ============ ITEMS TABLE ============ */
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 26px;
+        }
+
+        .items-table th {
+            font-family: Helvetica, sans-serif;
+            font-size: 9px;
+            letter-spacing: 2px;
+            color: #FFFDFB;
+            background-color: #211C17;
+            padding: 10px 12px;
+            text-align: left;
+            font-weight: normal;
+        }
+
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+
+        .items-table td {
+            padding: 12px;
+            border-bottom: 1px solid #E4D9C8;
+            background-color: #FFFDFB;
+            font-size: 12px;
+        }
+
+        .row-alt td {
+            background-color: #FBF8F3;
+        }
+
+        .item-name {
+            font-family: 'Times New Roman', Times, serif;
+            font-weight: bold;
+            font-size: 13px;
+            color: #211C17;
+        }
+
+        .item-date {
+            font-family: Helvetica, sans-serif;
+            font-size: 10px;
+            color: #6B6156;
+        }
+
+        .item-price {
+            font-family: Helvetica, sans-serif;
+            font-weight: bold;
+            color: #6E2A38;
+            font-size: 12px;
+        }
+
+        /* ============ TOTAL ============ */
+        .total-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 0;
+        }
+
+        .total-label {
+            font-family: Helvetica, sans-serif;
+            font-size: 10px;
+            letter-spacing: 2px;
+            color: #FFFDFB;
+            background-color: #6E2A38;
+            text-align: right;
+            padding: 16px 14px;
+        }
+
+        .total-amount {
+            font-family: 'Times New Roman', Times, serif;
+            font-weight: bold;
+            font-size: 20px;
+            color: #FFFDFB;
+            background-color: #6E2A38;
+            text-align: right;
+            padding: 16px 14px;
+            width: 130px;
+        }
+
+        /* ============ FOOTER ============ */
+        .footer {
+            margin-top: 40px;
+            padding-top: 14px;
+            border-top: 1px solid #E4D9C8;
+            font-family: Helvetica, sans-serif;
+            font-size: 8px;
+            letter-spacing: 1.5px;
+            color: #6B6156;
+            text-align: center;
+        }
+
+        .empty-state {
+            padding: 26px;
+            text-align: center;
+            color: #9A9084;
+            font-family: Helvetica, sans-serif;
+            font-size: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<table class="page-wrap" cellpadding="0" cellspacing="0">
+<tr><td class="page-pad">
+
+    <table class="header-table" cellpadding="0" cellspacing="0">
+        <tr>
+            <td style="width: 60%; vertical-align: top;">
+                <div class="logo-name">COHEN'S</div>
+                <div class="logo-script">Haute Couture</div>
+                <div class="logo-tagline">MAISON &amp; ATELIER DE CONFECTION</div>
+            </td>
+            <td style="width: 40%; vertical-align: top; text-align: right;">
+                <div class="doc-eyebrow">DOCUMENT CLIENT</div>
+                <div class="doc-title">Récapitulatif des Modèles</div>
+                <div class="doc-date">Généré le {% now "d/m/Y" %}</div>
+            </td>
+        </tr>
+    </table>
+
+    <div class="client-card">
+        <div class="client-card-inner">
+            <div class="client-eyebrow">CLIENTE</div>
+            <div class="client-name">{{ client.nom }} {{ client.prenom }}</div>
+            <table class="client-info-table" cellpadding="0" cellspacing="0">
+                <tr>
+                    {% if client.telephone %}
+                    <td class="client-label">TÉLÉPHONE</td>
+                    <td class="client-value">{{ client.telephone }}</td>
+                    {% endif %}
+                    {% if client.email %}
+                    <td class="client-label">E-MAIL</td>
+                    <td class="client-value">{{ client.email }}</td>
+                    {% endif %}
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <table class="items-table" cellpadding="0" cellspacing="0">
+        <thead>
+            <tr>
+                <th>MODÈLE / ROBE</th>
+                <th class="text-center">DÉBUT</th>
+                <th class="text-center">LIVRAISON</th>
+                <th class="text-right">PRIX</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for robe in robes %}
+                <tr {% cycle '' 'class="row-alt"' %}>
+                    <td class="item-name">{{ robe.nom_modele }}</td>
+                    <td class="text-center item-date">{{ robe.date_debut|date:"d/m/Y"|default:"—" }}</td>
+                    <td class="text-center item-date">{{ robe.date_livraison|date:"d/m/Y"|default:"—" }}</td>
+                    <td class="text-right item-price">{{ robe.prix_total|default:"0" }} &euro;</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4" class="empty-state">Aucun modèle sélectionné.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <table class="total-table" cellpadding="0" cellspacing="0">
+        <tr>
+            <td class="total-label">MONTANT TOTAL</td>
+            <td class="total-amount">{{ total_prix }} &euro;</td>
+        </tr>
+    </table>
+
+    <div class="footer">
+        COHEN'S HAUTE COUTURE &mdash; MAISON &amp; ATELIER DE CONFECTION
+    </div>
+
+</td></tr>
+</table>
+
+</body>
+</html>

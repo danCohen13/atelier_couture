@@ -1,18 +1,66 @@
 import os
 import json
+from io import BytesIO
 import requests
-from django.http import JsonResponse
+
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_POST
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from .models import Client, Robe, Tache
-from .forms import ClientForm, RobeForm
-from .models import CodeReinitialisation
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib import messages
+from django.template.loader import get_template
+from django.contrib.staticfiles import finders
+
+from xhtml2pdf import pisa
+
+from .models import Client, Robe, Tache, CodeReinitialisation
+from .forms import ClientForm, RobeForm
+
+
+# ==============================================================================
+# Helpers PDF (xhtml2pdf)
+# ==============================================================================
+
+def link_callback(uri, rel):
+    """Résout les chemins {% static %} pour que xhtml2pdf trouve le fichier CSS sur le disque."""
+    if uri.startswith(settings.STATIC_URL):
+        path = os.path.join(settings.STATIC_ROOT, uri.replace(settings.STATIC_URL, ""))
+    else:
+        path = uri
+
+    if not os.path.isfile(path):
+        result = finders.find(uri.replace(settings.STATIC_URL, ""))
+        if result:
+            path = result[0] if isinstance(result, (list, tuple)) else result
+        else:
+            return None
+    return path
+
+
+def render_to_pdf(template_src, context_dict={}):
+    """Génère le binaire PDF à partir d'un template HTML et de son contexte."""
+    template = get_template(template_src)
+    html = template.render(context_dict)
+    result = BytesIO()
+    
+    pdf = pisa.pisaDocument(
+        BytesIO(html.encode("UTF-8")),
+        result,
+        link_callback=link_callback
+    )
+    
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), content_type='application/pdf')
+    return None
+
+
+# ==============================================================================
+# Vues Confection & Atelier
+# ==============================================================================
 
 @login_required
 def dashboard(request):
@@ -49,6 +97,38 @@ def fiche_cliente(request, client_id):
     return render(request, 'atelier/confection/fiche_cliente.html', {'cliente': cliente, 'robes': robes})
 
 @login_required
+def exporter_pdf_cliente(request, client_id):
+    """Permet de sélectionner les robes à inclure et de télécharger la fiche PDF."""
+    cliente = get_object_or_404(Client, id=client_id)
+    
+    if request.method == 'POST':
+        robe_ids = request.POST.getlist('robes')
+        if robe_ids:
+            robes = cliente.robes.filter(id__in=robe_ids)
+        else:
+            robes = cliente.robes.all()
+            
+        total_prix = sum(r.prix_total or 0 for r in robes)
+        
+        context = {
+            'client': cliente,
+            'robes': robes,
+            'total_prix': total_prix,
+        }
+        
+        pdf = render_to_pdf('atelier/pdf/fiche_cliente.html', context)
+        if pdf:
+            response = HttpResponse(pdf, content_type='application/pdf')
+            filename = f"Recapitulatif_{cliente.nom}_{cliente.prenom}.pdf"
+            response['Content-Disposition'] = f'inline; filename="{filename}"'
+            return response
+            
+        return HttpResponse("Erreur lors de la génération du PDF", status=500)
+
+    robes = cliente.robes.all()
+    return render(request, 'atelier/pdf/selection_robes.html', {'client': cliente, 'robes': robes})
+
+@login_required
 def ajouter_client(request):
     if request.method == 'POST':
         form = ClientForm(request.POST)
@@ -61,24 +141,19 @@ def ajouter_client(request):
 
 @login_required
 def ajouter_robe(request):
-    # 1. On regarde si un ID de cliente est passé dans l'URL (?client_id=XX)
     client_id = request.GET.get('client_id')
     initial_data = {}
     
     if client_id:
-        # On vérifie que la cliente existe bien par sécurité
         cliente = get_object_or_404(Client, id=client_id)
-        # On prépare la valeur initiale pour le champ du formulaire
-        # Note : Remplace 'client' par le nom exact du champ de clé étrangère dans ton modèle Robe (ex: 'cliente')
         initial_data['client'] = cliente.id
 
     if request.method == 'POST':
         form = RobeForm(request.POST, request.FILES)
         if form.is_valid():
             robe = form.save()
-            return redirect('details_robe', pk=robe.pk) # Ou ta redirection habituelle
+            return redirect('details_robe', pk=robe.pk)
     else:
-        # 2. On passe les données initiales au formulaire vide
         form = RobeForm(initial=initial_data)
 
     return render(request, 'atelier/confection/ajouter_robe.html', {
@@ -183,9 +258,6 @@ def liste_clientes(request):
 @login_required
 @require_POST
 def analyser_mesures_ia(request):
-    """
-    Reçoit une dictée vocale textuelle et extrait les mesures physiques de la cliente.
-    """
     try:
         data = json.loads(request.body)
     except json.JSONDecodeError:
@@ -199,7 +271,6 @@ def analyser_mesures_ia(request):
     if not api_key:
         return JsonResponse({'error': 'Clé API Gemini manquante'}, status=500)
 
-    # Prompt d'extraction spécialisé pour la couture
     prompt_systeme = """
     Tu es un assistant technique d'atelier de haute couture.
     Analyse les notes ou la dictée vocale de l'utilisateur et extrait les mesures corporelles de la cliente.
@@ -213,13 +284,6 @@ def analyser_mesures_ia(request):
         "longueur_robe": un nombre entier ou décimal
     }
     
-    Exemples de termes équivalents :
-    - "poitrine", "tour de poitrine", "buste" -> tour_poitrine
-    - "taille", "tour de taille" -> tour_taille
-    - "hanches", "tour de hanches", "fesses" -> tour_hanches
-    - "hauteur buste", "longueur buste", "épaule à taille" -> hauteur_buste
-    - "longueur robe", "longueur jupe", "hauteur totale" -> longueur_robe
-
     Ne fournis aucune explication, aucune balise de code markdown. Renvoie juste le dictionnaire JSON.
     """
 
@@ -240,7 +304,6 @@ def analyser_mesures_ia(request):
         resultat_ia = response.json()
         
         texte_reponse = resultat_ia['candidates'][0]['content']['parts'][0]['text'].strip()
-        
         if texte_reponse.startswith("```"):
             texte_reponse = texte_reponse.strip("```").strip("json").strip()
 
@@ -251,20 +314,19 @@ def analyser_mesures_ia(request):
         return JsonResponse({'error': f"Erreur d'analyse : {str(e)}"}, status=500)
 
 
-# 1. Demande de code
+# ==============================================================================
+# Vues Réinitialisation Mot de passe
+# ==============================================================================
+
 def demander_code_reset(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         try:
             user = User.objects.get(email=email)
-            # Supprime les anciens codes non utilisés pour cet utilisateur
             CodeReinitialisation.objects.filter(user=user).delete()
-            
-            # Génère et sauvegarde le nouveau code à 6 chiffres
             code = CodeReinitialisation.generer_code()
             CodeReinitialisation.objects.create(user=user, code=code)
             
-            # Envoi du mail via Brevo
             send_mail(
                 subject='Votre code de réinitialisation - Atelier Couture',
                 message=f'Bonjour,\n\nVoici votre code de vérification à 6 chiffres : {code}\n\nCe code est valable pendant 10 minutes.',
@@ -272,7 +334,6 @@ def demander_code_reset(request):
                 recipient_list=[email],
             )
             
-            # On stocke l'ID de l'utilisateur en session pour la suite
             request.session['reset_user_id'] = user.id
             return redirect('verifier_code_reset')
         except User.DoesNotExist:
@@ -280,7 +341,7 @@ def demander_code_reset(request):
 
     return render(request, 'atelier/registration/demander_code.html')
 
-# 2. Saisie et vérification du code
+
 def verifier_code_reset(request):
     user_id = request.session.get('reset_user_id')
     if not user_id:
@@ -291,21 +352,19 @@ def verifier_code_reset(request):
         code_obj = CodeReinitialisation.objects.filter(user_id=user_id, code=code_saisi).last()
 
         if code_obj and code_obj.est_valide():
-            # Le code est bon ! On autorise le changement de mot de passe
             request.session['code_verifie'] = True
-            code_obj.delete() # On détruit le code après utilisation
+            code_obj.delete()
             return redirect('nouveau_mot_de_passe')
         else:
             messages.error(request, "Code invalide ou expiré (durée de validité : 10 min).")
 
     return render(request, 'atelier/registration/verifier_code.html')
 
-# 3. Création du nouveau mot de passe
+
 def nouveau_mot_de_passe(request):
     user_id = request.session.get('reset_user_id')
     code_verifie = request.session.get('code_verifie')
 
-    # Sécurité : impossible d'accéder à cette page sans avoir validé le code
     if not user_id or not code_verifie:
         return redirect('demander_code_reset')
 
@@ -318,7 +377,6 @@ def nouveau_mot_de_passe(request):
             user.set_password(mdp1)
             user.save()
 
-            # Nettoyage de la session
             del request.session['reset_user_id']
             del request.session['code_verifie']
 

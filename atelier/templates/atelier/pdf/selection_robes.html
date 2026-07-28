@@ -1,0 +1,44 @@
+{% extends 'atelier/base.html' %}
+
+{% block title %}Sélection PDF — {{ client.nom }}{% endblock %}
+
+{% block content %}
+<main class="page">
+    <div class="form-card">
+        <div class="form-card__inner">
+            <span class="eyebrow">Exportation PDF</span>
+            <h2>Fiche de {{ client.nom }} {{ client.prenom }}</h2>
+            <p class="auth-subtitle">
+                Cochez les modèles à inclure dans le récapitulatif PDF, ou laissez tout décoché pour inclure l'ensemble des confections.
+            </p>
+
+            <form method="POST">
+                {% csrf_token %}
+                <div style="margin-bottom: 24px;">
+                    <label style="display: block; margin-bottom: 12px;">Modèles de confections :</label>
+                    {% for robe in robes %}
+                        <div style="padding: 12px; border-bottom: 1px dashed var(--line); display: flex; align-items: flex-start; gap: 12px;">
+                            <input type="checkbox" name="robes" value="{{ robe.id }}" id="robe_{{ robe.id }}" style="margin-top: 4px; cursor: pointer;">
+                            <label for="robe_{{ robe.id }}" style="cursor: pointer; font-weight: normal; text-transform: none; letter-spacing: 0;">
+                                <strong style="font-family: var(--font-display); font-size: 16px; color: var(--ink);">{{ robe.nom_modele }}</strong>
+                                <span style="display: block; font-size: 12px; color: var(--ink-soft); margin-top: 2px;">
+                                    Début : {{ robe.date_debut|date:"d/m/Y"|default:"—" }} | Livraison : {{ robe.date_livraison|date:"d/m/Y"|default:"—" }} | Prix : {{ robe.prix_total|default:"0" }} €
+                                </span>
+                            </label>
+                        </div>
+                    {% empty %}
+                        <p class="empty-state">Aucun modèle disponible pour cette cliente.</p>
+                    {% endfor %}
+                </div>
+
+                <div class="form-actions">
+                    <a href="{% url 'fiche_cliente' client.id %}" class="btn btn--outline">Annuler</a>
+                    <button type="submit" class="btn btn--primary">
+                        Télécharger le PDF
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+{% endblock %}

@@ -7,16 +7,16 @@
         <div class="form-card__inner">
             <span class="eyebrow">Accès restreint</span>
             <h2>Atelier Cohen</h2>
-            <p style="color: var(--ink-soft); font-size: 13px; margin-bottom: 24px;">
+            <p class="auth-subtitle">
                 Veuillez vous connecter pour accéder aux fiches clientes et aux suivis de confection.
             </p>
 
+            {% if form.errors %}
+            <p class="form-error">Identifiants incorrects. Veuillez réessayer.</p>
+            {% endif %}
+
             <form method="POST">
                 {% csrf_token %}
-
-                {% if form.errors %}
-                <p class="form-error">Identifiants incorrects. Veuillez réessayer.</p>
-                {% endif %}
 
                 <p>
                     <label for="id_username">Nom d'utilisateur</label>
@@ -29,10 +29,11 @@
                 </p>
 
                 <button type="submit" class="btn btn--primary btn--block">Se connecter</button>
-                <div style="margin-top: 15px; text-align: right;">
-                    <a href="{% url 'demander_code_reset' %}">Mot de passe oublié ?</a>
-                </div>
             </form>
+
+            <div class="auth-footer">
+                <a href="{% url 'demander_code_reset' %}">Mot de passe oublié ?</a>
+            </div>
         </div>
     </div>
 </main>

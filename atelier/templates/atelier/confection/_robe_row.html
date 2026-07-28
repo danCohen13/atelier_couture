@@ -2,7 +2,12 @@
     <td><span class="model-name">{{ robe.nom_modele }}</span></td>
     
     {% if show_client %}
-    <td><span class="client-name">{{ robe.client }}</span></td>
+    <td onclick="event.stopPropagation();">
+    <a href="{% url 'fiche_cliente' robe.client.id %}" class="client-link" title="Voir la fiche cliente">
+        <span class="client-link__name">{{ robe.client.nom.upper }} {{ robe.client.prenom }}</span>
+        <span class="client-link__icon">→</span>
+    </a>
+</td>
     {% endif %}
     
     <td><span class="client-name">{{ robe.date_livraison|date:"d/m/Y" }}</span></td>

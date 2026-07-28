@@ -45,4 +45,6 @@ urlpatterns = [
     path('mot-de-passe-oublie/nouveau/', 
          views_atelier.nouveau_mot_de_passe, 
          name='nouveau_mot_de_passe'),
+
+     path('clientes/<int:client_id>/pdf/', views_atelier.exporter_pdf_cliente, name='exporter_pdf_cliente'),
 ]

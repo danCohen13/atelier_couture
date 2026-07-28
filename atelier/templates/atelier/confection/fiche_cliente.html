@@ -12,7 +12,11 @@
                 {% if cliente.date_naissance %}Née le {{ cliente.date_naissance|date:"d/m/Y" }}{% endif %}
             </p>
         </div>
-        <div class="hero-card__meta">
+        <div class="hero-card__meta" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <!-- 📄 Bouton d'exportation PDF -->
+            <a href="{% url 'exporter_pdf_cliente' cliente.id %}" class="btn btn--outline">
+                📄 Exporter PDF
+            </a>
             <!-- Dans la fiche de la cliente -->
             <a href="{% url 'ajouter_robe' %}?client_id={{ cliente.id }}" class="btn btn--primary">
                 Lancer une confection

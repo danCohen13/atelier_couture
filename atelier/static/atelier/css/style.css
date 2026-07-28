@@ -826,19 +826,77 @@ select.field-input {
 .notes-block p { font-size: 13px; color: var(--ink-soft); margin-top: 5px; }
 
 /* ---------------------------------------------------------------------
-   Page de connexion
+   Écrans d'authentification — connexion & mot de passe oublié
+   Toutes les pages du parcours (login, demande de code, vérification,
+   nouveau mot de passe) partagent cette même mise en page.
    --------------------------------------------------------------------- */
 .login-page { max-width: 440px; margin: 64px auto; }
 .login-page .form-card__inner { text-align: center; }
 .login-page form p { text-align: left; }
-.form-error {
+
+.auth-subtitle {
+  color: var(--ink-soft);
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 0 0 26px;
+}
+
+.form-error,
+.form-alert {
   color: var(--wine);
+  background: var(--wine-bg);
+  border: 1px solid var(--wine);
+  border-radius: 2px;
+  padding: 10px 14px;
   font-size: 12.5px;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
   font-family: var(--font-mono);
   letter-spacing: 0.02em;
+  text-align: left;
 }
+
 .btn--block { width: 100%; justify-content: center; padding: 13px; margin-top: 20px; }
+
+.form-card form label.field-label--center { text-align: center; }
+
+.field-input--code {
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 24px;
+  letter-spacing: 0.35em;
+  font-weight: 600;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.auth-footer {
+  margin-top: 22px;
+  text-align: center;
+}
+.auth-footer a {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 2px;
+}
+.auth-footer a:hover { color: var(--blueprint); border-bottom-color: var(--blueprint); }
+
+.login-page form .form-actions--inline {
+  margin-top: 15px;
+  text-align: right;
+  border-top: none;
+  padding-top: 0;
+}
+.login-page form .form-actions--inline a {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+}
+.login-page form .form-actions--inline a:hover { color: var(--blueprint); }
 
 /* ---------------------------------------------------------------------
    Thème Flatpickr — recalé sur la palette atelier
@@ -1051,3 +1109,187 @@ select.field-input {
 .chart-dot--out { background: var(--wine); }
 
 .chart-wrap { position: relative; height: 260px; }
+
+/* ======================================================================
+   Cohen Haute Couture — Impression PDF Fiche Cliente (xhtml2pdf)
+   ====================================================================== */
+@page {
+  size: a4 portrait;
+  margin: 1.5cm;
+}
+
+body.pdf-body {
+  background: #ffffff !important;
+  color: #211d1a;
+  font-family: 'Helvetica', 'Arial', sans-serif;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.pdf-header {
+  text-align: center;
+  border-bottom: 1px solid #d8cfb8;
+  padding-bottom: 15px;
+  margin-bottom: 25px;
+}
+
+.pdf-brand-title {
+  font-size: 20px;
+  font-weight: normal;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #211d1a;
+  margin: 0 0 4px 0;
+}
+
+.pdf-brand-subtitle {
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #a89d87;
+  margin: 0;
+}
+
+.pdf-doc-title {
+  margin-top: 15px;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #211d1a;
+}
+
+.pdf-client-card {
+  background-color: #f8f5ee;
+  border: 1px solid #d8cfb8;
+  padding: 12px 15px;
+  margin-bottom: 25px;
+  border-radius: 4px;
+}
+
+.pdf-client-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.pdf-client-table td {
+  padding: 3px 0;
+  border: none;
+  font-size: 11px;
+}
+
+.pdf-client-label {
+  font-weight: bold;
+  color: #6b6355;
+  width: 100px;
+}
+
+.pdf-items-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.pdf-items-table th {
+  background-color: #f8f5ee;
+  color: #211d1a;
+  border-top: 1px solid #d8cfb8;
+  border-bottom: 1px solid #d8cfb8;
+  padding: 8px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-align: left;
+}
+
+.pdf-items-table td {
+  padding: 10px 8px;
+  border-bottom: 1px solid #e2dbc8;
+  font-size: 11px;
+}
+
+.pdf-text-right { text-align: right; }
+.pdf-text-center { text-align: center; }
+
+.pdf-total-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.pdf-total-table td {
+  border: none;
+  padding: 6px 8px;
+}
+
+.pdf-total-row {
+  border-top: 2px solid #211d1a;
+}
+
+.pdf-total-label {
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-align: right;
+  color: #211d1a;
+}
+
+.pdf-total-amount {
+  font-size: 13px;
+  font-weight: bold;
+  color: #211d1a;
+  text-align: right;
+  width: 100px;
+}
+
+.pdf-footer {
+  margin-top: 40px;
+  text-align: center;
+  font-size: 9px;
+  color: #a89d87;
+  border-top: 1px solid #e2dbc8;
+  padding-top: 12px;
+}
+
+/* ======================================================================
+   Bouton fluide au survol du nom de la cliente
+   ====================================================================== */
+.client-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink-soft);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 13.5px;
+  padding: 4px 10px;
+  margin: -4px -10px; /* Maintient l'alignement exact du tableau */
+  border-radius: 4px;
+  border: 1px solid transparent;
+  text-decoration: none;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.client-link__icon {
+  display: inline-block;
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--gold);
+}
+
+/* Effet au survol (Hover) */
+.client-link:hover {
+  background-color: var(--paper-deep);
+  border-color: var(--line);
+  color: var(--blueprint-dark);
+  box-shadow: 0 2px 6px rgba(33, 29, 26, 0.06);
+}
+
+.client-link:hover .client-link__icon {
+  opacity: 1;
+  transform: translateX(0);
+}
