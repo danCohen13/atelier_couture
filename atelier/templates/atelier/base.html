@@ -60,9 +60,17 @@
         <aside class="sidebar">
             <div class="sidebar-title">Navigation</div>
             <nav class="sidebar-menu">
-                <a href="{% url 'dashboard' %}" class="sidebar-link {% if request.resolver_match.url_name != 'finances' %}is-active{% endif %}">
+                <!-- Atelier & confections sur mesure -->
+                <a href="{% url 'dashboard' %}" class="sidebar-link {% if request.resolver_match.url_name != 'finances' and 'location' not in request.resolver_match.url_name %}is-active{% endif %}">
                     Atelier &amp; modèles
                 </a>
+
+                <!-- Module Location & Stock -->
+                <a href="{% url 'tableau_bord_locations' %}" class="sidebar-link {% if 'location' in request.resolver_match.url_name %}is-active{% endif %}">
+                    Locations &amp; stock
+                </a>
+
+                <!-- Finances & bilans -->
                 <a href="{% url 'finances' %}" class="sidebar-link {% if request.resolver_match.url_name == 'finances' %}is-active{% endif %}">
                     Finances &amp; bilans
                 </a>

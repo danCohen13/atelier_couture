@@ -2,6 +2,7 @@ from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views_atelier
 from . import views_finances
+from . import views_location
 
 urlpatterns = [
     # --- RACINE & ATELIER (views_atelier) ---
@@ -47,4 +48,13 @@ urlpatterns = [
          name='nouveau_mot_de_passe'),
 
      path('clientes/<int:client_id>/pdf/', views_atelier.exporter_pdf_cliente, name='exporter_pdf_cliente'),
+]
+
+urlpatterns += [
+    # Espace Location
+    path('location/catalogue/', views_location.catalogue_location, name='catalogue_location'),
+    path('location/catalogue/ajouter/', views_location.ajouter_robe_location, name='ajouter_robe_location'),
+    path('location/tableau-de-bord/', views_location.tableau_bord_locations, name='tableau_bord_locations'),
+    path('location/nouveau/', views_location.creer_location, name='creer_location'),
+    path('location/<int:pk>/retour/', views_location.enregistrer_retour_location, name='retour_location'),
 ]

@@ -1,0 +1,58 @@
+{% extends 'atelier/base.html' %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1">Catalogue des Robes de Stock</h1>
+            <p class="text-muted small mb-0">Pièces physiques disponibles pour prêt et location</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'tableau_bord_locations' %}" class="btn btn-outline-secondary">← Planning</a>
+            <a href="{% url 'ajouter_robe_location' %}" class="btn btn-dark">+ Nouvelle robe de stock</a>
+        </div>
+    </div>
+
+    <!-- Grille des robes -->
+    <div class="row g-4">
+        {% for robe in robes %}
+        <div class="col-md-4 col-lg-3">
+            <div class="card h-100 shadow-sm border-0">
+                {% if robe.photo %}
+                    <img src="{{ robe.photo.url }}" class="card-img-top" style="height: 220px; object-fit: cover;" alt="{{ robe.nom_modele }}">
+                {% else %}
+                    <div class="d-flex align-items-center justify-content-center bg-light text-muted" style="height: 220px;">
+                        <span>📷 Pas de photo</span>
+                    </div>
+                {% endif %}
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <span class="badge bg-dark">{{ robe.reference_stock }}</span>
+                        <span class="badge {% if robe.statut_physique == 'DISPONIBLE' %}bg-success{% else %}bg-warning text-dark{% endif %}">
+                            {{ robe.get_statut_physique_display }}
+                        </span>
+                    </div>
+                    <h5 class="card-title mb-1">{{ robe.nom_modele }}</h5>
+                    <p class="text-muted small mb-2">Taille {{ robe.taille }} • {{ robe.couleur }}</p>
+                    
+                    <div class="mt-auto pt-3 border-top d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong class="text-primary">{{ robe.prix_location_defaut }} €</strong>
+                            <small class="text-muted d-block">Caution: {{ robe.caution_defaut }} €</small>
+                        </div>
+                        <a href="{% url 'creer_location' %}?robe_id={{ robe.id }}" class="btn btn-sm btn-outline-dark">
+                            Louer
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 py-5 text-center text-muted">
+            <p>Le catalogue de location est vide.</p>
+            <a href="{% url 'ajouter_robe_location' %}" class="btn btn-dark btn-sm">Ajouter une première robe</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,142 @@
+{% extends 'atelier/base.html' %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1">Planning & Logistique des Locations</h1>
+            <p class="text-muted small mb-0">Suivi des sorties, retours atelier et cautions</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'catalogue_location' %}" class="btn btn-outline-secondary">
+                📖 Catalogue stock
+            </a>
+            <a href="{% url 'creer_location' %}" class="btn btn-dark">
+                + Nouveau contrat
+            </a>
+        </div>
+    </div>
+
+    <!-- Alertes retards -->
+    {% if retours_en_retard %}
+    <div class="card border-danger mb-4 shadow-sm" style="background-color: #fff8f8;">
+        <div class="card-body">
+            <h2 class="h5 text-danger mb-3">⚠️ Retours en retard ({{ retours_en_retard|length }})</h2>
+            <div class="table-responsive">
+                <table class="table table-sm align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Robe</th>
+                            <th>Retour prévu</th>
+                            <th>Caution</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for loc in retours_en_retard %}
+                        <tr>
+                            <td>
+                                <strong><a href="{% url 'fiche_cliente' loc.client.id %}" class="text-dark">{{ loc.client }}</a></strong><br>
+                                <small class="text-muted">{{ loc.client.telephone|default:"Pas de tél." }}</small>
+                            </td>
+                            <td>{{ loc.robe_location.nom_modele }} ({{ loc.robe_location.reference_stock }})</td>
+                            <td class="text-danger fw-bold">{{ loc.date_fin_prevue|date:"d/m/Y" }}</td>
+                            <td>{{ loc.caution_montant }} € ({{ loc.get_caution_statut_display }})</td>
+                            <td>
+                                <a href="{% url 'retour_location' loc.id %}" class="btn btn-sm btn-outline-danger">Enregistrer retour</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Locations en cours -->
+    <div class="card mb-4 shadow-sm border-0">
+        <div class="card-header bg-white py-3">
+            <h2 class="h5 mb-0">👗 En cours de location ({{ locations_en_cours.count }})</h2>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Contrat</th>
+                            <th>Cliente</th>
+                            <th>Robe</th>
+                            <th>Période</th>
+                            <th>Caution</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for loc in locations_en_cours %}
+                        <tr>
+                            <td>#{{ loc.id }}</td>
+                            <td>
+                                <a href="{% url 'fiche_cliente' loc.client.id %}" class="text-decoration-none fw-semibold text-dark">
+                                    {{ loc.client }}
+                                </a>
+                            </td>
+                            <td>{{ loc.robe_location.nom_modele }} <span class="badge bg-light text-dark">{{ loc.robe_location.reference_stock }}</span></td>
+                            <td>Du {{ loc.date_debut|date:"d/m" }} au {{ loc.date_fin_prevue|date:"d/m/Y" }}</td>
+                            <td>
+                                <span class="badge bg-secondary">{{ loc.get_caution_statut_display }}</span>
+                            </td>
+                            <td class="text-end">
+                                <a href="{% url 'retour_location' loc.id %}" class="btn btn-sm btn-outline-primary">Restitution</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center py-4 text-muted">Aucune robe actuellement sortie de l'atelier.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Réservations futures -->
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-white py-3">
+            <h2 class="h5 mb-0">📅 Réservations à venir ({{ locations_reservees.count }})</h2>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Retrait prévu</th>
+                            <th>Cliente</th>
+                            <th>Robe</th>
+                            <th>Prix convenu</th>
+                            <th>Statut caution</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for loc in locations_reservees %}
+                        <tr>
+                            <td><strong>{{ loc.date_debut|date:"d/m/Y" }}</strong></td>
+                            <td><a href="{% url 'fiche_cliente' loc.client.id %}" class="text-dark">{{ loc.client }}</a></td>
+                            <td>{{ loc.robe_location.nom_modele }} (T.{{ loc.robe_location.taille }})</td>
+                            <td>{{ loc.prix_convenu }} €</td>
+                            <td><span class="badge bg-light text-secondary">{{ loc.get_caution_statut_display }}</span></td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center py-4 text-muted">Aucune réservation future enregistrée.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

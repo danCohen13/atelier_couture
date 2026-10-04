@@ -1,0 +1,17 @@
+{% extends 'atelier/base.html' %}
+
+{% block content %}
+<div class="container py-4" style="max-width: 680px;">
+    <h1 class="h3 mb-3">{{ titre }}</h1>
+    <div class="card p-4 shadow-sm border-0">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="d-flex justify-content-between mt-4">
+                <a href="{% url 'tableau_bord_locations' %}" class="btn btn-outline-secondary">Annuler</a>
+                <button type="submit" class="btn btn-dark">Enregistrer le contrat</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
