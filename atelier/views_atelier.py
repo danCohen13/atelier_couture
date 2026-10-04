@@ -152,7 +152,7 @@ def ajouter_robe(request):
         form = RobeForm(request.POST, request.FILES)
         if form.is_valid():
             robe = form.save()
-            return redirect('details_robe', pk=robe.pk)
+            return redirect('dashboard')
     else:
         form = RobeForm(initial=initial_data)
 

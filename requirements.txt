@@ -19,3 +19,7 @@ whitenoise==6.7.0
 python-dotenv==1.01
 xhtml2pdf==0.2.15
 reportlab==4.0.9
+psycopg2-binary
+dj-database-url
+gunicorn
+whitenoise
