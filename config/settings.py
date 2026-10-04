@@ -17,15 +17,29 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # --- CONFIGURATION DE PRODUCTION / DÉVELOPPEMENT ---
 
-# SECURITY WARNING: keep the secret key used in production secret!
+# Clé secrète (lue depuis l'environnement sur Render, avec fallback local)
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-)k_7gi3w3k7i+hor!864y9rk*6d%@n6-zbh8)4cd_&1p=8nlw+')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-# Repasse automatiquement à False si la variable d'environnement sur Render est définie
-DEBUG = os.environ.get('DEBUG', 'True') == 'True'
+# DEBUG passe automatiquement à False si la variable d'environnement DEBUG=False est définie
+DEBUG = os.environ.get('DEBUG', 'True').lower() in ('true', '1', 't')
 
-# Autorise les adresses locales et le futur domaine Render
+# Hôtes autorisés : local + sous-domaines Render
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.onrender.com']
+
+# Détection automatique de l'URL spécifique attribuée par Render
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+
+# Sécurité CSRF obligatoire pour les formulaires en HTTPS sur Render
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.onrender.com',
+]
+if RENDER_EXTERNAL_HOSTNAME:
+    CSRF_TRUSTED_ORIGINS.append(f'https://{RENDER_EXTERNAL_HOSTNAME}')
+
+# Indique à Django que Render termine le chiffrement SSL (HTTPS)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 # --- APPLICATION DEFINITION ---
@@ -36,16 +50,15 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    
     'django.contrib.staticfiles',
     'cloudinary_storage',
     'cloudinary',
-    'atelier',  # Ton application de couture
+    'atelier',  # Application principale
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # Gestion optimale des fichiers statiques en production
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Fichiers statiques servis directement par Python
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -75,99 +88,73 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 
-# --- CONFIGURATION DE LA BASE DE DONNÉES ---
+# --- CONFIGURATION DE LA BASE DE DONNÉES (NEON.TECH & LOCAL) ---
 
-# Configuration par défaut (sécurité temporaire)
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
-# Si le serveur en ligne fournit une URL de base de données PostgreSQL (Render)
 if os.environ.get('DATABASE_URL'):
-    DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
+    # Connexion à Neon.tech en production sur Render
+    DATABASES = {
+        'default': dj_database_url.config(
+            conn_max_age=600,
+            ssl_require=True
+        )
+    }
 else:
-    # Connexion à ton PostgreSQL local sur ton PC (WSL)
-    DATABASES['default'] = {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'atelier_db',
-        'USER': 'postgres',
-        'PASSWORD': 'admin1234',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+    # Connexion à PostgreSQL local sous WSL
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'atelier_db',
+            'USER': 'postgres',
+            'PASSWORD': 'admin1234',
+            'HOST': '127.0.0.1',
+            'PORT': '5432',
+        }
     }
 
 
 # --- VALIDATION DES MOTS DE PASSE ---
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
 
 # --- INTERNATIONALISATION ---
 
-LANGUAGE_CODE = 'fr-fr'  # Configuration en français pour l'administration et les dates
-
+LANGUAGE_CODE = 'fr-fr'
 TIME_ZONE = 'Europe/Paris'
-
 USE_I18N = True
-
 USE_TZ = True
 
 
-# --- FICHIERS STATIQUES (CSS, JS, IMAGES) ---
+# --- FICHIERS STATIQUES (CSS, JS, WHITENOISE) ---
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
+STATIC_DIR = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = [STATIC_DIR] if os.path.exists(STATIC_DIR) else []
 
-# Dossier où Django va rassembler tous les assets pour la production
+# Dossier collectstatic pour le déploiement
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 
-# --- CONFIGURATION PAR DÉFAUT DES CLÉS PRIMAIRES ---
+# --- STOCKAGES (CLOUDINARY & WHITENOISE) ---
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = 'dashboard'
-
 LOGOUT_REDIRECT_URL = 'login'
-
 LOGIN_URL = 'login'
 
-# Configuration du stockage des images dans le Cloud
-#DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
 STORAGES = {
-    # Cloudinary gère toujours tes croquis et tissus de manière dynamique
+    # Photos et croquis hébergés sur Cloudinary
     "default": {
         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
     },
-    # En production (DEBUG=False), WhiteNoise hache le contenu du CSS/JS
-    # dans le nom de fichier : dès que le CSS change, l'URL change, et le
-    # navigateur ne peut plus servir une version en cache périmée.
-    #
-    # En local/tests (DEBUG=True), on garde le stockage simple de Django :
-    # le stockage haché exige d'avoir lancé `collectstatic` au préalable,
-    # ce que `manage.py runserver` et `manage.py test` ne font jamais
-    # automatiquement — sans cette distinction, les tests plantent avec
-    # "the file could not be found" dès qu'une page utilise {% static %}.
+    # Fichiers CSS et JS gérés par WhiteNoise (avec gestion de version hashée en prod)
     "staticfiles": {
         "BACKEND": (
             "config.storage.LenientManifestStaticFilesStorage"
@@ -177,22 +164,21 @@ STORAGES = {
     },
 }
 
-# Ces clés vont lire les paramètres de ton compte Cloudinary de manière sécurisée
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
-    'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
-    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
-}
+# Configuration Cloudinary (prend en compte CLOUDINARY_URL ou les clés séparées)
+if not os.environ.get('CLOUDINARY_URL'):
+    CLOUDINARY_STORAGE = {
+        'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME', ''),
+        'API_KEY': os.environ.get('CLOUDINARY_API_KEY', ''),
+        'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET', ''),
+    }
 
 
-# Configuration SMTP Brevo (Sendinblue)
+# --- EMAILS TRANSACTIONNELS (BREVO) ---
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp-relay.brevo.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'b320f3001@smtp-brevo.com'  # L'email de ton compte Brevo
+EMAIL_HOST_USER = 'b320f3001@smtp-brevo.com'
 EMAIL_HOST_PASSWORD = os.getenv('BREVO_SMTP_KEY')
-
-# Adresse d'expéditeur (doit être l'email de ton compte Brevo ou un e-mail vérifié)
 DEFAULT_FROM_EMAIL = 'cohendan13110@gmail.com'
-
