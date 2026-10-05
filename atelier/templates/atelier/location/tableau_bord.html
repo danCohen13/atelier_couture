@@ -1,142 +1,166 @@
 {% extends 'atelier/base.html' %}
 
+{% block title %}Locations & stock — Cohen Haute Couture{% endblock %}
+
 {% block content %}
-<div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+<main class="page">
+
+    <div class="page-head">
         <div>
-            <h1 class="h3 mb-1">Planning & Logistique des Locations</h1>
-            <p class="text-muted small mb-0">Suivi des sorties, retours atelier et cautions</p>
+            <span class="eyebrow">Location &amp; stock</span>
+            <h1>Planning des locations</h1>
+            <p>Suivi des sorties, des retours à l'atelier et des cautions.</p>
         </div>
-        <div class="d-flex gap-2">
-            <a href="{% url 'catalogue_location' %}" class="btn btn-outline-secondary">
-                📖 Catalogue stock
-            </a>
-            <a href="{% url 'creer_location' %}" class="btn btn-dark">
-                + Nouveau contrat
-            </a>
+        <div class="page-head__actions">
+            <a href="{% url 'catalogue_location' %}" class="btn btn--outline">Catalogue du stock</a>
+            <a href="{% url 'creer_location' %}" class="btn btn--primary">+ Nouveau contrat</a>
         </div>
     </div>
 
-    <!-- Alertes retards -->
-    {% if retours_en_retard %}
-    <div class="card border-danger mb-4 shadow-sm" style="background-color: #fff8f8;">
-        <div class="card-body">
-            <h2 class="h5 text-danger mb-3">⚠️ Retours en retard ({{ retours_en_retard|length }})</h2>
-            <div class="table-responsive">
-                <table class="table table-sm align-middle mb-0">
-                    <thead>
-                        <tr>
-                            <th>Cliente</th>
-                            <th>Robe</th>
-                            <th>Retour prévu</th>
-                            <th>Caution</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for loc in retours_en_retard %}
-                        <tr>
-                            <td>
-                                <strong><a href="{% url 'fiche_cliente' loc.client.id %}" class="text-dark">{{ loc.client }}</a></strong><br>
-                                <small class="text-muted">{{ loc.client.telephone|default:"Pas de tél." }}</small>
-                            </td>
-                            <td>{{ loc.robe_location.nom_modele }} ({{ loc.robe_location.reference_stock }})</td>
-                            <td class="text-danger fw-bold">{{ loc.date_fin_prevue|date:"d/m/Y" }}</td>
-                            <td>{{ loc.caution_montant }} € ({{ loc.get_caution_statut_display }})</td>
-                            <td>
-                                <a href="{% url 'retour_location' loc.id %}" class="btn btn-sm btn-outline-danger">Enregistrer retour</a>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+    <div class="score-grid">
+        <div class="score-card">
+            <span class="eyebrow">Robes sorties</span>
+            <div class="value value--neutral">{{ locations_en_cours|length }}</div>
+        </div>
+        <div class="score-card">
+            <span class="eyebrow">Réservations à venir</span>
+            <div class="value value--neutral">{{ locations_reservees|length }}</div>
+        </div>
+        <div class="score-card">
+            <span class="eyebrow">Retours en retard</span>
+            <div class="value {% if retours_en_retard %}value--negative{% else %}value--positive{% endif %}">{{ retours_en_retard|length }}</div>
         </div>
     </div>
+
+    {% if retours_en_retard %}
+    <section class="alert-strip">
+        <div class="alert-strip__head">
+            <h2>Retours en retard</h2>
+            <span class="tag tag--urgent">{{ retours_en_retard|length }}</span>
+        </div>
+        <table class="swatch-table">
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>Robe</th>
+                    <th>Retour prévu</th>
+                    <th>Caution</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for loc in retours_en_retard %}
+                <tr class="swatch-row swatch-row--static">
+                    <td>
+                        <a href="{% url 'fiche_cliente' loc.client.id %}" class="client-link">
+                            <span class="client-link__name">{{ loc.client.nom.upper }} {{ loc.client.prenom }}</span>
+                            <span class="client-link__icon">→</span>
+                        </a>
+                        <span class="cell-sub">{{ loc.client.telephone|default:"Pas de téléphone" }}</span>
+                    </td>
+                    <td>
+                        <span class="model-name">{{ loc.robe_location.nom_modele }}</span>
+                        <span class="ref-tag">{{ loc.robe_location.reference_stock }}</span>
+                    </td>
+                    <td><span class="cell-date cell-date--late">{{ loc.date_fin_prevue|date:"d/m/Y" }}</span></td>
+                    <td>
+                        <span class="price-cell">{{ loc.caution_montant }} €</span>
+                        {% include 'atelier/location/_tag_caution.html' %}
+                    </td>
+                    <td class="cell-actions">
+                        <a href="{% url 'retour_location' loc.id %}" class="btn btn--danger btn--sm">Enregistrer le retour</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
     {% endif %}
 
-    <!-- Locations en cours -->
-    <div class="card mb-4 shadow-sm border-0">
-        <div class="card-header bg-white py-3">
-            <h2 class="h5 mb-0">👗 En cours de location ({{ locations_en_cours.count }})</h2>
-        </div>
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Contrat</th>
-                            <th>Cliente</th>
-                            <th>Robe</th>
-                            <th>Période</th>
-                            <th>Caution</th>
-                            <th class="text-end">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for loc in locations_en_cours %}
-                        <tr>
-                            <td>#{{ loc.id }}</td>
-                            <td>
-                                <a href="{% url 'fiche_cliente' loc.client.id %}" class="text-decoration-none fw-semibold text-dark">
-                                    {{ loc.client }}
-                                </a>
-                            </td>
-                            <td>{{ loc.robe_location.nom_modele }} <span class="badge bg-light text-dark">{{ loc.robe_location.reference_stock }}</span></td>
-                            <td>Du {{ loc.date_debut|date:"d/m" }} au {{ loc.date_fin_prevue|date:"d/m/Y" }}</td>
-                            <td>
-                                <span class="badge bg-secondary">{{ loc.get_caution_statut_display }}</span>
-                            </td>
-                            <td class="text-end">
-                                <a href="{% url 'retour_location' loc.id %}" class="btn btn-sm btn-outline-primary">Restitution</a>
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="6" class="text-center py-4 text-muted">Aucune robe actuellement sortie de l'atelier.</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <div class="section-head section-head--first">
+        <h2>En cours de location</h2>
+        <span class="tag tag--done">{{ locations_en_cours|length }}</span>
+    </div>
+    <div class="swatch-table-wrap">
+        <table class="swatch-table">
+            <thead>
+                <tr>
+                    <th>Robe</th>
+                    <th>Cliente</th>
+                    <th>Période</th>
+                    <th>Caution</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for loc in locations_en_cours %}
+                <tr class="swatch-row swatch-row--static">
+                    <td>
+                        <span class="model-name">{{ loc.robe_location.nom_modele }}</span>
+                        <span class="ref-tag">{{ loc.robe_location.reference_stock }}</span>
+                        <span class="cell-sub">Contrat n° {{ loc.id }}</span>
+                    </td>
+                    <td>
+                        <a href="{% url 'fiche_cliente' loc.client.id %}" class="client-link">
+                            <span class="client-link__name">{{ loc.client.nom.upper }} {{ loc.client.prenom }}</span>
+                            <span class="client-link__icon">→</span>
+                        </a>
+                    </td>
+                    <td><span class="cell-date">{{ loc.date_debut|date:"d/m" }} → {{ loc.date_fin_prevue|date:"d/m/Y" }}</span></td>
+                    <td>{% include 'atelier/location/_tag_caution.html' %}</td>
+                    <td class="cell-actions">
+                        <a href="{% url 'retour_location' loc.id %}" class="btn btn--outline btn--outline-accent btn--sm">Restitution</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="empty-state">Aucune robe n'est actuellement sortie de l'atelier.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 
-    <!-- Réservations futures -->
-    <div class="card shadow-sm border-0">
-        <div class="card-header bg-white py-3">
-            <h2 class="h5 mb-0">📅 Réservations à venir ({{ locations_reservees.count }})</h2>
-        </div>
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Retrait prévu</th>
-                            <th>Cliente</th>
-                            <th>Robe</th>
-                            <th>Prix convenu</th>
-                            <th>Statut caution</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for loc in locations_reservees %}
-                        <tr>
-                            <td><strong>{{ loc.date_debut|date:"d/m/Y" }}</strong></td>
-                            <td><a href="{% url 'fiche_cliente' loc.client.id %}" class="text-dark">{{ loc.client }}</a></td>
-                            <td>{{ loc.robe_location.nom_modele }} (T.{{ loc.robe_location.taille }})</td>
-                            <td>{{ loc.prix_convenu }} €</td>
-                            <td><span class="badge bg-light text-secondary">{{ loc.get_caution_statut_display }}</span></td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="5" class="text-center py-4 text-muted">Aucune réservation future enregistrée.</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <div class="section-head">
+        <h2>Réservations à venir</h2>
+        <span class="tag tag--soon">{{ locations_reservees|length }}</span>
     </div>
-</div>
+    <div class="swatch-table-wrap">
+        <table class="swatch-table">
+            <thead>
+                <tr>
+                    <th>Retrait prévu</th>
+                    <th>Cliente</th>
+                    <th>Robe</th>
+                    <th>Prix convenu</th>
+                    <th>Caution</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for loc in locations_reservees %}
+                <tr class="swatch-row swatch-row--static">
+                    <td><span class="cell-date">{{ loc.date_debut|date:"d/m/Y" }}</span></td>
+                    <td>
+                        <a href="{% url 'fiche_cliente' loc.client.id %}" class="client-link">
+                            <span class="client-link__name">{{ loc.client.nom.upper }} {{ loc.client.prenom }}</span>
+                            <span class="client-link__icon">→</span>
+                        </a>
+                    </td>
+                    <td>
+                        <span class="model-name">{{ loc.robe_location.nom_modele }}</span>
+                        <span class="cell-sub">Taille {{ loc.robe_location.taille }}</span>
+                    </td>
+                    <td><span class="price-cell">{{ loc.prix_convenu }} €</span></td>
+                    <td>{% include 'atelier/location/_tag_caution.html' %}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="empty-state">Aucune réservation future enregistrée.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</main>
 {% endblock %}

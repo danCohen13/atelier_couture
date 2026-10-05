@@ -1,0 +1,4 @@
+{% if loc.caution_statut == 'RESTITUEE' %}<span class="tag tag--ok">{{ loc.get_caution_statut_display }}</span>
+{% elif loc.caution_statut == 'ENREGISTREE' %}<span class="tag tag--done">{{ loc.get_caution_statut_display }}</span>
+{% elif loc.caution_statut == 'ENCAISSEE_TOTAL' %}<span class="tag tag--urgent">{{ loc.get_caution_statut_display }}</span>
+{% else %}<span class="tag tag--soon">{{ loc.get_caution_statut_display }}</span>{% endif %}

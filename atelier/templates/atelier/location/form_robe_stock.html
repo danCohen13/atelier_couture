@@ -1,17 +1,26 @@
 {% extends 'atelier/base.html' %}
 
+{% block title %}Nouvelle robe de stock — Cohen Haute Couture{% endblock %}
+
 {% block content %}
-<div class="container py-4" style="max-width: 680px;">
-    <h1 class="h3 mb-3">{{ titre }}</h1>
-    <div class="card p-4 shadow-sm border-0">
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <div class="d-flex justify-content-between mt-4">
-                <a href="{% url 'catalogue_location' %}" class="btn btn-outline-secondary">Retour</a>
-                <button type="submit" class="btn btn-dark">Ajouter au stock</button>
-            </div>
-        </form>
+<main class="page" style="max-width: 760px;">
+    <div class="form-card">
+        <div class="form-card__inner">
+            <span class="eyebrow">Location &amp; stock</span>
+            <h2>{{ titre }}</h2>
+            <p style="color: var(--ink-soft); font-size: 13.5px; margin: 0 0 26px;">
+                Chaque pièce reçoit une référence unique, à étiqueter sur la robe.
+            </p>
+
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="form-actions">
+                    <a href="{% url 'catalogue_location' %}" class="btn btn--outline">Retour</a>
+                    <button type="submit" class="btn btn--primary">Ajouter au stock</button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
+</main>
 {% endblock %}

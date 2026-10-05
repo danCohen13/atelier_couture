@@ -1,19 +1,30 @@
 {% extends 'atelier/base.html' %}
 
-{% block content %}
-<div class="container py-4" style="max-width: 600px;">
-    <h1 class="h3 mb-2">Restitution Robe {{ location.robe_location.reference_stock }}</h1>
-    <p class="text-muted small mb-4">Cliente : {{ location.client }} | Caution initiale : {{ location.caution_montant }} €</p>
+{% block title %}Restitution — Cohen Haute Couture{% endblock %}
 
-    <div class="card p-4 shadow-sm border-0">
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <div class="d-flex justify-content-between mt-4">
-                <a href="{% url 'tableau_bord_locations' %}" class="btn btn-outline-secondary">Annuler</a>
-                <button type="submit" class="btn btn-success">Valider la restitution</button>
+{% block content %}
+<main class="page" style="max-width: 760px;">
+    <div class="form-card">
+        <div class="form-card__inner">
+            <span class="eyebrow">Restitution</span>
+            <h2>{{ location.robe_location.nom_modele }}</h2>
+
+            <div class="recap-strip">
+                <div><span class="eyebrow">Référence</span><strong>{{ location.robe_location.reference_stock }}</strong></div>
+                <div><span class="eyebrow">Cliente</span><strong>{{ location.client.nom.upper }} {{ location.client.prenom }}</strong></div>
+                <div><span class="eyebrow">Retour prévu</span><strong>{{ location.date_fin_prevue|date:"d/m/Y" }}</strong></div>
+                <div><span class="eyebrow">Caution initiale</span><strong>{{ location.caution_montant }} €</strong></div>
             </div>
-        </form>
+
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="form-actions">
+                    <a href="{% url 'tableau_bord_locations' %}" class="btn btn--outline">Annuler</a>
+                    <button type="submit" class="btn btn--success">Valider la restitution</button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
+</main>
 {% endblock %}

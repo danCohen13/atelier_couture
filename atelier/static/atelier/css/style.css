@@ -1293,3 +1293,190 @@ body.pdf-body {
   opacity: 1;
   transform: translateX(0);
 }
+
+/* ======================================================================
+   Location & stock — composants propres au module
+   (réutilise les variables, .page, .btn, .tag, .swatch-table, .form-card)
+   ====================================================================== */
+
+/* Titre de section au-dessus d'un tableau */
+.section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin: 40px 0 14px;
+}
+.section-head h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 26px;
+  margin: 0;
+  color: var(--ink);
+}
+.section-head--first { margin-top: 0; }
+
+/* Bandeau d'alerte — retours en retard (fil de bâti rouge) */
+.alert-strip {
+  background: var(--wine-bg);
+  border: 1px solid var(--wine);
+  border-left-width: 4px;
+  box-shadow: var(--shadow);
+  margin-bottom: 32px;
+}
+.alert-strip__head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 16px 22px 4px;
+}
+.alert-strip__head h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 24px;
+  margin: 0;
+  color: var(--wine);
+}
+.alert-strip .swatch-table thead th { color: var(--wine); opacity: 0.75; border-bottom-color: rgba(138, 46, 61, 0.3); }
+.alert-strip .swatch-table tbody tr { border-bottom-color: rgba(138, 46, 61, 0.2); }
+.alert-strip .swatch-table tbody tr:last-child { border-bottom: none; }
+.alert-strip .swatch-row:hover { background: rgba(255, 255, 255, 0.45); }
+
+/* Lignes non cliquables */
+.swatch-row--static { cursor: default; }
+
+.cell-sub {
+  display: block;
+  font-size: 12px;
+  color: var(--ink-faint);
+  margin-top: 2px;
+}
+.cell-date { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-soft); white-space: nowrap; }
+.cell-date--late { color: var(--wine); font-weight: 600; }
+.cell-actions { text-align: right; white-space: nowrap; }
+.btn--sm { padding: 8px 14px; }
+.btn--danger { background: var(--wine); color: var(--paper-light); border-color: var(--wine); }
+.btn--danger:hover { background: #6f2431; border-color: #6f2431; }
+.btn--success { background: var(--moss); color: var(--paper-light); border-color: var(--moss); }
+.btn--success:hover { background: #3d4d32; border-color: #3d4d32; }
+
+.ref-tag {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 2px 7px;
+  margin-left: 6px;
+  white-space: nowrap;
+}
+
+/* Catalogue — planche de robes */
+.dress-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 22px;
+}
+.dress-card {
+  background: var(--paper-light);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+/* encoches de patron sur le bord gauche, comme les lignes de tableau */
+.dress-card::before,
+.dress-card::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  z-index: 1;
+}
+.dress-card::before { top: 14px; border-width: 6px 0 6px 7px; border-color: transparent transparent transparent var(--gold-light); }
+.dress-card::after  { bottom: 14px; border-width: 6px 0 6px 7px; border-color: transparent transparent transparent var(--gold-light); }
+
+.dress-card__photo {
+  display: block;
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  border-bottom: 1px solid var(--line);
+  background: var(--paper-deep);
+}
+.dress-card__photo--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 240px;
+  background: var(--paper-deep);
+  border-bottom: 1px dashed var(--ink-faint);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.dress-card__body { padding: 18px 20px 20px; display: flex; flex-direction: column; flex: 1; }
+.dress-card__top { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 10px; }
+.dress-card__name {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.15;
+  margin: 0;
+  color: var(--ink);
+}
+.dress-card__meta { margin: 4px 0 0; font-size: 12.5px; color: var(--ink-soft); }
+.dress-card__foot {
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px dashed var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 10px;
+}
+.dress-card__body > .dress-card__meta + .dress-card__foot { margin-top: 18px; }
+.dress-card__price { font-family: var(--font-mono); font-weight: 600; font-size: 15px; color: var(--blueprint-dark); }
+.dress-card__deposit { display: block; font-family: var(--font-mono); font-size: 11px; color: var(--ink-faint); margin-top: 2px; }
+
+/* Formulaires de location : Django rend les aides et erreurs en .helptext / .errorlist */
+.form-card form .helptext { display: block; font-size: 12px; color: var(--ink-faint); margin-top: 5px; }
+.form-card form ul.errorlist {
+  list-style: none;
+  margin: 0 0 8px;
+  padding: 8px 12px;
+  background: var(--wine-bg);
+  border: 1px solid var(--wine);
+  border-radius: 2px;
+  color: var(--wine);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.form-card form input[type="file"] { font-family: var(--font-body); font-size: 13px; color: var(--ink-soft); }
+.form-card--wide { max-width: 760px; }
+
+/* Récapitulatif en tête de formulaire (restitution) */
+.recap-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 28px;
+  background: var(--paper);
+  border: 1px dashed var(--line);
+  padding: 12px 16px;
+  margin: 0 0 24px;
+}
+.recap-strip div { display: flex; flex-direction: column; }
+.recap-strip strong { font-family: var(--font-mono); font-size: 13px; color: var(--ink); font-weight: 600; }
+
+.catalogue-search { display: flex; gap: 10px; align-items: center; }
+.catalogue-search input.field-input { width: 220px; }
+
+/* étiquettes d'état longues : elles passent à la ligne au lieu de déborder */
+.dress-card__top .tag { white-space: normal; text-align: right; line-height: 1.3; min-width: 0; }
+.dress-card__top .ref-tag { flex-shrink: 0; }
