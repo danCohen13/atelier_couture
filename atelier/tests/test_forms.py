@@ -130,3 +130,21 @@ class TransactionFormTests(TestCase):
         # il ne doit plus apparaître dans le formulaire rapide.
         form = TransactionForm()
         self.assertNotIn('robe', form.fields)
+
+
+class FormatDatesFrancaisTests(TestCase):
+    """Toutes les dates du site s'affichent et se saisissent en jj/mm/aaaa."""
+
+    def test_widgets_affichent_jj_mm_aaaa(self):
+        import datetime
+        from atelier.forms import TransactionForm, LocationForm, RetourLocationForm
+        d = datetime.date(2026, 7, 4)
+        self.assertIn('value="04/07/2026"', str(TransactionForm(initial={'date': d})['date']))
+        self.assertIn('value="04/07/2026"', str(LocationForm(initial={'date_debut': d})['date_debut']))
+        self.assertIn('value="04/07/2026"', str(RetourLocationForm(initial={'date_retour_effectif': d})['date_retour_effectif']))
+
+    def test_champs_relies_au_selecteur_flatpickr(self):
+        from atelier.forms import TransactionForm, LocationForm
+        for html in (str(TransactionForm()['date']), str(LocationForm()['date_fin_prevue'])):
+            self.assertIn('datepicker', html)
+            self.assertIn('placeholder="jj/mm/aaaa"', html)

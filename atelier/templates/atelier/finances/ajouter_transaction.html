@@ -22,7 +22,7 @@
         <form method="POST">
             {% csrf_token %}
             
-            <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px;">
+            <div class="ia-row" style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px;">
                 <!-- 🎙️ On appelle le micro générique et on lui dit de remplir "finance-transcript" -->
                 {% include 'atelier/includes/_microphone_generic.html' with btn_id="btn-mic-finance" target_id="finance-transcript" %}
                 

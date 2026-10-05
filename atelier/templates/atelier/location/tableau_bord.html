@@ -58,12 +58,12 @@
                         </a>
                         <span class="cell-sub">{{ loc.client.telephone|default:"Pas de téléphone" }}</span>
                     </td>
-                    <td>
+                    <td data-label="Robe">
                         <span class="model-name">{{ loc.robe_location.nom_modele }}</span>
                         <span class="ref-tag">{{ loc.robe_location.reference_stock }}</span>
                     </td>
-                    <td><span class="cell-date cell-date--late">{{ loc.date_fin_prevue|date:"d/m/Y" }}</span></td>
-                    <td>
+                    <td data-label="Retour prévu"><span class="cell-date cell-date--late">{{ loc.date_fin_prevue|date:"d/m/Y" }}</span></td>
+                    <td data-label="Caution">
                         <span class="price-cell">{{ loc.caution_montant }} €</span>
                         {% include 'atelier/location/_tag_caution.html' %}
                     </td>
@@ -100,14 +100,14 @@
                         <span class="ref-tag">{{ loc.robe_location.reference_stock }}</span>
                         <span class="cell-sub">Contrat n° {{ loc.id }}</span>
                     </td>
-                    <td>
+                    <td data-label="Cliente">
                         <a href="{% url 'fiche_cliente' loc.client.id %}" class="client-link">
                             <span class="client-link__name">{{ loc.client.nom.upper }} {{ loc.client.prenom }}</span>
                             <span class="client-link__icon">→</span>
                         </a>
                     </td>
-                    <td><span class="cell-date">{{ loc.date_debut|date:"d/m" }} → {{ loc.date_fin_prevue|date:"d/m/Y" }}</span></td>
-                    <td>{% include 'atelier/location/_tag_caution.html' %}</td>
+                    <td data-label="Période"><span class="cell-date">{{ loc.date_debut|date:"d/m" }} → {{ loc.date_fin_prevue|date:"d/m/Y" }}</span></td>
+                    <td data-label="Caution">{% include 'atelier/location/_tag_caution.html' %}</td>
                     <td class="cell-actions">
                         <a href="{% url 'retour_location' loc.id %}" class="btn btn--outline btn--outline-accent btn--sm">Restitution</a>
                     </td>
@@ -140,18 +140,18 @@
                 {% for loc in locations_reservees %}
                 <tr class="swatch-row swatch-row--static">
                     <td><span class="cell-date">{{ loc.date_debut|date:"d/m/Y" }}</span></td>
-                    <td>
+                    <td data-label="Cliente">
                         <a href="{% url 'fiche_cliente' loc.client.id %}" class="client-link">
                             <span class="client-link__name">{{ loc.client.nom.upper }} {{ loc.client.prenom }}</span>
                             <span class="client-link__icon">→</span>
                         </a>
                     </td>
-                    <td>
+                    <td data-label="Robe">
                         <span class="model-name">{{ loc.robe_location.nom_modele }}</span>
                         <span class="cell-sub">Taille {{ loc.robe_location.taille }}</span>
                     </td>
-                    <td><span class="price-cell">{{ loc.prix_convenu }} €</span></td>
-                    <td>{% include 'atelier/location/_tag_caution.html' %}</td>
+                    <td data-label="Prix convenu"><span class="price-cell">{{ loc.prix_convenu }} €</span></td>
+                    <td data-label="Caution">{% include 'atelier/location/_tag_caution.html' %}</td>
                 </tr>
                 {% empty %}
                 <tr>

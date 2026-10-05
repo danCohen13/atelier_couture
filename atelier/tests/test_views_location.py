@@ -170,8 +170,8 @@ class LocationFormsTests(TestCase):
         form = LocationForm(data={
             'client': self.cliente.id,
             'robe_location': self.robe.id,
-            'date_debut': datetime.date.today(),
-            'date_fin_prevue': datetime.date.today() + datetime.timedelta(days=4),
+            'date_debut': datetime.date.today().strftime('%d/%m/%Y'),
+            'date_fin_prevue': (datetime.date.today() + datetime.timedelta(days=4)).strftime('%d/%m/%Y'),
             'prix_convenu': '200.00',
             'caution_montant': '500.00',
             'caution_statut': 'ENREGISTREE',
@@ -184,7 +184,7 @@ class LocationFormsTests(TestCase):
 
     def test_retour_location_form_valide(self):
         form = RetourLocationForm(data={
-            'date_retour_effectif': datetime.date.today(),
+            'date_retour_effectif': datetime.date.today().strftime('%d/%m/%Y'),
             'caution_statut': 'RESTITUEE',
             'etat_apres': 'Robe rendue propre, aucun accroc.',
             'notes': '',
@@ -278,7 +278,7 @@ class LocationViewsTests(TestCase):
         self.client.login(username="couturiere", password="Password123!")
         retour_url = reverse('retour_location', args=[self.location.id])
         data = {
-            'date_retour_effectif': datetime.date.today(),
+            'date_retour_effectif': datetime.date.today().strftime('%d/%m/%Y'),
             'caution_statut': 'RESTITUEE',
             'etat_apres': 'Robe restituée en parfait état.',
             'notes': '',

@@ -1480,3 +1480,172 @@ body.pdf-body {
 /* étiquettes d'état longues : elles passent à la ligne au lieu de déborder */
 .dress-card__top .tag { white-space: normal; text-align: right; line-height: 1.3; min-width: 0; }
 .dress-card__top .ref-tag { flex-shrink: 0; }
+
+/* ======================================================================
+   RESPONSIVE — tablette & mobile
+   Placé en fin de fichier : à spécificité égale, ces règles l'emportent.
+   ====================================================================== */
+
+/* ---- Tablette & mobile : la barre latérale devient un bandeau d'onglets ---- */
+@media (max-width: 900px) {
+  .site-header { position: static; }
+  .site-header__inner {
+    height: auto;
+    padding: 12px 16px;
+    flex-wrap: wrap;
+    gap: 10px 16px;
+  }
+  .brand { gap: 10px; }
+  .brand__mark { width: 32px; height: 32px; }
+  .brand__name { font-size: 21px; }
+  .brand__tagline { display: none; }
+  .header-actions { gap: 14px; flex-wrap: wrap; }
+  .header-actions a { padding: 7px 11px; font-size: 10px; }
+
+  .app-container { flex-direction: column; align-items: stretch; }
+
+  .sidebar {
+    width: 100%;
+    min-height: 0;
+    position: static;
+    padding: 0;
+    border-right: none;
+    border-bottom: 1px solid var(--line);
+  }
+  .sidebar-title { display: none; }
+  .sidebar-menu {
+    flex-direction: row;
+    gap: 6px;
+    padding: 10px 16px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .sidebar-menu::-webkit-scrollbar { display: none; }
+  .sidebar-link { white-space: nowrap; flex-shrink: 0; padding: 9px 14px; }
+
+  .page { padding: 32px 20px 64px; }
+  .page-head { margin-bottom: 26px; }
+  .page-head h1 { font-size: 36px; }
+}
+
+/* ---- Mobile ---- */
+@media (max-width: 640px) {
+  body { font-size: 15px; }
+
+  .page { padding: 24px 14px 56px; }
+  .page-head { gap: 16px; }
+  .page-head h1 { font-size: 30px; }
+  .page-head p { max-width: none; }
+  .page-head__actions { width: 100%; }
+  .page-head__actions .btn { flex: 1 1 auto; justify-content: center; }
+
+  /* zones tactiles confortables ; 16px évite le zoom automatique d'iOS */
+  .btn { padding: 13px 18px; }
+  .btn--sm { padding: 10px 14px; }
+  .field-input, select.field-input, textarea.field-input { font-size: 16px; }
+  .filter-chip { padding: 9px 14px; }
+  .sort-link { padding: 6px 0; }
+
+  .legend-strip { padding: 14px; gap: 14px; }
+  .filter-group, .sort-group { width: 100%; }
+  .filter-group { gap: 8px; }
+  .filter-group .eyebrow, .sort-group .eyebrow { width: 100%; }
+  .search-form, .catalogue-search { width: 100%; flex-wrap: wrap; }
+  .search-form input.field-input, .catalogue-search input.field-input { width: 100%; max-width: none; flex: 1 1 100%; }
+
+  /* cartes & formulaires */
+  .form-card { padding: 26px 18px; }
+  .form-card__inner { padding-left: 10px; }
+  .form-card h2 { font-size: 26px; }
+  .form-row { gap: 14px; }
+  .form-row > div { flex: 1 1 100%; }
+  .form-actions { flex-direction: column-reverse; }
+  .form-actions .btn { width: 100%; justify-content: center; }
+  .login-page { margin: 24px auto; }
+
+  .hero-card { padding: 22px 18px; }
+  .hero-card h1 { font-size: 28px; }
+  .hero-card__meta { text-align: left; width: 100%; }
+  .hero-card__meta .btn { flex: 1 1 100%; justify-content: center; }
+
+  .score-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .score-card { padding: 16px; }
+  .score-card .value { font-size: 22px; }
+  .score-card:last-child:nth-child(odd) { grid-column: 1 / -1; }
+
+  .quick-form-grid { grid-template-columns: 1fr; }
+  .type-toggle { flex-direction: column; }
+  .chart-wrap { height: 220px; }
+  .chart-legend { flex-wrap: wrap; gap: 10px 16px; }
+
+  .section-head { margin-top: 32px; }
+  .section-head h2 { font-size: 23px; }
+  .alert-strip__head h2 { font-size: 21px; }
+
+  .dress-grid { grid-template-columns: 1fr; }
+  .dress-card__photo, .dress-card__photo--empty { height: 260px; }
+
+  .client-grid { grid-template-columns: 1fr; }
+
+  /* ---- Tableaux « pièces de patron » : chaque ligne devient une carte ---- */
+  .swatch-table-wrap { overflow: hidden; }
+  .swatch-table tbody tr { border-bottom: 1px solid var(--line); }
+  .swatch-table tbody tr:last-child { border-bottom: none; }
+  .swatch-row { padding: 12px 0; }
+  .swatch-table td { padding: 5px 20px 5px 28px; font-size: 14px; }
+  .swatch-row td:first-child { padding-left: 28px; }
+  .swatch-table td:not(:first-child)[data-label]::before {
+    content: attr(data-label);
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 2px;
+  }
+  .swatch-table td.cell-actions { text-align: left; padding-top: 10px; }
+  .swatch-table td.cell-actions .btn { width: 100%; justify-content: center; }
+  .swatch-table td.empty-state { padding: 40px 20px; text-align: center; }
+  .client-link { margin: 0; padding: 4px 0; }
+  .client-link__icon { opacity: 1; transform: none; }
+  .tape-row { max-width: 100%; }
+
+  /* tiroir de détails */
+  .drawer-cell { padding: 20px 16px !important; }
+  .drawer-header { align-items: flex-start; }
+  .drawer-header__actions { width: 100%; }
+  .drawer-header__actions .btn { flex: 1; justify-content: center; }
+  .step-custom-form { flex-wrap: wrap; }
+  .step-custom-form input[type="text"] { flex: 1 1 100%; font-size: 16px; }
+  .style-slot__img, .style-slot__placeholder, .style-slot__broken { height: 130px; }
+
+  /* grand livre : date + type + montant sur la 1re ligne, détail en dessous */
+  .ledger-month { padding: 16px 16px 8px; }
+  .ledger-table tr {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 4px 12px;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .ledger-table tr:last-child { border-bottom: none; }
+  .ledger-table td { display: block; padding: 0; border: none; }
+  .ledger-table td:nth-child(1) { grid-column: 1; grid-row: 1; }
+  .ledger-table td:nth-child(2) { grid-column: 2; grid-row: 1; }
+  .ledger-table td:nth-child(6) { grid-column: 3; grid-row: 1; }
+  .ledger-table td:nth-child(4) { grid-column: 1 / -1; grid-row: 2; }
+  .ledger-table td:nth-child(3) { grid-column: 1 / 3; grid-row: 3; }
+  .ledger-table td:nth-child(5) { grid-column: 3; grid-row: 3; text-align: right; }
+}
+
+/* Saisie rapide (micro + champ + bouton) : le champ rétrécit au lieu de déborder */
+.ia-row input[type="text"] { min-width: 0; }
+@media (max-width: 640px) {
+  .ia-row input[type="text"] { font-size: 16px; padding-left: 12px !important; padding-right: 12px !important; }
+  .ia-row .btn { padding: 0 14px !important; }
+}
+
+.price-cell { white-space: nowrap; }

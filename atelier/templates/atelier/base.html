@@ -87,12 +87,14 @@
     {% block scripts %}{% endblock %}
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             flatpickr(".datepicker", {
                 dateFormat: "d/m/Y",
                 allowInput: true,
-                locale: { firstDayOfWeek: 1 }
+                disableMobile: true,   // même format jj/mm/aaaa sur téléphone
+                locale: "fr"
             });
 
             document.querySelectorAll('.datepicker').forEach(function (input) {

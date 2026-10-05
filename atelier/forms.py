@@ -2,14 +2,36 @@ from django import forms
 from .models import Client, Robe, Transaction
 from .models import RobeLocation, Location
 
+# --- Dates : format unique jj/mm/aaaa sur tout le site -----------------------
+DATE_FR = '%d/%m/%Y'
+DATE_FR_INPUTS = [DATE_FR]
+
+
+def date_widget():
+    """Champ texte jj/mm/aaaa, branché sur le sélecteur Flatpickr de base.html."""
+    return forms.DateInput(
+        format=DATE_FR,
+        attrs={
+            'class': 'field-input datepicker',
+            'placeholder': 'jj/mm/aaaa',
+            'inputmode': 'numeric',
+            'autocomplete': 'off',
+        },
+    )
+
+
+def date_field(label, required=True):
+    return forms.DateField(
+        label=label,
+        required=required,
+        input_formats=DATE_FR_INPUTS,
+        widget=date_widget(),
+    )
+
+
 class ClientForm(forms.ModelForm):
     # On configure la date de naissance pour accepter et afficher le format jj/mm/aaaa
-    date_naissance = forms.DateField(
-        input_formats=['%d/%m/%Y'],
-        widget=forms.DateInput(format='%d/%m/%Y', attrs={'class': 'field-input datepicker', 'placeholder': 'jj/mm/aaaa'}),
-        required=False,
-        label="Date de naissance"
-    )
+    date_naissance = date_field("Date de naissance", required=False)
 
     class Meta:
         model = Client
@@ -26,16 +48,8 @@ class ClientForm(forms.ModelForm):
 
 class RobeForm(forms.ModelForm):
     # On applique la même rigueur pour les deux dates de la robe
-    date_commencement = forms.DateField(
-        input_formats=['%d/%m/%Y'],
-        widget=forms.DateInput(format='%d/%m/%Y', attrs={'class': 'field-input datepicker', 'placeholder': 'jj/mm/aaaa'}),
-        label="Date de commencement"
-    )
-    date_livraison = forms.DateField(
-        input_formats=['%d/%m/%Y'],
-        widget=forms.DateInput(format='%d/%m/%Y', attrs={'class': 'field-input datepicker', 'placeholder': 'jj/mm/aaaa'}),
-        label="Date de livraison"
-    )
+    date_commencement = date_field("Date de commencement")
+    date_livraison = date_field("Date de livraison")
 
     class Meta:
         model = Robe
@@ -60,6 +74,8 @@ class RobeForm(forms.ModelForm):
                 self.initial[field_name] = None
 
 class TransactionForm(forms.ModelForm):
+    date = date_field("Date")
+
     class Meta:
         model = Transaction
         fields = ['type', 'montant', 'categorie', 'designation', 'date']
@@ -69,7 +85,6 @@ class TransactionForm(forms.ModelForm):
             'categorie': forms.Select(attrs={'class': 'field-input'}),
             'montant': forms.NumberInput(attrs={'class': 'field-input', 'placeholder': '0.00', 'step': '0.01', 'autofocus': True}),
             'designation': forms.TextInput(attrs={'class': 'field-input', 'placeholder': 'Ex : Achat fils dorés, acompte…'}),
-            'date': forms.TextInput(attrs={'class': 'datepicker field-input'}),
         }
 
 class RobeLocationForm(forms.ModelForm):
@@ -94,6 +109,9 @@ class RobeLocationForm(forms.ModelForm):
 
 
 class LocationForm(forms.ModelForm):
+    date_debut = date_field("Date de retrait prévue")
+    date_fin_prevue = date_field("Date de retour prévue")
+
     class Meta:
         model = Location
         fields = [
@@ -104,8 +122,6 @@ class LocationForm(forms.ModelForm):
         widgets = {
             'client': forms.Select(attrs={'class': 'field-input'}),
             'robe_location': forms.Select(attrs={'class': 'field-input'}),
-            'date_debut': forms.DateInput(attrs={'class': 'field-input', 'type': 'date'}),
-            'date_fin_prevue': forms.DateInput(attrs={'class': 'field-input', 'type': 'date'}),
             'prix_convenu': forms.NumberInput(attrs={'class': 'field-input', 'step': '0.01'}),
             'caution_montant': forms.NumberInput(attrs={'class': 'field-input', 'step': '0.01'}),
             'caution_statut': forms.Select(attrs={'class': 'field-input'}),
@@ -118,11 +134,12 @@ class LocationForm(forms.ModelForm):
 
 class RetourLocationForm(forms.ModelForm):
     """Formulaire allégé pour la restitution rapide et l'état des lieux au retour."""
+    date_retour_effectif = date_field("Date de retour effective", required=False)
+
     class Meta:
         model = Location
         fields = ['date_retour_effectif', 'caution_statut', 'etat_apres', 'notes']
         widgets = {
-            'date_retour_effectif': forms.DateInput(attrs={'class': 'field-input', 'type': 'date'}),
             'caution_statut': forms.Select(attrs={'class': 'field-input'}),
             'etat_apres': forms.Textarea(attrs={'class': 'field-input', 'rows': 3, 'placeholder': 'Taches, réparations à prévoir, départ pressing...'}),
             'notes': forms.Textarea(attrs={'class': 'field-input', 'rows': 2}),
