@@ -61,8 +61,13 @@
             <div class="sidebar-title">Navigation</div>
             <nav class="sidebar-menu">
                 <!-- Atelier & confections sur mesure -->
-                <a href="{% url 'dashboard' %}" class="sidebar-link {% if request.resolver_match.url_name != 'finances' and 'location' not in request.resolver_match.url_name %}is-active{% endif %}">
+                <a href="{% url 'dashboard' %}" class="sidebar-link {% if request.resolver_match.url_name != 'finances' and request.resolver_match.url_name != 'planning' and 'location' not in request.resolver_match.url_name %}is-active{% endif %}">
                     Atelier &amp; modèles
+                </a>
+
+                <!-- Calendrier : livraisons, retraits et retours -->
+                <a href="{% url 'planning' %}" class="sidebar-link {% if request.resolver_match.url_name == 'planning' %}is-active{% endif %}">
+                    Planning
                 </a>
 
                 <!-- Module Location & Stock -->

@@ -1,0 +1,229 @@
+{% extends 'atelier/base.html' %}
+
+{% block title %}Planning — Cohen Haute Couture{% endblock %}
+
+{% block content %}
+<main class="page planning" id="planning">
+
+    <div class="page-head">
+        <div>
+            <span class="eyebrow">Planning</span>
+            <h1>Calendrier de l'atelier</h1>
+            <p>Livraisons des confections, retraits et retours des robes de location.</p>
+        </div>
+        <div class="page-head__actions">
+            <a href="{% url 'ajouter_robe' %}" class="btn btn--outline">+ Confection</a>
+            <a href="{% url 'creer_location' %}" class="btn btn--primary">+ Contrat de location</a>
+        </div>
+    </div>
+
+    <div class="legend-strip">
+        <div class="filter-group" role="group" aria-label="Types d'évènements à afficher">
+            <span class="eyebrow">Afficher</span>
+            <button type="button" class="kind-chip" data-kind="livraison" aria-pressed="true">
+                <i class="kind-chip__dot" aria-hidden="true"></i>Livraisons
+            </button>
+            <button type="button" class="kind-chip" data-kind="retrait" aria-pressed="true">
+                <i class="kind-chip__dot" aria-hidden="true"></i>Retraits
+            </button>
+            <button type="button" class="kind-chip" data-kind="retour" aria-pressed="true">
+                <i class="kind-chip__dot" aria-hidden="true"></i>Retours
+            </button>
+        </div>
+    </div>
+
+    <p class="form-alert planning-error" id="planning-error" role="alert" hidden>
+        Impossible de charger les évènements. Recharge la page ou réessaie dans un instant.
+    </p>
+
+    <div class="calendar-wrap">
+        <div id="calendar" aria-label="Calendrier des livraisons, retraits et retours"></div>
+    </div>
+
+    <!-- Détail d'un évènement -->
+    <dialog id="event-dialog" class="event-dialog" aria-labelledby="event-dialog-title">
+        <div class="event-dialog__head">
+            <span class="eyebrow" id="event-dialog-kind"></span>
+            <button type="button" class="event-dialog__close" id="event-dialog-close" aria-label="Fermer">×</button>
+        </div>
+        <h2 id="event-dialog-title"></h2>
+        <div id="event-dialog-lines"></div>
+        <div class="event-dialog__actions" id="event-dialog-actions"></div>
+    </dialog>
+
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.15/locales/fr.global.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const URL_EVENEMENTS = "{{ url_evenements|escapejs }}";
+
+    const racine = document.getElementById('planning');
+    const elCalendrier = document.getElementById('calendar');
+    const elErreur = document.getElementById('planning-error');
+
+    // Les couleurs viennent de la feuille de style : une seule source de vérité.
+    const css = getComputedStyle(document.documentElement);
+    const COULEURS = {
+        livraison: css.getPropertyValue('--gold').trim(),
+        retrait: css.getPropertyValue('--blueprint').trim(),
+        retour: css.getPropertyValue('--wine').trim(),
+    };
+    const LIBELLES = { livraison: 'Livraison', retrait: 'Retrait', retour: 'Retour' };
+
+    const estMobile = () => window.matchMedia('(max-width: 640px)').matches;
+    const masques = new Set();   // types décochés dans la légende
+
+    function barreOutils() {
+        return estMobile()
+            ? { left: 'prev,next today', center: 'title', right: 'dayGridMonth,listMonth' }
+            : { left: 'prev,next today', center: 'title', right: 'dayGridMonth,dayGridWeek,listMonth' };
+    }
+
+    function el(tag, classe, texte) {
+        const n = document.createElement(tag);
+        if (classe) n.className = classe;
+        if (texte !== undefined) n.textContent = texte;   // textContent : jamais d'HTML injecté
+        return n;
+    }
+
+    // ------------------------------------------------------------------
+    // Fenêtre de détails
+    // ------------------------------------------------------------------
+    const dlg = document.getElementById('event-dialog');
+    const dlgKind = document.getElementById('event-dialog-kind');
+    const dlgTitre = document.getElementById('event-dialog-title');
+    const dlgLignes = document.getElementById('event-dialog-lines');
+    const dlgActions = document.getElementById('event-dialog-actions');
+
+    function ouvrirDetails(evenement) {
+        const p = evenement.extendedProps;
+        dlg.dataset.kind = p.kind;
+        dlgKind.textContent = p.kind_label;
+        dlgTitre.textContent = evenement.title;
+
+        const lignes = p.lignes.map(function (paire) {
+            const ligne = el('div', 'finance-line');
+            ligne.append(el('span', null, paire[0]), el('strong', null, paire[1]));
+            return ligne;
+        });
+        if (p.telephone) {
+            const ligne = el('div', 'finance-line');
+            const lien = el('a', 'card-link', p.telephone);
+            lien.href = 'tel:' + p.telephone;
+            const valeur = el('strong');
+            valeur.append(lien);
+            ligne.append(el('span', null, 'Téléphone'), valeur);
+            lignes.push(ligne);
+        }
+        dlgLignes.replaceChildren(...lignes);
+
+        dlgActions.replaceChildren(...p.actions.map(function (a) {
+            const lien = el('a', 'btn ' + (a.primary ? 'btn--primary' : 'btn--outline'), a.label);
+            lien.href = a.url;
+            return lien;
+        }));
+
+        if (typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open', '');
+    }
+
+    document.getElementById('event-dialog-close').addEventListener('click', () => dlg.close());
+    dlg.addEventListener('click', function (e) {          // clic sur le fond = fermeture
+        if (e.target === dlg) dlg.close();
+    });
+
+    // ------------------------------------------------------------------
+    // Calendrier
+    // ------------------------------------------------------------------
+    let etaitMobile = estMobile();
+
+    const calendrier = new FullCalendar.Calendar(elCalendrier, {
+        locale: 'fr',
+        firstDay: 1,
+        height: 'auto',
+        fixedWeekCount: false,
+        initialView: etaitMobile ? 'listMonth' : 'dayGridMonth',
+        headerToolbar: barreOutils(),
+        buttonText: { today: "Aujourd'hui", month: 'Mois', week: 'Semaine', list: 'Liste' },
+        dayMaxEvents: 3,
+        moreLinkText: (n) => estMobile() ? '+' + n : '+' + n + ' autre' + (n > 1 ? 's' : ''),
+        noEventsText: 'Rien de prévu sur cette période.',
+
+        events: function (info, succes, echec) {
+            const url = URL_EVENEMENTS + '?start=' + encodeURIComponent(info.startStr) +
+                        '&end=' + encodeURIComponent(info.endStr);
+            fetch(url, { headers: { 'Accept': 'application/json' }, credentials: 'same-origin' })
+                .then(function (r) {
+                    if (!r.ok) throw new Error('HTTP ' + r.status);
+                    return r.json();
+                })
+                .then(function (donnees) {
+                    elErreur.hidden = true;
+                    succes(donnees.filter((e) => !masques.has(e.extendedProps.kind)));
+                })
+                .catch(function (err) {
+                    elErreur.hidden = false;
+                    echec(err);
+                });
+        },
+
+        // La pastille de la vue « Liste » prend la couleur du type d'évènement.
+        eventDataTransform: function (e) {
+            const couleur = e.extendedProps && COULEURS[e.extendedProps.kind];
+            if (couleur) e.borderColor = couleur;
+            return e;
+        },
+
+        // Le type est écrit en toutes lettres : la couleur n'est jamais la seule information.
+        eventContent: function (arg) {
+            const p = arg.event.extendedProps;
+            const enListe = arg.view.type.indexOf('list') === 0;
+            const noeud = el('span', 'ev__texte');
+            noeud.append(el('span', 'ev__kind', LIBELLES[p.kind]), el('span', 'ev__titre', arg.event.title));
+            if (enListe) noeud.append(el('span', 'ev__client', ' · ' + p.client));
+            return { domNodes: [noeud] };
+        },
+
+        // Téléphone : un appui sur un jour de la grille ouvre le détail de la journée.
+        dateClick: function (info) {
+            if (estMobile()) calendrier.changeView('listDay', info.date);
+        },
+
+        eventClick: function (info) {
+            info.jsEvent.preventDefault();
+            ouvrirDetails(info.event);
+        },
+
+        // Téléphone ↔ ordinateur : on change de vue et de barre d'outils.
+        windowResize: function () {
+            if (estMobile() === etaitMobile) return;
+            etaitMobile = estMobile();
+            calendrier.setOption('headerToolbar', barreOutils());
+            calendrier.changeView(etaitMobile ? 'listMonth' : 'dayGridMonth');
+        },
+
+        loading: function (enCours) {
+            racine.setAttribute('aria-busy', enCours ? 'true' : 'false');
+            racine.classList.toggle('is-loading', enCours);
+        },
+    });
+    calendrier.render();
+
+    // ------------------------------------------------------------------
+    // Légende interactive : afficher / masquer un type d'évènement
+    // ------------------------------------------------------------------
+    document.querySelectorAll('.kind-chip').forEach(function (bouton) {
+        bouton.addEventListener('click', function () {
+            const type = bouton.dataset.kind;
+            const actif = bouton.getAttribute('aria-pressed') === 'true';
+            bouton.setAttribute('aria-pressed', actif ? 'false' : 'true');
+            if (actif) masques.add(type); else masques.delete(type);
+            calendrier.refetchEvents();
+        });
+    });
+});
+</script>
+{% endblock %}

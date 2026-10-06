@@ -3,6 +3,7 @@ from django.contrib.auth import views as auth_views
 from . import views_atelier
 from . import views_finances
 from . import views_location
+from . import views_planning
 
 urlpatterns = [
     # --- RACINE & ATELIER (views_atelier) ---
@@ -57,4 +58,10 @@ urlpatterns += [
     path('location/tableau-de-bord/', views_location.tableau_bord_locations, name='tableau_bord_locations'),
     path('location/nouveau/', views_location.creer_location, name='creer_location'),
     path('location/<int:pk>/retour/', views_location.enregistrer_retour_location, name='retour_location'),
+]
+
+urlpatterns += [
+    # Planning mensuel (livraisons, retraits et retours de location)
+    path('planning/', views_planning.planning, name='planning'),
+    path('api/planning/evenements/', views_planning.api_planning_evenements, name='api_planning_evenements'),
 ]
