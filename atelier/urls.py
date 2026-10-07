@@ -1,6 +1,7 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views_atelier
+from . import views_auth
 from . import views_finances
 from . import views_location
 from . import views_planning
@@ -35,17 +36,17 @@ urlpatterns = [
 
     # 1. Demande de code par email
     path('mot-de-passe-oublie/', 
-         views_atelier.demander_code_reset, 
+         views_auth.demander_code_reset, 
          name='demander_code_reset'),
 
     # 2. Saisie du code à 6 chiffres
     path('mot-de-passe-oublie/verification/', 
-         views_atelier.verifier_code_reset, 
+         views_auth.verifier_code_reset, 
          name='verifier_code_reset'),
 
     # 3. Création du nouveau mot de passe
     path('mot-de-passe-oublie/nouveau/', 
-         views_atelier.nouveau_mot_de_passe, 
+         views_auth.nouveau_mot_de_passe, 
          name='nouveau_mot_de_passe'),
 
      path('clientes/<int:client_id>/pdf/', views_atelier.exporter_pdf_cliente, name='exporter_pdf_cliente'),

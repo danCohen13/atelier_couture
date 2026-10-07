@@ -63,12 +63,18 @@ class Robe(models.Model):
 
     @property
     def progression(self):
-        taches = self.taches.all()
-        total_taches = taches.count()
-        if total_taches > 0:
-            faites = taches.filter(est_faite=True).count()
-            return int((faites / total_taches) * 100)
-        return 0
+        """
+        Pourcentage de tâches terminées (0 à 100).
+
+        Calculé en Python à partir de `self.taches.all()` : avec
+        `prefetch_related('taches')` aucune requête SQL n'est émise, même si la
+        propriété est lue plusieurs fois par robe (liste, filtre, tri…).
+        """
+        taches = list(self.taches.all())
+        if not taches:
+            return 0
+        faites = sum(1 for t in taches if t.est_faite)
+        return 100 * faites // len(taches)
 
     def __str__(self):
         return f"{self.nom_modele} - Client : {self.client.nom}"

@@ -1641,270 +1641,54 @@ body.pdf-body {
   .ledger-table td:nth-child(5) { grid-column: 3; grid-row: 3; text-align: right; }
 }
 
-/* Saisie rapide (micro + champ + bouton) : le champ rétrécit au lieu de déborder */
-.ia-row input[type="text"] { min-width: 0; }
+/* Saisie rapide par IA + micro (page « Enregistrer une opération ») */
+.page--narrow { max-width: 760px; }
+.back-link {
+  display: inline-block;
+  margin-bottom: 18px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  text-decoration: none;
+}
+.back-link:hover { color: var(--blueprint); }
+
+.quick-ia {
+  background: var(--paper);
+  border: 1px dashed var(--line);
+  padding: 18px 20px 20px;
+  margin: 22px 0 28px;
+}
+.quick-ia h3 { font-family: var(--font-display); font-weight: 600; font-size: 21px; margin: 0 0 4px; }
+.quick-ia p { margin: 0 0 14px; font-size: 13px; color: var(--ink-soft); }
+.quick-ia__row { display: flex; gap: 10px; align-items: center; }
+.quick-ia__row .field-input { flex: 1; min-width: 0; height: 46px; }
+.quick-ia__row .btn { height: 46px; }
+.quick-ia p.quick-ia__error { margin: 12px 0 0; color: var(--wine); font-weight: 500; }
+
+.mic-btn {
+  flex-shrink: 0;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--paper-light);
+  font-size: 1.2em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.mic-btn:hover { border-color: var(--blueprint); }
+
 @media (max-width: 640px) {
-  .ia-row input[type="text"] { font-size: 16px; padding-left: 12px !important; padding-right: 12px !important; }
-  .ia-row .btn { padding: 0 14px !important; }
+  .quick-ia { padding: 16px 14px 18px; }
+  .quick-ia__row { flex-wrap: wrap; }
+  .quick-ia__row .field-input { flex: 1 1 calc(100% - 56px); }
+  .quick-ia__row .btn { flex: 1 1 100%; justify-content: center; }
 }
 
 .price-cell { white-space: nowrap; }
-
-/* ======================================================================
-   PLANNING — calendrier FullCalendar habillé "Patron d'atelier"
-   Doré = livraison de confection · Bleu = retrait · Rouge = retour
-   ====================================================================== */
-.planning [data-kind="livraison"] { --kind: var(--gold); }
-.planning [data-kind="retrait"]   { --kind: var(--blueprint); }
-.planning [data-kind="retour"]    { --kind: var(--wine); }
-
-/* Légende interactive */
-.kind-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  padding: 8px 14px;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  background: transparent;
-  color: var(--ink-soft);
-  cursor: pointer;
-  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
-}
-.kind-chip__dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--kind);
-  border: 2px solid var(--kind);
-}
-.kind-chip[aria-pressed="true"] { background: var(--paper); border-color: var(--kind); color: var(--ink); }
-.kind-chip[aria-pressed="false"] { color: var(--ink-faint); }
-.kind-chip[aria-pressed="false"] .kind-chip__dot { background: transparent; }
-.kind-chip:hover { border-color: var(--kind); }
-
-.planning-error { margin-bottom: 18px; }
-
-.calendar-wrap {
-  background: var(--paper-light);
-  border: 1px solid var(--line);
-  box-shadow: var(--shadow);
-  padding: 22px 24px 26px;
-  transition: opacity 0.2s ease;
-}
-.planning.is-loading .calendar-wrap { opacity: 0.6; }
-
-/* --- Variables FullCalendar --- */
-.planning .fc {
-  --fc-border-color: var(--line);
-  --fc-page-bg-color: var(--paper-light);
-  --fc-neutral-bg-color: var(--paper);
-  --fc-today-bg-color: #f2e9d4;
-  --fc-button-bg-color: transparent;
-  --fc-button-border-color: var(--line);
-  --fc-button-text-color: var(--ink-soft);
-  --fc-button-hover-bg-color: transparent;
-  --fc-button-hover-border-color: var(--blueprint);
-  --fc-button-active-bg-color: var(--ink);
-  --fc-button-active-border-color: var(--ink);
-  --fc-event-bg-color: var(--paper);
-  --fc-event-border-color: var(--kind, var(--line));
-  --fc-event-text-color: var(--ink);
-  --fc-more-link-bg-color: transparent;
-  --fc-list-event-hover-bg-color: var(--paper);
-  --fc-small-font-size: 0.8em;
-  font-family: var(--font-body);
-}
-
-/* --- Barre d'outils --- */
-.planning .fc .fc-toolbar { gap: 12px; margin-bottom: 20px; }
-.planning .fc .fc-toolbar-title {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 32px;
-  text-transform: capitalize;
-  letter-spacing: 0.005em;
-}
-.planning .fc .fc-button {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 10px 16px;
-  border-radius: 2px;
-  box-shadow: none;
-  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
-}
-.planning .fc .fc-button:hover { color: var(--blueprint); }
-.planning .fc .fc-button:focus-visible { outline: 2px solid var(--blueprint); outline-offset: 2px; box-shadow: none; }
-.planning .fc .fc-button-primary:not(:disabled).fc-button-active,
-.planning .fc .fc-button-primary:not(:disabled):active { color: var(--paper-light); }
-.planning .fc .fc-button:disabled { opacity: 0.4; }
-.planning .fc .fc-button-group > .fc-button { border-radius: 0; margin-left: -1px; }
-.planning .fc .fc-button-group > .fc-button:first-child { border-radius: 2px 0 0 2px; margin-left: 0; }
-.planning .fc .fc-button-group > .fc-button:last-child { border-radius: 0 2px 2px 0; }
-
-/* --- Grille --- */
-.planning .fc .fc-col-header-cell { background: var(--paper); }
-.planning .fc .fc-col-header-cell-cushion {
-  padding: 10px 4px;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-}
-.planning .fc .fc-daygrid-day-number {
-  padding: 6px 8px;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--ink-soft);
-}
-.planning .fc .fc-day-other .fc-daygrid-day-top { opacity: 0.4; }
-.planning .fc .fc-day-today .fc-daygrid-day-number { color: var(--gold); font-weight: 700; }
-.planning .fc .fc-daygrid-day-frame { min-height: 104px; }
-.planning .fc .fc-more-link {
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  letter-spacing: 0.04em;
-  color: var(--blueprint);
-  padding: 2px 6px;
-}
-.planning .fc .fc-more-link:hover { color: var(--gold); }
-.planning .fc .fc-popover {
-  background: var(--paper-light);
-  border: 1px solid var(--line);
-  box-shadow: var(--shadow);
-  border-radius: 2px;
-}
-.planning .fc .fc-popover-header { background: var(--paper); font-family: var(--font-mono); font-size: 11px; }
-
-/* --- Évènements : étiquettes de patron, liseré coloré à gauche --- */
-.planning .fc .fc-event.ev {
-  background: var(--paper);
-  border: none;
-  border-left: 3px solid var(--kind);
-  border-radius: 2px;
-  margin: 1px 4px;
-  padding: 2px 6px;
-  font-size: 12px;
-  line-height: 1.35;
-  cursor: pointer;
-}
-.planning .fc .fc-event.ev:focus-visible { outline: 2px solid var(--blueprint); outline-offset: 1px; }
-.planning .fc .fc-daygrid-event.ev--livraison { background: #f2e9d4; }
-.planning .fc .fc-daygrid-event.ev--retrait   { background: #e2eaf0; }
-.planning .fc .fc-daygrid-event.ev--retour    { background: var(--wine-bg); }
-.planning .fc .fc-daygrid-event.ev--livraison.ev--retard { background: var(--gold); }   /* texte sombre : contraste 4.5 */
-.planning .fc .fc-daygrid-event.ev--retour.ev--retard {
-  background: var(--wine);
-  --fc-event-text-color: var(--paper-light);   /* FullCalendar fixe sa propre couleur : on passe par sa variable */
-}
-.planning .fc .fc-event.ev--fait { opacity: 0.55; }
-
-.planning .ev__texte { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.planning .ev__kind {
-  margin-right: 6px;
-  font-family: var(--font-mono);
-  font-size: 9.5px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  opacity: 0.8;
-}
-.planning .ev__titre { font-weight: 600; }
-.planning .ev__client { opacity: 0.75; }
-
-/* --- Vue liste --- */
-.planning .fc .fc-list { border-color: var(--line); }
-.planning .fc .fc-list-day-cushion { background: var(--paper); }
-.planning .fc .fc-list-day-text,
-.planning .fc .fc-list-day-side-text {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-}
-.planning .fc .fc-list-event td { padding: 12px 14px; }
-.planning .fc .fc-list-event-time { display: none; }
-.planning .fc .fc-list-event .ev__texte { white-space: normal; }
-.planning .fc .fc-list-event.ev { background: transparent; border-left: none; margin: 0; padding: 0; }
-.planning .fc .fc-list-event.ev--fait { opacity: 0.55; }
-.planning .fc .fc-list-event.ev--retard .ev__titre { color: var(--wine); }
-.planning .fc .fc-list-empty { background: var(--paper); font-size: 13.5px; color: var(--ink-soft); }
-
-/* --- Fenêtre de détails --- */
-.event-dialog {
-  width: min(460px, calc(100% - 28px));
-  padding: 24px 28px 26px;
-  background: var(--paper-light);
-  color: var(--ink);
-  border: 1px solid var(--line);
-  border-top: 4px solid var(--kind, var(--ink));
-  box-shadow: 0 24px 60px -20px rgba(33, 29, 26, 0.45);
-}
-.event-dialog[data-kind="livraison"] { --kind: var(--gold); }
-.event-dialog[data-kind="retrait"]   { --kind: var(--blueprint); }
-.event-dialog[data-kind="retour"]    { --kind: var(--wine); }
-.event-dialog::backdrop { background: rgba(33, 29, 26, 0.45); }
-.event-dialog__head { display: flex; justify-content: space-between; align-items: center; }
-.event-dialog__head .eyebrow { color: var(--kind); font-weight: 600; }
-.event-dialog__close {
-  background: none;
-  border: none;
-  font-size: 26px;
-  line-height: 1;
-  color: var(--ink-soft);
-  cursor: pointer;
-  padding: 4px 8px;
-  margin-right: -8px;
-}
-.event-dialog__close:hover { color: var(--ink); }
-.event-dialog h2 {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 30px;
-  line-height: 1.1;
-  margin: 6px 0 16px;
-}
-.event-dialog .finance-line { gap: 18px; border-bottom: 1px dashed var(--line); padding: 8px 0; }
-.event-dialog .finance-line:last-child { border-bottom: none; }
-.event-dialog .finance-line span { flex-shrink: 0; }
-.event-dialog .finance-line strong { text-align: right; overflow-wrap: anywhere; font-size: 12.5px; }
-.event-dialog .card-link { font-size: 12.5px; }
-.event-dialog__actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; margin-top: 22px; }
-
-@media (max-width: 900px) {
-  .calendar-wrap { padding: 16px; }
-}
-@media (max-width: 640px) {
-  .calendar-wrap { padding: 10px; }
-  .planning .fc .fc-toolbar { flex-wrap: wrap; justify-content: space-between; }
-  .planning .fc .fc-toolbar-chunk:nth-child(2) { order: -1; width: 100%; }
-  .planning .fc .fc-toolbar-title { font-size: 26px; }
-  .planning .fc .fc-button { padding: 11px 10px; letter-spacing: 0.04em; }
-  .planning .kind-chip { padding: 9px 14px; }
-  .event-dialog { padding: 20px 18px 22px; }
-
-  /* grille mensuelle sur téléphone : simples pastilles colorées (le détail est dans la liste) */
-  .planning .fc .fc-daygrid-event.ev { margin: 1px 3px; padding: 0; }
-  .planning .fc .fc-daygrid-event .ev__texte,
-  .planning .fc .fc-daygrid-event .ev__texte * { font-size: 0; line-height: 0; }
-  .planning .fc .fc-daygrid-event .ev__texte { height: 7px; }
-  .planning .fc .fc-daygrid-day-frame { min-height: 84px; cursor: pointer; }
-  .planning .fc .fc-more-link { padding: 0 3px; font-size: 10px; }
-  .event-dialog__actions .btn { flex: 1 1 100%; justify-content: center; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .calendar-wrap, .kind-chip { transition: none; }
-}
-
-.planning .ev--livraison { --kind: var(--gold); }
-.planning .ev--retrait   { --kind: var(--blueprint); }
-.planning .ev--retour    { --kind: var(--wine); }

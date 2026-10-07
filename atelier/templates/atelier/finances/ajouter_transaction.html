@@ -1,60 +1,46 @@
 {% extends 'atelier/base.html' %}
 
+{% block title %}Enregistrer une opération — Cohen Haute Couture{% endblock %}
+
 {% block content %}
-<div class="container" style="max-width: 600px; margin: 40px auto; padding: 0 20px;">
-    
-    <div style="margin-bottom: 20px;">
-        <a href="{% url 'finances' %}" style="color: #666; text-decoration: none; font-size: 0.9em;">← Retour aux finances</a>
+<main class="page page--narrow">
+
+    <a href="{% url 'finances' %}" class="back-link">← Retour aux finances</a>
+
+    <div class="form-card">
+        <div class="form-card__inner">
+            <span class="eyebrow">Finances</span>
+            <h2>Enregistrer une opération</h2>
+
+            <!-- Saisie rapide : l'IA lit la phrase et pré-remplit le formulaire ci-dessous (rien n'est enregistré) -->
+            <form method="post" class="quick-ia">
+                {% csrf_token %}
+                <h3>Saisie rapide par IA</h3>
+                <p>Tape ou dicte ton opération librement ; l'IA remplit les champs ci-dessous.</p>
+
+                <div class="quick-ia__row">
+                    {% include 'atelier/includes/_microphone_generic.html' with btn_id="btn-mic-finance" target_id="finance-transcript" %}
+                    <input type="text" id="finance-transcript" name="texte_ia" class="field-input"
+                           value="{{ texte_ia|default:'' }}"
+                           placeholder="Ex : acheté du fil de soie 45 € hier">
+                    <button type="submit" name="analyser" class="btn btn--primary">Analyser</button>
+                </div>
+
+                {% if erreur_ia %}
+                <p class="quick-ia__error" role="alert">{{ erreur_ia }}</p>
+                {% endif %}
+            </form>
+
+            <!-- Formulaire classique -->
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="form-actions">
+                    <a href="{% url 'finances' %}" class="btn btn--outline">Annuler</a>
+                    <button type="submit" name="enregistrer" class="btn btn--primary">Enregistrer l'opération</button>
+                </div>
+            </form>
+        </div>
     </div>
-
-    <h2 style="color: #1a1a1a; margin-bottom: 30px; font-weight: 600;">Enregistrer une opération</h2>
-
-    <!-- ✨ BLOC DE SAISIE RAPIDE PAR IA -->
-    <div style="background-color: #fcfbf9; border: 1px solid #e6dfd3; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
-        <h3 style="margin-top: 0; margin-bottom: 8px; font-size: 1.1em; color: #1a1a1a; display: flex; align-items: center; gap: 8px;">
-            ✨ Saisie rapide par IA
-        </h3>
-        <p style="color: var(--ink-soft); font-size: 12.5px; margin-bottom: 15px; line-height: 1.4;">
-            Tapez ou dictez votre opération librement. L'IA s'occupe de remplir tous les champs ci-dessous pour vous.
-        </p>
-
-        <!-- On englobe la saisie IA dans le formulaire principal pour que le bouton "Analyser" envoie bien le texte au serveur -->
-        <form method="POST">
-            {% csrf_token %}
-            
-            <div class="ia-row" style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px;">
-                <!-- 🎙️ On appelle le micro générique et on lui dit de remplir "finance-transcript" -->
-                {% include 'atelier/includes/_microphone_generic.html' with btn_id="btn-mic-finance" target_id="finance-transcript" %}
-                
-                <!-- Zone de saisie -->
-                <input type="text" id="finance-transcript" name="texte_ia" value="{{ texte_ia|default:'' }}"
-                       placeholder="Tapez ou dictez votre opération librement..." 
-                       style="flex-grow: 1; padding: 11px 15px; border: 1px solid #dcd5c9; border-radius: 4px; font-size: 0.95em; background-color: #fff; outline: none; height: 46px; box-sizing: border-box;">
-                
-                <!-- Bouton d'analyse -->
-                <button type="submit" name="analyser" class="btn btn--primary" style="height: 46px; padding: 0 20px; font-size: 0.95em;">
-                    Analyser
-                </button>
-            </div>
-            
-            {% if erreur_ia %}
-            <div style="color: #d9534f; font-size: 12.5px; font-weight: 500; margin-top: -5px; margin-bottom: 15px;">
-                ❌ {{ erreur_ia }}
-            </div>
-            {% endif %}
-
-            <hr style="border: 0; border-top: 1px solid #e6dfd3; margin: 25px 0;">
-
-            <!-- FORMULAIRE DJANGO TRADITIONNEL (rempli automatiquement après analyse) -->
-            {{ form.as_p }}
-
-            <div style="margin-top: 30px;">
-                <button type="submit" name="enregistrer" class="btn btn--primary" style="width: 100%;">
-                    Enregistrer l'opération
-                </button>
-            </div>
-        </form>
-    </div>
-
-</div>
+</main>
 {% endblock %}

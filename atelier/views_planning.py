@@ -49,8 +49,7 @@ def planning(request):
 
 
 def _evenement_livraison(robe, aujourdhui):
-    taches = list(robe.taches.all())  # prefetch : pas de requête par robe
-    progression = int(100 * sum(t.est_faite for t in taches) / len(taches)) if taches else 0
+    progression = robe.progression  # tâches préchargées : aucune requête en plus
     echue = robe.date_livraison < aujourdhui
     classes = ['ev', 'ev--livraison']
     if echue and progression == 100:
