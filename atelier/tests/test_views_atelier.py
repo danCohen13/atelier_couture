@@ -211,9 +211,19 @@ class RobeCrudTests(TestCase):
             client=self.cliente, nom_modele="Robe à supprimer",
             date_commencement=datetime.date.today(), date_livraison=datetime.date.today(),
         )
-        response = self.client.get(reverse('supprimer_robe', args=[robe.id]))
+        response = self.client.post(reverse('supprimer_robe', args=[robe.id]))
         self.assertRedirects(response, reverse('dashboard'))
         self.assertFalse(Robe.objects.filter(pk=robe.id).exists())
+
+    def test_supprimer_robe_refuse_le_get(self):
+        """Un simple lien (ou une prévisualisation de page) ne doit jamais effacer de données."""
+        robe = Robe.objects.create(
+            client=self.cliente, nom_modele="Robe protégée",
+            date_commencement=datetime.date.today(), date_livraison=datetime.date.today(),
+        )
+        response = self.client.get(reverse('supprimer_robe', args=[robe.id]))
+        self.assertEqual(response.status_code, 405)
+        self.assertTrue(Robe.objects.filter(pk=robe.id).exists())
 
 
 class TacheTests(TestCase):
@@ -228,12 +238,34 @@ class TacheTests(TestCase):
         )
 
     def test_ajout_rapide_type_connu_cree_la_tache(self):
-        self.client.get(reverse('ajouter_tache_rapide', args=[self.robe.id, 'toile']))
+        self.client.post(reverse('ajouter_tache_rapide', args=[self.robe.id, 'toile']))
         self.assertTrue(self.robe.taches.filter(libelle="Toile d'essai").exists())
 
     def test_ajout_rapide_type_inconnu_ne_cree_rien(self):
-        self.client.get(reverse('ajouter_tache_rapide', args=[self.robe.id, 'inexistant']))
+        self.client.post(reverse('ajouter_tache_rapide', args=[self.robe.id, 'inexistant']))
         self.assertEqual(self.robe.taches.count(), 0)
+
+    def test_actions_sur_les_taches_refusent_le_get(self):
+        tache = Tache.objects.create(robe=self.robe, libelle="Ourlet", est_faite=False)
+        urls = [
+            reverse('ajouter_tache_rapide', args=[self.robe.id, 'toile']),
+            reverse('toggle_tache', args=[tache.id]),
+            reverse('supprimer_tache', args=[tache.id]),
+        ]
+        for url in urls:
+            self.assertEqual(self.client.get(url).status_code, 405, url)
+        tache.refresh_from_db()
+        self.assertFalse(tache.est_faite)
+        self.assertEqual(self.robe.taches.count(), 1)
+
+    def test_libelle_avec_apostrophe_ne_casse_pas_le_javascript(self):
+        """Le libellé ne doit jamais être injecté dans du code JavaScript (faille XSS)."""
+        Tache.objects.create(robe=self.robe, libelle="');alert(document.cookie);//", est_faite=False)
+        page = self.client.get(reverse('dashboard')).content.decode()
+        self.assertNotIn("confirm('Supprimer l", page)
+        # Le libellé n'apparaît qu'échappé, dans un attribut data-* : jamais comme code exécutable.
+        self.assertIn('data-confirm="Supprimer l\'étape « &#x27;);alert(document.cookie);// » ?"', page)
+        self.assertNotIn("');alert(document.cookie);//", page)
 
     def test_tache_personnalisee_avec_libelle_est_creee(self):
         self.client.post(reverse('ajouter_tache_personnalisee', args=[self.robe.id]), {
@@ -249,14 +281,14 @@ class TacheTests(TestCase):
 
     def test_toggle_tache_inverse_le_statut(self):
         tache = Tache.objects.create(robe=self.robe, libelle="Ourlet", est_faite=False)
-        self.client.get(reverse('toggle_tache', args=[tache.id]))
+        self.client.post(reverse('toggle_tache', args=[tache.id]))
         tache.refresh_from_db()
         self.assertTrue(tache.est_faite)
-        self.client.get(reverse('toggle_tache', args=[tache.id]))
+        self.client.post(reverse('toggle_tache', args=[tache.id]))
         tache.refresh_from_db()
         self.assertFalse(tache.est_faite)
 
     def test_supprimer_tache_la_retire(self):
         tache = Tache.objects.create(robe=self.robe, libelle="Ourlet", est_faite=False)
-        self.client.get(reverse('supprimer_tache', args=[tache.id]))
+        self.client.post(reverse('supprimer_tache', args=[tache.id]))
         self.assertFalse(Tache.objects.filter(pk=tache.id).exists())

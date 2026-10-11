@@ -6,7 +6,12 @@
             <span class="eyebrow">{{ robe.nom_modele }} — Actions sur cette confection</span>
             <div class="drawer-header__actions">
                 <a href="{% url 'modifier_robe' robe.id %}" class="btn btn--outline">Modifier</a>
-                <a href="{% url 'supprimer_robe' robe.id %}" onclick="return confirm('Supprimer définitivement cette confection ?');" class="btn btn--outline btn--danger-outline">Supprimer</a>
+                <form method="POST" action="{% url 'supprimer_robe' robe.id %}" class="inline-form"
+                      data-confirm="Supprimer définitivement cette confection ?"
+                      onsubmit="return confirm(this.dataset.confirm);">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn--outline btn--danger-outline">Supprimer</button>
+                </form>
             </div>
         </div>
 
@@ -76,10 +81,10 @@
                 <div class="step-quickbar">
                     <div class="filter-group" style="margin-bottom: 0;">
                         <span class="eyebrow" style="margin-right:2px;">Ajouter</span>
-                        <a href="{% url 'ajouter_tache_rapide' robe.id 'toile' %}" class="step-chip">+ Toile</a>
-                        <a href="{% url 'ajouter_tache_rapide' robe.id 'coupe' %}" class="step-chip">+ Coupe</a>
-                        <a href="{% url 'ajouter_tache_rapide' robe.id 'assemblage' %}" class="step-chip">+ Assemblage</a>
-                        <a href="{% url 'ajouter_tache_rapide' robe.id 'finitions' %}" class="step-chip">+ Finitions</a>
+                        <form method="POST" action="{% url 'ajouter_tache_rapide' robe.id 'toile' %}" class="inline-form">{% csrf_token %}<button type="submit" class="step-chip">+ Toile</button></form>
+                        <form method="POST" action="{% url 'ajouter_tache_rapide' robe.id 'coupe' %}" class="inline-form">{% csrf_token %}<button type="submit" class="step-chip">+ Coupe</button></form>
+                        <form method="POST" action="{% url 'ajouter_tache_rapide' robe.id 'assemblage' %}" class="inline-form">{% csrf_token %}<button type="submit" class="step-chip">+ Assemblage</button></form>
+                        <form method="POST" action="{% url 'ajouter_tache_rapide' robe.id 'finitions' %}" class="inline-form">{% csrf_token %}<button type="submit" class="step-chip">+ Finitions</button></form>
                     </div>
                     <form method="POST" action="{% url 'ajouter_tache_personnalisee' robe.id %}" class="step-custom-form">
                         {% csrf_token %}
@@ -93,14 +98,23 @@
                     <div class="step-item">
                         <span class="step-item__label">{{ tache.libelle }}</span>
                         <div class="step-item__actions">
-                            <a href="{% url 'toggle_tache' tache.id %}">
-                                {% if tache.est_faite %}
-                                    <span class="pill-toggle pill-toggle--done">Terminé</span>
-                                {% else %}
-                                    <span class="pill-toggle pill-toggle--todo">À faire</span>
-                                {% endif %}
-                            </a>
-                            <a href="{% url 'supprimer_tache' tache.id %}" onclick="return confirm('Supprimer l\'étape « {{ tache.libelle }} » ?');" class="delete-link">×</a>
+                            <form method="POST" action="{% url 'toggle_tache' tache.id %}" class="inline-form">
+                                {% csrf_token %}
+                                <button type="submit" class="pill-btn">
+                                    {% if tache.est_faite %}
+                                        <span class="pill-toggle pill-toggle--done">Terminé</span>
+                                    {% else %}
+                                        <span class="pill-toggle pill-toggle--todo">À faire</span>
+                                    {% endif %}
+                                </button>
+                            </form>
+                            {# Le libellé est dans un attribut data-* (échappé par Django) et non dans du JavaScript : une apostrophe ne peut plus casser le code. #}
+                            <form method="POST" action="{% url 'supprimer_tache' tache.id %}" class="inline-form"
+                                  data-confirm="Supprimer l'étape « {{ tache.libelle }} » ?"
+                                  onsubmit="return confirm(this.dataset.confirm);">
+                                {% csrf_token %}
+                                <button type="submit" class="delete-link" aria-label="Supprimer l'étape">×</button>
+                            </form>
                         </div>
                     </div>
                     {% empty %}

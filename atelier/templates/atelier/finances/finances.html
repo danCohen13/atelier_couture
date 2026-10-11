@@ -19,21 +19,42 @@
     <div class="score-grid">
         <div class="score-card">
             <span class="eyebrow">Chiffre d'affaires</span>
-            <div class="value value--positive">{{ total_recettes }} ₪</div>
+            <div class="value value--positive">{{ total_recettes }} {{ devise_symbole }}</div>
         </div>
         <div class="score-card">
             <span class="eyebrow">Dépenses totales</span>
-            <div class="value value--negative">{{ total_depenses }} ₪</div>
+            <div class="value value--negative">{{ total_depenses }} {{ devise_symbole }}</div>
         </div>
         <div class="score-card">
             <span class="eyebrow">Bénéfice net</span>
-            <div class="value {% if benefice_net >= 0 %}value--neutral{% else %}value--negative{% endif %}">{{ benefice_net }} ₪</div>
+            <div class="value {% if benefice_net >= 0 %}value--neutral{% else %}value--negative{% endif %}">{{ benefice_net }} {{ devise_symbole }}</div>
         </div>
     </div>
 
+    {% if autres_bilans %}
+    <div class="card">
+        <h4>Autres devises</h4>
+        <p class="empty-state" style="padding: 0 0 10px; text-align: left;">
+            Ces montants ne sont pas convertis ni ajoutés aux totaux en {{ devise_symbole }} ci-dessus.
+        </p>
+        <table class="ledger-table">
+            <tbody>
+                {% for b in autres_bilans %}
+                <tr>
+                    <td class="ledger-model">{{ b.devise }}</td>
+                    <td class="ledger-amount ledger-amount--in">+{{ b.recettes }} {{ b.symbole }}</td>
+                    <td class="ledger-amount ledger-amount--out">−{{ b.depenses }} {{ b.symbole }}</td>
+                    <td class="ledger-amount">{{ b.benefice }} {{ b.symbole }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
     <div class="card chart-card">
         <div class="card-header-row">
-            <h4>Évolution des flux</h4>
+            <h4>Évolution des flux ({{ devise_symbole }})</h4>
             <div class="filter-group">
                 <button type="button" class="filter-chip" data-granularite="semaine">Semaine</button>
                 <button type="button" class="filter-chip is-active" data-granularite="mois">Mois</button>

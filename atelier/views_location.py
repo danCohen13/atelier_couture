@@ -46,7 +46,7 @@ def ajouter_robe_location(request):
 @login_required
 def tableau_bord_locations(request):
     """Vue d'ensemble opérationnelle : sorties en cours, retours attendus, réservations."""
-    aujourdhui = timezone.now().date()
+    aujourdhui = timezone.localdate()
     
     locations_en_cours = Location.objects.filter(statut='EN_COURS').select_related('client', 'robe_location')
     locations_reservees = Location.objects.filter(statut='RESERVEE').select_related('client', 'robe_location').order_by('date_debut')
@@ -103,14 +103,14 @@ def enregistrer_retour_location(request, pk):
         if form.is_valid():
             loc = form.save(commit=False)
             if not loc.date_retour_effectif:
-                loc.date_retour_effectif = timezone.now().date()
+                loc.date_retour_effectif = timezone.localdate()
             loc.statut = 'TERMINEE'
             loc.save()
             messages.success(request, f"Retour validé pour la robe {loc.robe_location.reference_stock}.")
             return redirect('tableau_bord_locations')
     else:
         form = RetourLocationForm(instance=location, initial={
-            'date_retour_effectif': timezone.now().date()
+            'date_retour_effectif': timezone.localdate()
         })
 
     return render(request, 'atelier/location/form_retour.html', {

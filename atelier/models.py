@@ -1,5 +1,5 @@
 import datetime
-import random
+import secrets
 from datetime import timedelta
 from django.db import models
 from django.core.validators import RegexValidator
@@ -57,7 +57,8 @@ class Robe(models.Model):
     @property
     def jours_restants(self):
         if self.date_livraison:
-            delta = self.date_livraison - datetime.date.today()
+            # Date locale de l'atelier (TIME_ZONE) : le serveur tourne en UTC.
+            delta = self.date_livraison - timezone.localdate()
             return delta.days
         return None
 
@@ -125,14 +126,6 @@ class Transaction(models.Model):
         related_name='transactions',
         verbose_name="Location associée"
     )
-    location = models.ForeignKey(
-    'Location',
-    on_delete=models.SET_NULL,
-    null=True,
-    blank=True,
-    related_name='transactions',
-    verbose_name="Location associée"
-    )
 
     class Meta:
         ordering = ['-date', '-id']
@@ -145,13 +138,15 @@ class CodeReinitialisation(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     code = models.CharField(max_length=6)
     created_at = models.DateTimeField(auto_now_add=True)
+    tentatives = models.PositiveSmallIntegerField(default=0)  # essais ratés sur ce code
 
     def est_valide(self):
         return timezone.now() < self.created_at + datetime.timedelta(minutes=10)
 
     @staticmethod
     def generer_code():
-        return str(random.randint(100000, 999999))
+        # `secrets` (et non `random`) : le code protège l'accès au compte.
+        return str(100000 + secrets.randbelow(900000))
 
 
 class RobeLocation(models.Model):
@@ -321,5 +316,5 @@ class Location(models.Model):
     @property
     def est_en_retard(self):
         if self.statut == 'EN_COURS' and not self.date_retour_effectif:
-            return timezone.now().date() > self.date_fin_prevue
+            return timezone.localdate() > self.date_fin_prevue
         return False

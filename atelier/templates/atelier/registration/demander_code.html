@@ -1,5 +1,7 @@
 {% extends 'atelier/base.html' %}
 {% block title %}Mot de passe oublié — Cohen Haute Couture{% endblock %}
+{# Cette page affiche déjà les messages dans sa carte : on neutralise l'affichage global. #}
+{% block messages %}{% endblock %}
 
 {% block content %}
 <main class="page login-page">

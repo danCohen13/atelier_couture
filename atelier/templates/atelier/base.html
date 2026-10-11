@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
     <title>{% block title %}Cohen Haute Couture{% endblock %}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -46,10 +47,16 @@
                         <a href="{% url 'liste_clientes' %}" class="header-link">Répertoire</a>
                     {% endif %}
 
-                    <a href="{% url 'logout' %}" class="header-link header-link--logout">Déconnexion</a>
-                {% endif %}
+                    {# La déconnexion modifie la session : elle se fait en POST (Django 5 refuse le GET). #}
+                    <form method="POST" action="{% url 'logout' %}" class="inline-form">
+                        {% csrf_token %}
+                        <button type="submit" class="header-link header-link--logout">Déconnexion</button>
+                    </form>
 
-                <a href="/admin/">Accéder à l'admin</a>
+                    {% if user.is_staff %}
+                        <a href="{% url 'admin:index' %}" class="header-link">Administration</a>
+                    {% endif %}
+                {% endif %}
             </div>
         </div>
     </header>
@@ -85,6 +92,17 @@
         {% endif %}
 
         <div class="main-content">
+            {# Messages de confirmation / d'erreur (django.contrib.messages) affichés sur toutes les pages. #}
+            {% block messages %}
+            {% if messages %}
+            <div class="flash-messages" role="status">
+                {% for m in messages %}
+                <p class="form-alert{% if m.level_tag == 'success' %} form-alert--success{% endif %}">{{ m }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endblock %}
+
             {% block content %}{% endblock %}
         </div>
 

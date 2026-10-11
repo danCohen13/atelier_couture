@@ -18,15 +18,23 @@ MOIS_ABBR = ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin",
              "Juil", "Août", "Sep", "Oct", "Nov", "Déc"]
 
 
+# Devise de l'atelier : celle des écritures saisies à la main, et la seule
+# représentée dans le graphe. Les robes facturées dans une autre devise
+# apparaissent dans des totaux séparés (jamais additionnées sans conversion).
+DEVISE_PRINCIPALE = 'ILS'
+SYMBOLES_DEVISE = {'ILS': '₪', 'EUR': '€', 'USD': '$'}
+
+
 class LigneCompte:
-    def __init__(self, date, type, categorie_label, designation, robe, montant, devise_symbole='₪', auto=False):
+    def __init__(self, date, type, categorie_label, designation, robe, montant, devise=DEVISE_PRINCIPALE, auto=False):
         self.date = date
         self.type = type
         self.categorie_label = categorie_label
         self.designation = designation
         self.robe = robe
         self.montant = montant
-        self.devise_symbole = devise_symbole
+        self.devise = devise
+        self.devise_symbole = SYMBOLES_DEVISE.get(devise, devise)
         self.auto = auto
 
     def get_categorie_display(self):
@@ -40,7 +48,7 @@ def construire_serie_graphe(lignes, granularite):
     aujourd'hui (les périodes sans opération apparaissent à 0 plutôt que
     d'être omises, pour que la courbe reste lisible).
     """
-    aujourdhui = timezone.now().date()
+    aujourdhui = timezone.localdate()
 
     if granularite == 'semaine':
         cles = []
@@ -90,7 +98,7 @@ def construire_serie_graphe(lignes, granularite):
 @login_required
 def finances_view(request):
     periode = request.GET.get('periode', 'tout')
-    aujourdhui = timezone.now().date()
+    aujourdhui = timezone.localdate()
 
     lignes = []
 
@@ -101,30 +109,31 @@ def finances_view(request):
     #    donc elle ne doit pas être comptée une deuxième fois ici — elle
     #    reste visible sur la fiche de la robe, mais sort du grand livre.
     for robe in Robe.objects.select_related('client').all():
-        symbole = robe.symbole_devise
         if robe.cout_tissu:
             lignes.append(LigneCompte(
                 robe.date_commencement, 'DEPENSE', 'Tissu (auto)',
-                f"Tissu — {robe.nom_modele}", robe, robe.cout_tissu, symbole, auto=True
+                f"Tissu — {robe.nom_modele}", robe, robe.cout_tissu, robe.devise, auto=True
             ))
         if robe.prix_total:
             lignes.append(LigneCompte(
                 robe.date_livraison, 'RECETTE', 'Paiement client (auto)',
-                f"Facturation — {robe.nom_modele}", robe, robe.prix_total, symbole, auto=True
+                f"Facturation — {robe.nom_modele}", robe, robe.prix_total, robe.devise, auto=True
             ))
 
     # 2. Injection des écritures manuelles du grand livre des comptes
     for t in Transaction.objects.select_related('robe').all():
         lignes.append(LigneCompte(
-            t.date, t.type, t.get_categorie_display(), t.designation, t.robe, t.montant, '₪', auto=False
+            t.date, t.type, t.get_categorie_display(), t.designation, t.robe, t.montant, DEVISE_PRINCIPALE, auto=False
         ))
 
     # 3. Données du graphe — calculées sur l'historique complet, indépendamment
-    #    du filtre de période appliqué au grand livre ci-dessous.
+    #    du filtre de période appliqué au grand livre ci-dessous, et uniquement
+    #    dans la devise de l'atelier (on n'additionne pas des ₪ et des €).
+    lignes_graphe = [l for l in lignes if l.devise == DEVISE_PRINCIPALE]
     chart_data = {
-        'semaine': construire_serie_graphe(lignes, 'semaine'),
-        'mois': construire_serie_graphe(lignes, 'mois'),
-        'annee': construire_serie_graphe(lignes, 'annee'),
+        'semaine': construire_serie_graphe(lignes_graphe, 'semaine'),
+        'mois': construire_serie_graphe(lignes_graphe, 'mois'),
+        'annee': construire_serie_graphe(lignes_graphe, 'annee'),
     }
 
     # 4. Filtrage temporel (grand livre uniquement)
@@ -135,10 +144,26 @@ def finances_view(request):
     elif periode == 'annee':
         lignes = [l for l in lignes if l.date.year == aujourdhui.year]
 
-    # 5. Calculs des bilans de la période
-    total_recettes = sum((l.montant for l in lignes if l.type == 'RECETTE'), 0)
-    total_depenses = sum((l.montant for l in lignes if l.type == 'DEPENSE'), 0)
-    benefice_net = total_recettes - total_depenses
+    # 5. Calculs des bilans de la période, devise par devise
+    def bilan(devise):
+        recettes = sum((l.montant for l in lignes if l.devise == devise and l.type == 'RECETTE'), 0)
+        depenses = sum((l.montant for l in lignes if l.devise == devise and l.type == 'DEPENSE'), 0)
+        return {
+            'devise': devise,
+            'symbole': SYMBOLES_DEVISE.get(devise, devise),
+            'recettes': recettes,
+            'depenses': depenses,
+            'benefice': recettes - depenses,
+        }
+
+    principal = bilan(DEVISE_PRINCIPALE)
+    total_recettes = principal['recettes']
+    total_depenses = principal['depenses']
+    benefice_net = principal['benefice']
+    autres_bilans = [
+        bilan(devise)
+        for devise in sorted({l.devise for l in lignes} - {DEVISE_PRINCIPALE})
+    ]
 
     # 6. Tri chronologique inversé et regroupement par mois de calendrier
     lignes.sort(key=lambda l: l.date, reverse=True)
@@ -151,6 +176,8 @@ def finances_view(request):
         'total_recettes': total_recettes,
         'total_depenses': total_depenses,
         'benefice_net': benefice_net,
+        'devise_symbole': SYMBOLES_DEVISE[DEVISE_PRINCIPALE],
+        'autres_bilans': autres_bilans,
         'groupes': groupes,
         'periode': periode,
         'chart_data': chart_data,
