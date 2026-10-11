@@ -1,219 +1,291 @@
 {% extends 'atelier/base.html' %}
+{% load l10n %}
 
 {% block title %}Finances — Cohen Haute Couture{% endblock %}
 
 {% block content %}
-<main class="page">
+<main class="page fin-page">
 
     <div class="page-head">
         <div>
             <span class="eyebrow">Comptabilité</span>
-            <h1>Finances de l'atelier</h1>
-            <p>Le coût du tissu et le prix facturé de chaque robe sont importés automatiquement, ainsi que le prix de chaque location (à la date de retrait). La caution n'est jamais comptée : elle est restituée. La main d'œuvre n'apparaît pas ici : c'est une composante du prix facturé, pas une dépense séparée. Les cautions conservées (dégâts, perte) comptent comme revenu. Utilise l'ajout rapide uniquement pour les frais annexes — fournitures, matériel, autres opérations — et ne saisis pas à la main une location déjà enregistrée dans « Locations &amp; stock ».</p>
+            <h1>Finances</h1>
+            <p>Ce que l'atelier gagne, ce qu'il dépense, et ce qu'on lui doit encore.</p>
         </div>
         <div class="page-head__actions">
-            <a href="{% url 'ajouter_transaction' %}" class="btn btn--primary">+ Opération rapide</a>
-            <a href="{% url 'exporter_csv' %}?periode={{ periode }}{% if base == 'ENCAISSE' %}&amp;base=encaisse{% endif %}" class="btn btn--outline">Export CSV</a>
-            <a href="{% url 'exporter_pdf_recapitulatif' %}?periode={{ periode }}{% if base == 'ENCAISSE' %}&amp;base=encaisse{% endif %}" class="btn btn--outline">Récapitulatif PDF</a>
+            <a href="{% url 'ajouter_transaction' %}" class="btn btn--primary">+ Ajouter une opération</a>
+            <details class="fin-menu">
+                <summary class="btn btn--outline">Exporter</summary>
+                <div class="fin-menu__list">
+                    <a href="{% url 'exporter_csv' %}?periode={{ periode }}{% if base == 'ENCAISSE' %}&amp;base=encaisse{% endif %}">Tableau Excel (CSV)</a>
+                    <a href="{% url 'exporter_pdf_recapitulatif' %}?periode={{ periode }}{% if base == 'ENCAISSE' %}&amp;base=encaisse{% endif %}" target="_blank">Récapitulatif PDF</a>
+                </div>
+            </details>
         </div>
     </div>
 
     {% include 'atelier/finances/_nav.html' %}
 
+    <!-- Filtres -->
+    <div class="fin-filters">
+        <div class="fin-filters__group">
+            <span class="fin-filters__label">Période</span>
+            <div class="segmented">
+                <a href="?periode=jour{% if base == 'ENCAISSE' %}&amp;base=encaisse{% endif %}" class="{% if periode == 'jour' %}is-active{% endif %}">Aujourd'hui</a>
+                <a href="?periode=mois{% if base == 'ENCAISSE' %}&amp;base=encaisse{% endif %}" class="{% if periode == 'mois' %}is-active{% endif %}">Ce mois</a>
+                <a href="?periode=annee{% if base == 'ENCAISSE' %}&amp;base=encaisse{% endif %}" class="{% if periode == 'annee' %}is-active{% endif %}">Cette année</a>
+                <a href="?periode=tout{% if base == 'ENCAISSE' %}&amp;base=encaisse{% endif %}" class="{% if periode == 'tout' %}is-active{% endif %}">Tout</a>
+            </div>
+        </div>
+        <div class="fin-filters__group">
+            <span class="fin-filters__label">Compter</span>
+            <div class="segmented">
+                <a href="?periode={{ periode }}" class="{% if base == 'FACTURE' %}is-active{% endif %}">Le facturé</a>
+                <a href="?periode={{ periode }}&amp;base=encaisse" class="{% if base == 'ENCAISSE' %}is-active{% endif %}">L'argent reçu</a>
+            </div>
+        </div>
+    </div>
+    <p class="fin-hint">
+        {% if base == 'ENCAISSE' %}
+        Seuls les paiements réellement reçus sont comptés, à leur date de réception.
+        {% else %}
+        Une robe est comptée à sa date de livraison, une location à sa date de retrait, même si elle n'est pas encore payée.
+        {% endif %}
+    </p>
+
     {% if alertes %}
-    <div class="card finance-alertes" role="alert">
-        <h4>À surveiller</h4>
-        <ul>{% for a in alertes %}<li>{{ a }}</li>{% endfor %}</ul>
-        <a href="{% url 'impayes' %}">Voir le détail →</a>
+    <div class="fin-alert" role="alert">
+        <div class="fin-alert__icon" aria-hidden="true">!</div>
+        <div>
+            <strong>À traiter</strong>
+            <ul>{% for a in alertes %}<li>{{ a }}</li>{% endfor %}</ul>
+        </div>
+        <a href="{% url 'impayes' %}" class="fin-alert__link">Voir le détail →</a>
     </div>
     {% endif %}
 
-    {% if objectif %}
-    <div class="card">
-        <div class="card-header-row">
-            <h4>Objectif du mois</h4>
-            <span class="eyebrow">{{ objectif.realise }} / {{ objectif.objectif }} {{ devise_symbole }} · {{ objectif.pct }} %</span>
+    <!-- Chiffres clés -->
+    <section class="kpi-grid" aria-label="Chiffres clés">
+        <div class="kpi kpi--in">
+            <span class="kpi__label">Argent entré</span>
+            <span class="kpi__value">{{ total_recettes|floatformat:"-2g" }} <small>{{ devise_symbole }}</small></span>
+            <span class="kpi__help">Robes, locations, cautions conservées</span>
         </div>
-        <div class="progress-bar" role="progressbar" aria-valuenow="{{ objectif.pct_barre }}" aria-valuemin="0" aria-valuemax="100">
-            <div class="progress-bar__fill{% if objectif.atteint %} progress-bar__fill--ok{% endif %}" style="width: {{ objectif.pct_barre }}%"></div>
+        <div class="kpi kpi--out">
+            <span class="kpi__label">Argent dépensé</span>
+            <span class="kpi__value">{{ total_depenses|floatformat:"-2g" }} <small>{{ devise_symbole }}</small></span>
+            <span class="kpi__help">Tissus, fournitures, frais</span>
         </div>
-        {% if objectif.atteint %}<p class="empty-state" style="padding: 8px 0 0; text-align: left;">Objectif atteint, bravo !</p>{% endif %}
-    </div>
+        <div class="kpi kpi--net {% if benefice_net < 0 %}kpi--loss{% endif %}">
+            <span class="kpi__label">Bénéfice</span>
+            <span class="kpi__value">{% if benefice_net > 0 %}+{% endif %}{{ benefice_net|floatformat:"-2g" }} <small>{{ devise_symbole }}</small></span>
+            <span class="kpi__help">Entré moins dépensé</span>
+        </div>
+        <div class="kpi kpi--due">
+            <span class="kpi__label">Reste à encaisser</span>
+            <span class="kpi__value">{% include 'atelier/finances/_montants.html' with montants=reste_a_encaisser %}</span>
+            <span class="kpi__help"><a href="{% url 'impayes' %}">Voir qui doit quoi →</a></span>
+        </div>
+    </section>
+
+    {% if cautions_detenues %}
+    <p class="fin-note">
+        <strong>Cautions gardées en dépôt :</strong> {% include 'atelier/finances/_montants.html' with montants=cautions_detenues %}
+        — cet argent sera rendu aux clientes, il n'est pas compté dans tes revenus.
+    </p>
     {% endif %}
-
-    <div class="score-grid">
-        <div class="score-card">
-            <span class="eyebrow">Chiffre d'affaires</span>
-            <div class="value value--positive">{{ total_recettes }} {{ devise_symbole }}</div>
-        </div>
-        <div class="score-card">
-            <span class="eyebrow">Dépenses totales</span>
-            <div class="value value--negative">{{ total_depenses }} {{ devise_symbole }}</div>
-        </div>
-        <div class="score-card">
-            <span class="eyebrow">Bénéfice net</span>
-            <div class="value {% if benefice_net >= 0 %}value--neutral{% else %}value--negative{% endif %}">{{ benefice_net }} {{ devise_symbole }}</div>
-        </div>
-    </div>
-
-    <div class="score-grid">
-        <div class="score-card">
-            <span class="eyebrow">Reste à encaisser</span>
-            <div class="value value--neutral">{% include 'atelier/finances/_montants.html' with montants=reste_a_encaisser %}</div>
-        </div>
-        <div class="score-card">
-            <span class="eyebrow">Cautions détenues</span>
-            <div class="value value--neutral">{% include 'atelier/finances/_montants.html' with montants=cautions_detenues %}</div>
-        </div>
-    </div>
 
     {% if autres_bilans %}
-    <div class="card">
+    <div class="card fin-other">
         <h4>Autres devises</h4>
-        <p class="empty-state" style="padding: 0 0 10px; text-align: left;">
-            Ces montants ne sont pas ajoutés aux totaux en {{ devise_symbole }} ci-dessus.
-        </p>
+        <p class="fin-hint">Ces montants sont séparés des totaux en {{ devise_symbole }} ci-dessus.</p>
         <table class="ledger-table">
+            <thead><tr><th>Devise</th><th class="ledger-amount">Entré</th><th class="ledger-amount">Dépensé</th><th class="ledger-amount">Bénéfice</th></tr></thead>
             <tbody>
                 {% for b in autres_bilans %}
                 <tr>
                     <td class="ledger-model">{{ b.devise }}</td>
-                    <td class="ledger-amount ledger-amount--in">+{{ b.recettes }} {{ b.symbole }}</td>
-                    <td class="ledger-amount ledger-amount--out">−{{ b.depenses }} {{ b.symbole }}</td>
-                    <td class="ledger-amount">{{ b.benefice }} {{ b.symbole }}</td>
+                    <td class="ledger-amount ledger-amount--in">+{{ b.recettes|floatformat:"-2g" }} {{ b.symbole }}</td>
+                    <td class="ledger-amount ledger-amount--out">−{{ b.depenses|floatformat:"-2g" }} {{ b.symbole }}</td>
+                    <td class="ledger-amount">{{ b.benefice|floatformat:"-2g" }} {{ b.symbole }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
         {% if total_global %}
-        <p><strong>Total global converti : {{ total_global.recettes }} {{ devise_symbole }} de recettes, {{ total_global.depenses }} {{ devise_symbole }} de dépenses, bénéfice {{ total_global.benefice }} {{ devise_symbole }}.</strong>
-        {% if total_global.incomplet %}<br>Taux manquant pour : {{ total_global.incomplet|join:", " }} — <a href="{% url 'parametres_finance' %}">renseigne-le</a> pour un total complet.{% endif %}</p>
+        <p class="fin-note">
+            <strong>Total converti en {{ devise_symbole }} :</strong>
+            {{ total_global.recettes|floatformat:"-2g" }} entrés, {{ total_global.depenses|floatformat:"-2g" }} dépensés,
+            bénéfice {{ total_global.benefice|floatformat:"-2g" }} {{ devise_symbole }}.
+            {% if total_global.incomplet %}<br>Il manque le taux pour {{ total_global.incomplet|join:", " }} :
+            <a href="{% url 'parametres_finance' %}">le renseigner</a>.{% endif %}
+        </p>
         {% endif %}
     </div>
     {% endif %}
 
-    <div class="card">
-        <h4>Comparaison mensuelle ({{ devise_symbole }})</h4>
-        <table class="ledger-table">
-            <thead><tr><th></th><th>Période</th><th class="ledger-amount">Recettes</th><th class="ledger-amount">Dépenses</th><th class="ledger-amount">Bénéfice</th><th class="ledger-amount">Recettes vs ce mois</th></tr></thead>
-            <tbody>
-            {% for c in comparaison %}
-                <tr>
-                    <td class="ledger-model">{{ c.label }}</td>
-                    <td>{{ c.mois }}</td>
-                    <td class="ledger-amount ledger-amount--in">{{ c.recettes }}</td>
-                    <td class="ledger-amount ledger-amount--out">{{ c.depenses }}</td>
-                    <td class="ledger-amount">{{ c.benefice }}</td>
-                    <td class="ledger-amount">{% if forloop.first %}—{% elif c.evolution is None %}n/a{% else %}{{ c.evolution }} %{% endif %}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
-
-    <div class="two-col">
-        <div class="card">
-            <h4>Confection vs location (période)</h4>
-            <table class="ledger-table"><tbody>
-            {% for a in activites %}
-                <tr><td class="ledger-model">{{ a.label }}</td>
-                    <td class="ledger-amount ledger-amount--in">+{{ a.recettes }}</td>
-                    <td class="ledger-amount ledger-amount--out">−{{ a.depenses }}</td>
-                    <td class="ledger-amount">{{ a.benefice }}</td></tr>
-            {% empty %}<tr><td class="empty-state">Aucune donnée.</td></tr>{% endfor %}
-            </tbody></table>
+    {% if objectif %}
+    <div class="card fin-goal">
+        <div class="fin-goal__top">
+            <h4>Objectif du mois</h4>
+            <span><strong>{{ objectif.realise|floatformat:"-2g" }}</strong> sur {{ objectif.objectif|floatformat:"-2g" }} {{ devise_symbole }} · {{ objectif.pct|floatformat:"-1" }} %</span>
         </div>
-        <div class="card">
-            <h4>Dépenses par catégorie (période)</h4>
-            <table class="ledger-table"><tbody>
-            {% for d in depenses_par_categorie %}
-                <tr><td class="ledger-model">{{ d.categorie }}</td>
-                    <td class="ledger-amount ledger-amount--out">{{ d.montant }}</td>
-                    <td class="ledger-amount">{{ d.part }} %</td></tr>
-            {% empty %}<tr><td class="empty-state">Aucune dépense.</td></tr>{% endfor %}
-            </tbody></table>
+        <div class="progress-bar" role="progressbar" aria-valuenow="{{ objectif.pct_barre }}" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-bar__fill{% if objectif.atteint %} progress-bar__fill--ok{% endif %}" style="width: {{ objectif.pct_barre }}%"></div>
         </div>
+        {% if objectif.atteint %}<p class="fin-hint">Objectif atteint, bravo !</p>{% endif %}
     </div>
+    {% endif %}
 
-    <div class="card chart-card">
-        <div class="card-header-row">
-            <h4>Évolution des flux ({{ devise_symbole }})</h4>
-            <div class="filter-group">
-                <button type="button" class="filter-chip" data-granularite="semaine">Semaine</button>
-                <button type="button" class="filter-chip is-active" data-granularite="mois">Mois</button>
-                <button type="button" class="filter-chip" data-granularite="annee">Année</button>
+    <!-- Évolution -->
+    <section class="fin-section">
+        <div class="fin-section__head">
+            <div>
+                <h2>Évolution</h2>
+                <p>Argent entré et dépensé dans le temps (en {{ devise_symbole }}).</p>
+            </div>
+            <div class="segmented segmented--small">
+                <button type="button" data-granularite="semaine">Semaines</button>
+                <button type="button" data-granularite="mois" class="is-active">Mois</button>
+                <button type="button" data-granularite="annee">Années</button>
             </div>
         </div>
-        <div class="chart-legend">
-            <span><i class="chart-dot chart-dot--in"></i>Recettes</span>
-            <span><i class="chart-dot chart-dot--out"></i>Dépenses</span>
+        <div class="card chart-card">
+            <div class="chart-legend">
+                <span><i class="chart-dot chart-dot--in"></i>Entré</span>
+                <span><i class="chart-dot chart-dot--out"></i>Dépensé</span>
+            </div>
+            <div class="chart-wrap">
+                <canvas id="flux-chart"></canvas>
+                <p class="chart-empty" id="chart-empty" hidden>Le graphique apparaîtra dès la première opération en {{ devise_symbole }}.</p>
+            </div>
         </div>
-        <div class="chart-wrap">
-            <canvas id="flux-chart"></canvas>
-        </div>
-    </div>
+    </section>
 
     {{ chart_data|json_script:"chart-data" }}
 
-    <div class="legend-strip">
-        <div class="filter-group">
-            <span class="eyebrow">Période</span>
-            <a href="?periode=jour{% if base == 'ENCAISSE' %}&amp;base=encaisse{% endif %}" class="filter-chip {% if periode == 'jour' %}is-active{% endif %}">Aujourd'hui</a>
-            <a href="?periode=mois{% if base == 'ENCAISSE' %}&amp;base=encaisse{% endif %}" class="filter-chip {% if periode == 'mois' %}is-active{% endif %}">Ce mois-ci</a>
-            <a href="?periode=annee{% if base == 'ENCAISSE' %}&amp;base=encaisse{% endif %}" class="filter-chip {% if periode == 'annee' %}is-active{% endif %}">Cette année</a>
-            <a href="?periode=tout{% if base == 'ENCAISSE' %}&amp;base=encaisse{% endif %}" class="filter-chip {% if periode == 'tout' %}is-active{% endif %}">Tout</a>
+    <!-- Comparaison -->
+    <section class="fin-section">
+        <div class="fin-section__head">
+            <div>
+                <h2>Ce mois-ci, comparé à avant</h2>
+                <p>Argent entré, en {{ devise_symbole }}. La pastille montre l'écart de ce mois par rapport à la période.</p>
+            </div>
         </div>
-        <div class="filter-group">
-            <span class="eyebrow">Base</span>
-            <a href="?periode={{ periode }}" class="filter-chip {% if base == 'FACTURE' %}is-active{% endif %}" title="Une robe est comptée à sa livraison, une location à son retrait">Facturé</a>
-            <a href="?periode={{ periode }}&amp;base=encaisse" class="filter-chip {% if base == 'ENCAISSE' %}is-active{% endif %}" title="Seuls les paiements réellement reçus sont comptés">Encaissé</a>
+        <div class="compare-grid">
+            {% for c in comparaison %}
+            <div class="compare-card {% if forloop.first %}compare-card--now{% endif %}">
+                <span class="compare-card__label">{{ c.label }}</span>
+                <span class="compare-card__month">{{ c.mois }}</span>
+                <span class="compare-card__value">{{ c.recettes|floatformat:"-2g" }}</span>
+                <span class="compare-card__sub">dépensé {{ c.depenses|floatformat:"-2g" }} · bénéfice {{ c.benefice|floatformat:"-2g" }}</span>
+                {% if not forloop.first %}
+                    {% if c.evolution is None %}
+                    <span class="delta delta--none">pas de comparaison</span>
+                    {% elif c.evolution > 0 %}
+                    <span class="delta delta--up">▲ ce mois +{{ c.evolution|floatformat:"-1" }} %</span>
+                    {% elif c.evolution < 0 %}
+                    <span class="delta delta--down">▼ ce mois {{ c.evolution|floatformat:"-1" }} %</span>
+                    {% else %}
+                    <span class="delta delta--none">identique</span>
+                    {% endif %}
+                {% endif %}
+            </div>
+            {% endfor %}
         </div>
-    </div>
+    </section>
 
-    <div class="swatch-table-wrap">
+    <!-- Répartitions -->
+    <section class="fin-section">
+        <div class="fin-section__head">
+            <div>
+                <h2>D'où vient l'argent, où part-il ?</h2>
+                <p>Sur la période choisie en haut de page.</p>
+            </div>
+        </div>
+        <div class="two-col">
+            <div class="card">
+                <h4>Confection ou location</h4>
+                {% for a in activites %}
+                <div class="bar-row">
+                    <div class="bar-row__top">
+                        <span>{{ a.label }}</span>
+                        <span class="bar-row__num">{% if a.benefice > 0 %}+{% endif %}{{ a.benefice|floatformat:"-2g" }} {{ devise_symbole }} de bénéfice</span>
+                    </div>
+                    <div class="bar"><div class="bar__fill bar__fill--in" style="width: {{ a.part|unlocalize }}%"></div></div>
+                    <span class="bar-row__sub">{{ a.recettes|floatformat:"-2g" }} entrés · {{ a.depenses|floatformat:"-2g" }} dépensés</span>
+                </div>
+                {% empty %}<p class="empty-state">Pas encore de données sur cette période.</p>{% endfor %}
+            </div>
+            <div class="card">
+                <h4>Dépenses par type</h4>
+                {% for d in depenses_par_categorie %}
+                <div class="bar-row">
+                    <div class="bar-row__top">
+                        <span>{{ d.categorie }}</span>
+                        <span class="bar-row__num">{{ d.montant|floatformat:"-2g" }} {{ devise_symbole }} · {{ d.part|floatformat:"-0" }} %</span>
+                    </div>
+                    <div class="bar"><div class="bar__fill bar__fill--out" style="width: {{ d.part|unlocalize }}%"></div></div>
+                </div>
+                {% empty %}<p class="empty-state">Aucune dépense sur cette période.</p>{% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Détail -->
+    <section class="fin-section">
+        <div class="fin-section__head">
+            <div>
+                <h2>Toutes les opérations</h2>
+                <p>Les lignes « Auto » viennent des robes et des locations ; les autres sont saisies à la main et modifiables.</p>
+            </div>
+        </div>
+
         {% for groupe in groupes %}
-            <div class="ledger-month"><span>{{ groupe.label }}</span></div>
-            <table class="ledger-table">
-                <tbody>
-                    {% for ligne in groupe.lignes %}
-                    <tr>
-                        <td class="ledger-date">{{ ligne.date|date:"d/m" }}</td>
-                        <td>
-                            {% if ligne.type == 'RECETTE' %}
-                                <span class="tag tag--recette">Recette</span>
-                            {% else %}
-                                <span class="tag tag--depense">Dépense</span>
-                            {% endif %}
-                        </td>
-                        <td class="ledger-model">{{ ligne.get_categorie_display }}</td>
-                        <td class="ledger-desc">
-                            {{ ligne.designation }}
-                            {% if ligne.auto %}<span class="tag tag--auto">Auto</span>{% endif %}
-                            {% if ligne.justificatif %}<a href="{{ ligne.justificatif }}" target="_blank" rel="noopener noreferrer">📎 justificatif</a>{% endif %}
-                        </td>
-                        <td class="ledger-model">
-                            {% if ligne.robe %}{{ ligne.robe.nom_modele }}{% else %}—{% endif %}
-                        </td>
-                        <td class="ledger-amount {% if ligne.type == 'RECETTE' %}ledger-amount--in{% else %}ledger-amount--out{% endif %}">
-                            {% if ligne.type == 'RECETTE' %}+{% else %}−{% endif %}{{ ligne.montant }} <span class="currency-symbol">{{ ligne.devise_symbole }}</span>
-                        </td>
-                        <td class="ledger-actions">
-                            {% if ligne.transaction %}
-                            <a href="{% url 'modifier_transaction' ligne.transaction.pk %}">Modifier</a>
-                            <form method="post" action="{% url 'supprimer_transaction' ligne.transaction.pk %}" class="inline-form"
-                                  onsubmit="return confirm('Supprimer cette opération ?');">
-                                {% csrf_token %}<button type="submit" class="delete-link">Supprimer</button>
-                            </form>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+        <div class="tx-month">{{ groupe.label }}</div>
+        <ul class="tx-list">
+            {% for ligne in groupe.lignes %}
+            <li class="tx">
+                <span class="tx__icon {% if ligne.type == 'RECETTE' %}tx__icon--in{% else %}tx__icon--out{% endif %}" aria-hidden="true">{% if ligne.type == 'RECETTE' %}↗{% else %}↙{% endif %}</span>
+                <div class="tx__main">
+                    <span class="tx__title">{{ ligne.designation }}</span>
+                    <span class="tx__sub">
+                        {{ ligne.date|date:"d/m/Y" }} · {{ ligne.get_categorie_display }}{% if ligne.robe %} · {{ ligne.robe.nom_modele }}{% endif %}
+                        {% if ligne.auto %}<span class="tag tag--auto">Auto</span>{% endif %}
+                        {% if ligne.justificatif %}<a href="{{ ligne.justificatif }}" target="_blank" rel="noopener noreferrer">📎 justificatif</a>{% endif %}
+                    </span>
+                </div>
+                <div class="tx__side">
+                    <span class="tx__amount {% if ligne.type == 'RECETTE' %}tx__amount--in{% else %}tx__amount--out{% endif %}">
+                        {% if ligne.type == 'RECETTE' %}+{% else %}−{% endif %}{{ ligne.montant|floatformat:"2g" }} {{ ligne.devise_symbole }}
+                    </span>
+                    {% if ligne.transaction %}
+                    <span class="tx__actions">
+                        <a href="{% url 'modifier_transaction' ligne.transaction.pk %}">Modifier</a>
+                        <form method="post" action="{% url 'supprimer_transaction' ligne.transaction.pk %}" class="inline-form"
+                              onsubmit="return confirm('Supprimer cette opération ?');">
+                            {% csrf_token %}<button type="submit" class="delete-link">Supprimer</button>
+                        </form>
+                    </span>
+                    {% endif %}
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
         {% empty %}
-        <div class="empty-state">Aucune opération sur cette période.</div>
+        <div class="card empty-state">Aucune opération sur cette période.</div>
         {% endfor %}
-    </div>
+    </section>
+
+    <details class="fin-help">
+        <summary>Comment sont calculés ces chiffres ?</summary>
+        <ul>
+            <li>Le prix de chaque robe sur mesure et le prix de chaque location sont importés automatiquement.</li>
+            <li>La caution n'est jamais un revenu, sauf la part que tu gardes (dégâts, perte).</li>
+            <li>La main d'œuvre n'apparaît pas à part : elle fait partie du prix facturé.</li>
+            <li>Utilise « Ajouter une opération » uniquement pour les frais annexes (fournitures, matériel…). Ne ressaisis pas une location déjà enregistrée dans « Locations &amp; stock ».</li>
+        </ul>
+    </details>
 
 </main>
 {% endblock %}
@@ -225,23 +297,32 @@
         const donnees = JSON.parse(document.getElementById('chart-data').textContent);
         const ctx = document.getElementById('flux-chart');
 
+        const aDesDonnees = ['semaine', 'mois', 'annee'].some(function (g) {
+            return donnees[g].recettes.concat(donnees[g].depenses).some(function (v) { return v > 0; });
+        });
+        if (!aDesDonnees) {
+            ctx.hidden = true;
+            document.getElementById('chart-empty').hidden = false;
+            return;
+        }
+
         const chart = new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: donnees.mois.labels,
                 datasets: [
                     {
-                        label: 'Recettes',
+                        label: 'Entré',
                         data: donnees.mois.recettes,
                         backgroundColor: '#4c5f3f',
-                        borderRadius: 2,
+                        borderRadius: 4,
                         maxBarThickness: 28,
                     },
                     {
-                        label: 'Dépenses',
+                        label: 'Dépensé',
                         data: donnees.mois.depenses,
                         backgroundColor: '#8a2e3d',
-                        borderRadius: 2,
+                        borderRadius: 4,
                         maxBarThickness: 28,
                     },
                 ],
@@ -252,7 +333,7 @@
                 plugins: { legend: { display: false } },
                 scales: {
                     x: { grid: { display: false }, ticks: { font: { family: 'IBM Plex Mono', size: 10 }, color: '#6b6355' } },
-                    y: { grid: { color: '#d8cfb8' }, ticks: { font: { family: 'IBM Plex Mono', size: 10 }, color: '#6b6355' } },
+                    y: { beginAtZero: true, grid: { color: '#e6dfcb' }, ticks: { font: { family: 'IBM Plex Mono', size: 10 }, color: '#6b6355' } },
                 },
             },
         });

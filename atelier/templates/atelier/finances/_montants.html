@@ -1,1 +1,1 @@
-{% for m in montants %}{% if not forloop.first %} · {% endif %}{{ m.montant }} {{ m.symbole }}{% empty %}0{% endfor %}
+{% for m in montants %}{% if not forloop.first %} · {% endif %}{{ m.montant|floatformat:"-2g" }} {{ m.symbole }}{% empty %}0{% endfor %}

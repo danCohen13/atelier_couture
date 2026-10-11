@@ -243,6 +243,10 @@ def repartition_activites(lignes, params):
         dep = sum((m for l, m in converties if l.source == cle and l.type == 'DEPENSE'), ZERO)
         if rec or dep:
             res.append({'label': label, 'recettes': rec, 'depenses': dep, 'benefice': rec - dep})
+    total = sum((a['recettes'] for a in res), ZERO) or sum((a['depenses'] for a in res), ZERO)
+    for a in res:
+        base = a['recettes'] if sum((x['recettes'] for x in res), ZERO) else a['depenses']
+        a['part'] = (base / total * 100).quantize(Decimal('0.1')) if total else ZERO
     return res
 
 

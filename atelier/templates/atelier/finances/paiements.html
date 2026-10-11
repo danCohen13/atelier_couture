@@ -3,7 +3,7 @@
 {% block title %}Paiements — Cohen Haute Couture{% endblock %}
 
 {% block content %}
-<main class="page">
+<main class="page fin-page">
     <a href="{% if type == 'robe' %}{% url 'fiche_cliente' dossier.client.pk %}{% else %}{% url 'tableau_bord_locations' %}{% endif %}" class="back-link">← Retour</a>
     <div class="page-head">
         <div>

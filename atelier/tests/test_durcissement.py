@@ -168,7 +168,7 @@ class FinancesMultiDevisesTests(TestCase):
         self.robe('Robe euro', '1000.00', 'EUR')
         page = self.client.get(reverse('finances'))
         self.assertContains(page, 'Autres devises')
-        self.assertContains(page, '1000,00 €')  # séparateur décimal français
+        self.assertContains(page, '1\u00a0000,00 €')  # format français : espace des milliers, virgule décimale
 
     def test_pas_de_bloc_autres_devises_quand_tout_est_en_shekels(self):
         self.robe('Robe shekel', '500.00', 'ILS')
