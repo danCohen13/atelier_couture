@@ -184,5 +184,6 @@ class PlanningLocationsTests(PlanningBase):
         self.assertEqual(props["client"], "GAUTIER Chloé")
         lignes = dict(props["lignes"])
         self.assertIn("LOC-001", lignes["Robe"])
-        self.assertEqual(lignes["Tarif convenu"], "150.00 €")
-        self.assertIn("400.00 €", lignes["Caution"])
+        # Les locations sont en shekels par défaut (la devise est réglable par contrat).
+        self.assertEqual(lignes["Tarif convenu"], "150.00 ₪")
+        self.assertIn("400.00 ₪", lignes["Caution"])

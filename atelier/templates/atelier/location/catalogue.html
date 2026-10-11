@@ -66,8 +66,8 @@
 
                 <div class="dress-card__foot">
                     <div>
-                        <span class="dress-card__price">{{ robe.prix_location_defaut }} €</span>
-                        <span class="dress-card__deposit">Caution {{ robe.caution_defaut }} €</span>
+                        <span class="dress-card__price">{{ robe.prix_location_defaut }} {{ robe.symbole_devise }}</span>
+                        <span class="dress-card__deposit">Caution {{ robe.caution_defaut }} {{ robe.symbole_devise }}</span>
                     </div>
                     <a href="{% url 'creer_location' %}?robe_id={{ robe.id }}" class="btn btn--outline btn--sm">Louer</a>
                 </div>

@@ -87,15 +87,24 @@ class TransactionForm(forms.ModelForm):
             'designation': forms.TextInput(attrs={'class': 'field-input', 'placeholder': 'Ex : Achat fils dorés, acompte…'}),
         }
 
-class RobeLocationForm(forms.ModelForm):
+class DeviseParDefautMixin:
+    """La devise est facultative dans le formulaire : sans valeur, le shekel (défaut du modèle) s'applique."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['devise'].required = False
+
+
+class RobeLocationForm(DeviseParDefautMixin, forms.ModelForm):
     class Meta:
         model = RobeLocation
         fields = [
             'reference_stock', 'nom_modele', 'taille', 'couleur',
-            'prix_location_defaut', 'caution_defaut', 'statut_physique',
+            'devise', 'prix_location_defaut', 'caution_defaut', 'statut_physique',
             'photo', 'description', 'etat_general'
         ]
         widgets = {
+            'devise': forms.Select(attrs={'class': 'field-input'}),
             'reference_stock': forms.TextInput(attrs={'class': 'field-input', 'placeholder': 'ex: LOC-042'}),
             'nom_modele': forms.TextInput(attrs={'class': 'field-input', 'placeholder': 'ex: Modèle Aurore'}),
             'taille': forms.TextInput(attrs={'class': 'field-input', 'placeholder': 'ex: 38'}),
@@ -108,7 +117,7 @@ class RobeLocationForm(forms.ModelForm):
         }
 
 
-class LocationForm(forms.ModelForm):
+class LocationForm(DeviseParDefautMixin, forms.ModelForm):
     date_debut = date_field("Date de retrait prévue")
     date_fin_prevue = date_field("Date de retour prévue")
 
@@ -116,10 +125,11 @@ class LocationForm(forms.ModelForm):
         model = Location
         fields = [
             'client', 'robe_location', 'date_debut', 'date_fin_prevue',
-            'prix_convenu', 'caution_montant', 'caution_statut',
+            'devise', 'prix_convenu', 'caution_montant', 'caution_statut',
             'delai_tampon_jours', 'statut', 'etat_avant', 'notes'
         ]
         widgets = {
+            'devise': forms.Select(attrs={'class': 'field-input'}),
             'client': forms.Select(attrs={'class': 'field-input'}),
             'robe_location': forms.Select(attrs={'class': 'field-input'}),
             'prix_convenu': forms.NumberInput(attrs={'class': 'field-input', 'step': '0.01'}),

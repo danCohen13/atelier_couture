@@ -64,7 +64,7 @@
                     </td>
                     <td data-label="Retour prévu"><span class="cell-date cell-date--late">{{ loc.date_fin_prevue|date:"d/m/Y" }}</span></td>
                     <td data-label="Caution">
-                        <span class="price-cell">{{ loc.caution_montant }} €</span>
+                        <span class="price-cell">{{ loc.caution_montant }} {{ loc.symbole_devise }}</span>
                         {% include 'atelier/location/_tag_caution.html' %}
                     </td>
                     <td class="cell-actions">
@@ -150,7 +150,7 @@
                         <span class="model-name">{{ loc.robe_location.nom_modele }}</span>
                         <span class="cell-sub">Taille {{ loc.robe_location.taille }}</span>
                     </td>
-                    <td data-label="Prix convenu"><span class="price-cell">{{ loc.prix_convenu }} €</span></td>
+                    <td data-label="Prix convenu"><span class="price-cell">{{ loc.prix_convenu }} {{ loc.symbole_devise }}</span></td>
                     <td data-label="Caution">{% include 'atelier/location/_tag_caution.html' %}</td>
                 </tr>
                 {% empty %}

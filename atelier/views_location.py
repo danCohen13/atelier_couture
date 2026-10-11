@@ -75,6 +75,7 @@ def creer_location(request):
     if robe_id:
         robe = get_object_or_404(RobeLocation, pk=robe_id)
         initial_data['robe_location'] = robe
+        initial_data['devise'] = robe.devise
         initial_data['prix_convenu'] = robe.prix_location_defaut
         initial_data['caution_montant'] = robe.caution_defaut
 

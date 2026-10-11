@@ -7,6 +7,15 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
+# Devises proposées partout où l'on saisit un montant (confections, locations, stock).
+# Le shekel est la devise par défaut de l'atelier.
+DEVISE_CHOICES = [
+    ('ILS', '₪ (Shekel)'),
+    ('EUR', '€ (Euro)'),
+    ('USD', '$ (Dollar)'),
+]
+SYMBOLES_DEVISE = {'ILS': '₪', 'EUR': '€', 'USD': '$'}
+
 
 class Client(models.Model):
     nom = models.CharField(max_length=100)
@@ -31,11 +40,7 @@ class Client(models.Model):
 
 
 class Robe(models.Model):
-    DEVISE_CHOICES = [
-        ('ILS', '₪ (Shekel)'),
-        ('EUR', '€ (Euro)'),
-        ('USD', '$ (Dollar)'),
-    ]
+    DEVISE_CHOICES = DEVISE_CHOICES
 
     client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='robes')
     nom_modele = models.CharField(max_length=200)
@@ -51,8 +56,7 @@ class Robe(models.Model):
     
     @property
     def symbole_devise(self):
-        mapping = {'ILS': '₪', 'EUR': '€', 'USD': '$'}
-        return mapping.get(self.devise, '₪')
+        return SYMBOLES_DEVISE.get(self.devise, '₪')
 
     @property
     def jours_restants(self):
@@ -173,11 +177,15 @@ class RobeLocation(models.Model):
     
     photo = models.ImageField(upload_to="robes_location/", blank=True, null=True, verbose_name="Photo")
     
+    devise = models.CharField(
+        max_length=3, choices=DEVISE_CHOICES, default='ILS', verbose_name="Devise",
+        help_text="Devise du prix et de la caution standard (₪ par défaut)"
+    )
     prix_location_defaut = models.DecimalField(
-        max_digits=10, decimal_places=2, verbose_name="Prix standard (€)"
+        max_digits=10, decimal_places=2, verbose_name="Prix standard"
     )
     caution_defaut = models.DecimalField(
-        max_digits=10, decimal_places=2, verbose_name="Caution standard (€)"
+        max_digits=10, decimal_places=2, verbose_name="Caution standard"
     )
 
     statut_physique = models.CharField(
@@ -201,6 +209,10 @@ class RobeLocation(models.Model):
 
     def __str__(self):
         return f"{self.reference_stock} - {self.nom_modele} (T.{self.taille})"
+
+    @property
+    def symbole_devise(self):
+        return SYMBOLES_DEVISE.get(self.devise, '₪')
 
     def est_disponible_sur_periode(self, debut, fin, exclure_location_id=None):
         if self.statut_physique in ['HORS_SERVICE', 'REPARATION']:
@@ -261,8 +273,12 @@ class Location(models.Model):
         help_text="Nombre de jours de blocage après le retour pour l'entretien"
     )
 
-    prix_convenu = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Prix de la location (€)")
-    caution_montant = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Montant de la caution (€)")
+    devise = models.CharField(
+        max_length=3, choices=DEVISE_CHOICES, default='ILS', verbose_name="Devise",
+        help_text="Devise du prix et de la caution de ce contrat (₪ par défaut)"
+    )
+    prix_convenu = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Prix de la location")
+    caution_montant = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Montant de la caution")
     caution_statut = models.CharField(
         max_length=30,
         choices=CAUTION_STATUT_CHOICES,
@@ -291,6 +307,10 @@ class Location(models.Model):
 
     def __str__(self):
         return f"Location #{self.pk} - {self.client} ({self.robe_location.reference_stock})"
+
+    @property
+    def symbole_devise(self):
+        return SYMBOLES_DEVISE.get(self.devise, '₪')
 
     def clean(self):
         super().clean()

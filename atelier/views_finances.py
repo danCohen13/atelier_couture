@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from django.utils import timezone
 from itertools import groupby
 from datetime import date, timedelta
-from .models import Robe, Transaction
+from .models import Location, Robe, SYMBOLES_DEVISE, Transaction
 from .forms import TransactionForm
 from .services.extraction import extraire_operation
 from .services.gemini import ErreurIA
@@ -22,7 +22,6 @@ MOIS_ABBR = ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin",
 # représentée dans le graphe. Les robes facturées dans une autre devise
 # apparaissent dans des totaux séparés (jamais additionnées sans conversion).
 DEVISE_PRINCIPALE = 'ILS'
-SYMBOLES_DEVISE = {'ILS': '₪', 'EUR': '€', 'USD': '$'}
 
 
 class LigneCompte:
@@ -118,6 +117,21 @@ def finances_view(request):
             lignes.append(LigneCompte(
                 robe.date_livraison, 'RECETTE', 'Paiement client (auto)',
                 f"Facturation — {robe.nom_modele}", robe, robe.prix_total, robe.devise, auto=True
+            ))
+
+    # 1 bis. Locations de robes : le prix de la location est une recette, daté du
+    #    retrait de la robe, dans la devise du contrat. La caution n'est JAMAIS
+    #    comptée : c'est une somme déposée puis restituée, pas un revenu. Les
+    #    contrats annulés sont ignorés.
+    contrats = (Location.objects.exclude(statut='ANNULEE')
+                .select_related('client', 'robe_location'))
+    for loc in contrats:
+        if loc.prix_convenu:
+            stock = loc.robe_location
+            lignes.append(LigneCompte(
+                loc.date_debut, 'RECETTE', 'Location de robe (auto)',
+                f"Location — {stock.nom_modele} ({stock.reference_stock}) · {loc.client}",
+                None, loc.prix_convenu, loc.devise, auto=True
             ))
 
     # 2. Injection des écritures manuelles du grand livre des comptes

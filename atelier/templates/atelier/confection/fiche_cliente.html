@@ -105,10 +105,10 @@
                                     <span class="cell-sub">au {{ loc.date_fin_prevue|date:"d/m/Y" }}</span>
                                 </td>
                                 <td data-label="Caution">
-                                    <span class="price-cell">{{ loc.caution_montant }} €</span>
+                                    <span class="price-cell">{{ loc.caution_montant }} {{ loc.symbole_devise }}</span>
                                     <span class="cell-sub">{{ loc.get_caution_statut_display }}</span>
                                 </td>
-                                <td data-label="Tarif"><span class="price-cell">{{ loc.prix_convenu }} €</span></td>
+                                <td data-label="Tarif"><span class="price-cell">{{ loc.prix_convenu }} {{ loc.symbole_devise }}</span></td>
                                 <td data-label="Statut">
                                     {% if loc.statut == 'EN_COURS' %}
                                         <span class="tag tag--done">En cours</span>

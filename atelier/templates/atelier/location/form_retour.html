@@ -13,7 +13,7 @@
                 <div><span class="eyebrow">Référence</span><strong>{{ location.robe_location.reference_stock }}</strong></div>
                 <div><span class="eyebrow">Cliente</span><strong>{{ location.client.nom.upper }} {{ location.client.prenom }}</strong></div>
                 <div><span class="eyebrow">Retour prévu</span><strong>{{ location.date_fin_prevue|date:"d/m/Y" }}</strong></div>
-                <div><span class="eyebrow">Caution initiale</span><strong>{{ location.caution_montant }} €</strong></div>
+                <div><span class="eyebrow">Caution initiale</span><strong>{{ location.caution_montant }} {{ location.symbole_devise }}</strong></div>
             </div>
 
             <form method="post">
