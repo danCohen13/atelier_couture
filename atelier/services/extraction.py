@@ -5,6 +5,8 @@ Ici vivent les consignes (prompts) propres à l'atelier ; le transport est dans 
 """
 import datetime
 
+from django.utils import timezone
+
 from .gemini import generer_json
 from ..models import Transaction
 
@@ -57,7 +59,7 @@ def extraire_operation(phrase, aujourdhui=None):
     date (datetime.date), type, categorie (code valide), designation, montant.
     Les valeurs inexploitables sont simplement omises : l'utilisatrice complète le formulaire.
     """
-    aujourdhui = aujourdhui or datetime.date.today()
+    aujourdhui = aujourdhui or timezone.localdate()
     brut = generer_json(_consigne_operation(aujourdhui.isoformat()), f"Phrase à analyser : {phrase}", timeout=10)
     if not isinstance(brut, dict):
         return {}
