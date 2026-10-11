@@ -107,16 +107,67 @@ class ReinitialisationMotDePasseTests(TestCase):
         self.user.refresh_from_db()
         self.assertTrue(self.user.check_password("NouveauMdp456!"))
 
-    def test_email_inconnu(self):
-        r = self.client.post(reverse("demander_code_reset"), {"email": "inconnu@example.com"})
-        self.assertEqual(r.status_code, 200)
-        self.assertContains(r, "Aucun compte")
-        self.assertEqual(len(mail.outbox), 0)
+    def test_email_inconnu_ne_revele_pas_que_le_compte_n_existe_pas(self):
+        """Même réponse qu'un compte existant (pas d'énumération), mais aucun e-mail n'est envoyé."""
+        connu = self.client.post(reverse("demander_code_reset"), {"email": "c@example.com"}, follow=True)
+        inconnu = self.client_class().post(reverse("demander_code_reset"), {"email": "inconnu@example.com"}, follow=True)
+
+        self.assertEqual(connu.redirect_chain, inconnu.redirect_chain)
+        self.assertEqual(connu.redirect_chain[-1][0], reverse("verifier_code_reset"))
+        self.assertEqual(len(mail.outbox), 1)  # seul le compte réel a reçu un code
+        for reponse in (connu, inconnu):
+            self.assertContains(reponse, "Si un compte correspond")
+            self.assertNotContains(reponse, "Aucun compte")
+
+    def test_email_insensible_a_la_casse(self):
+        self.client.post(reverse("demander_code_reset"), {"email": "C@Example.COM"})
+        self.assertEqual(len(mail.outbox), 1)
+
+    def test_code_a_six_chiffres(self):
+        for _ in range(50):
+            code = CodeReinitialisation.generer_code()
+            self.assertRegex(code, r"^[1-9]\d{5}$")
+
+    def test_pas_de_nouvel_envoi_dans_la_minute(self):
+        for _ in range(3):
+            self.client.post(reverse("demander_code_reset"), {"email": "c@example.com"})
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(CodeReinitialisation.objects.filter(user=self.user).count(), 1)
+
+    def test_un_echec_d_envoi_ne_plante_pas_la_page(self):
+        with mock.patch("atelier.views_auth.send_mail", side_effect=OSError("SMTP indisponible")):
+            with self.assertLogs("atelier.views_auth", level="ERROR"):
+                r = self.client.post(reverse("demander_code_reset"), {"email": "c@example.com"})
+        self.assertRedirects(r, reverse("verifier_code_reset"))
 
     def test_mauvais_code(self):
         self.client.post(reverse("demander_code_reset"), {"email": "c@example.com"})
         r = self.client.post(reverse("verifier_code_reset"), {"code": "000000"})
         self.assertContains(r, "invalide")
+
+    def test_le_code_est_detruit_apres_trop_d_essais(self):
+        """Impossible de deviner un code à 6 chiffres par force brute pendant les 10 minutes."""
+        self.client.post(reverse("demander_code_reset"), {"email": "c@example.com"})
+        vrai_code = CodeReinitialisation.objects.get(user=self.user).code
+        faux = "000000" if vrai_code != "000000" else "111111"
+
+        for _ in range(5):
+            self.client.post(reverse("verifier_code_reset"), {"code": faux})
+        self.assertFalse(CodeReinitialisation.objects.filter(user=self.user).exists())
+
+        # Même le bon code ne passe plus : il faut en redemander un.
+        r = self.client.post(reverse("verifier_code_reset"), {"code": vrai_code})
+        self.assertContains(r, "invalide")
+        self.assertNotIn("code_verifie", self.client.session)
+
+    def test_mot_de_passe_trop_faible_refuse(self):
+        self.client.post(reverse("demander_code_reset"), {"email": "c@example.com"})
+        code = CodeReinitialisation.objects.get(user=self.user).code
+        self.client.post(reverse("verifier_code_reset"), {"code": code})
+        r = self.client.post(reverse("nouveau_mot_de_passe"), {"password": "12345678", "password_confirm": "12345678"})
+        self.assertEqual(r.status_code, 200)
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.check_password("AncienMdp123!"))
 
     def test_etapes_protegees(self):
         for nom in ("verifier_code_reset", "nouveau_mot_de_passe"):

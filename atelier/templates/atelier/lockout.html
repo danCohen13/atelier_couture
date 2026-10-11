@@ -1,0 +1,20 @@
+{% extends 'atelier/base.html' %}
+{% block title %}Accès temporairement bloqué — Cohen Haute Couture{% endblock %}
+
+{% block content %}
+<main class="page login-page">
+    <div class="form-card">
+        <div class="form-card__inner">
+            <span class="eyebrow">Sécurité</span>
+            <h2>Accès temporairement bloqué</h2>
+            <p class="auth-subtitle">
+                Trop de tentatives de connexion ont échoué. Par précaution, l'accès est
+                suspendu pendant une heure. Réessayez plus tard.
+            </p>
+            <div class="auth-footer">
+                <a href="{% url 'login' %}">Retour à la connexion</a>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

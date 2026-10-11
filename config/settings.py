@@ -39,8 +39,14 @@ if not SECRET_KEY:
             "La variable d'environnement SECRET_KEY est obligatoire quand DEBUG est désactivé."
         )
 
-# Hôtes autorisés : local + sous-domaines Render
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.onrender.com']
+def _liste_env(nom):
+    """Lit une variable d'environnement « a,b,c » et renvoie une liste sans valeurs vides."""
+    return [v.strip() for v in os.environ.get(nom, '').split(',') if v.strip()]
+
+
+# Hôtes autorisés : local + sous-domaines Render + éventuel nom de domaine
+# personnalisé (variable ALLOWED_HOSTS, séparée par des virgules).
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.onrender.com'] + _liste_env('ALLOWED_HOSTS')
 
 # Détection automatique de l'URL spécifique attribuée par Render
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
@@ -53,9 +59,26 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 if RENDER_EXTERNAL_HOSTNAME:
     CSRF_TRUSTED_ORIGINS.append(f'https://{RENDER_EXTERNAL_HOSTNAME}')
+# Un domaine personnalisé doit aussi être autorisé pour les formulaires.
+CSRF_TRUSTED_ORIGINS += [f'https://{h.lstrip(".")}' for h in _liste_env('ALLOWED_HOSTS')]
 
 # Indique à Django que Render termine le chiffrement SSL (HTTPS)
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# URL de l'interface d'administration. En production, définir ADMIN_URL avec une
+# valeur non devinable (ex. « gestion-x7k2p/ ») pour ne pas exposer /admin/.
+ADMIN_URL = (os.environ.get('ADMIN_URL') or 'admin').strip('/') + '/'
+
+# --- DURCISSEMENT HTTPS (désactivé en développement et pendant les tests) ---
+if not (DEBUG or TESTING):
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    # HSTS : le navigateur refusera le HTTP pendant cette durée. Commencer court
+    # (valeur par défaut : 30 jours), puis augmenter (31536000 = 1 an) une fois sûr.
+    SECURE_HSTS_SECONDS = int(os.environ.get('SECURE_HSTS_SECONDS', 60 * 60 * 24 * 30))
+    SECURE_REFERRER_POLICY = 'same-origin'
+    X_FRAME_OPTIONS = 'DENY'
 
 
 # --- APPLICATION DEFINITION ---
@@ -69,6 +92,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'cloudinary_storage',
     'cloudinary',
+    'axes',  # Blocage après trop d'échecs de connexion
     'atelier',  # Application principale
 ]
 
@@ -81,6 +105,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'axes.middleware.AxesMiddleware',  # Doit rester en dernier
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -106,26 +131,33 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # --- CONFIGURATION DE LA BASE DE DONNÉES (NEON.TECH & LOCAL) ---
 
-if os.environ.get('DATABASE_URL'):
-    # Connexion à Neon.tech en production sur Render
+DATABASE_URL = os.environ.get('DATABASE_URL')
+if DATABASE_URL:
+    # Neon.tech en production sur Render (SSL exigé pour PostgreSQL uniquement).
     DATABASES = {
-        'default': dj_database_url.config(
+        'default': dj_database_url.parse(
+            DATABASE_URL,
             conn_max_age=600,
-            ssl_require=True
+            ssl_require=DATABASE_URL.startswith(('postgres://', 'postgresql://')),
         )
     }
-else:
-    # Connexion à PostgreSQL local sous WSL
+elif DEBUG or TESTING:
+    # PostgreSQL local : identifiants lus dans l'environnement / le fichier .env,
+    # jamais écrits dans le code (voir .env.example).
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'atelier_db',
-            'USER': 'postgres',
-            'PASSWORD': 'admin1234',
-            'HOST': '127.0.0.1',
-            'PORT': '5432',
+            'NAME': os.environ.get('DB_NAME', 'atelier_db'),
+            'USER': os.environ.get('DB_USER', 'postgres'),
+            'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+            'HOST': os.environ.get('DB_HOST', '127.0.0.1'),
+            'PORT': os.environ.get('DB_PORT', '5432'),
         }
     }
+else:
+    raise ImproperlyConfigured(
+        "La variable d'environnement DATABASE_URL est obligatoire quand DEBUG est désactivé."
+    )
 
 
 # --- VALIDATION DES MOTS DE PASSE ---
@@ -141,7 +173,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # --- INTERNATIONALISATION ---
 
 LANGUAGE_CODE = 'fr-fr'
-TIME_ZONE = 'Europe/Paris'
+TIME_ZONE = 'Asia/Jerusalem'
 USE_I18N = True
 USE_TZ = True
 
@@ -191,13 +223,46 @@ if not os.environ.get('CLOUDINARY_URL'):
 
 # --- EMAILS TRANSACTIONNELS (BREVO) ---
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# En développement sans clé Brevo, les e-mails s'affichent dans la console du
+# serveur. En production, l'envoi passe toujours par le SMTP de Brevo.
+EMAIL_HOST_PASSWORD = os.environ.get('BREVO_SMTP_KEY')
+if DEBUG and not EMAIL_HOST_PASSWORD:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp-relay.brevo.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'b320f3001@smtp-brevo.com'
-EMAIL_HOST_PASSWORD = os.getenv('BREVO_SMTP_KEY')
-DEFAULT_FROM_EMAIL = 'cohendan13110@gmail.com'
+# Identifiant SMTP Brevo (variable EMAIL_HOST_USER) et adresse d'expédition
+# (variable DEFAULT_FROM_EMAIL). Utiliser une adresse de VOTRE domaine, dont le
+# domaine est authentifié chez Brevo (SPF/DKIM/DMARC), sinon les messages
+# risquent de finir en courrier indésirable.
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'webmaster@localhost')
+
+
+# --- PROTECTION CONTRE LES ATTAQUES PAR DEVINETTE DE MOT DE PASSE (AXES) ---
+
+AXES_FAILURE_LIMIT = 5          # échecs avant blocage
+AXES_COOLOFF_TIME = 1           # durée du blocage, en heures
+# Blocage par couple (adresse IP, identifiant) : un inconnu qui s'acharne sur
+# votre identifiant ne peut pas vous empêcher, vous, de vous connecter.
+AXES_LOCKOUT_PARAMETERS = [['ip_address', 'username']]
+AXES_RESET_ON_SUCCESS = True
+AXES_LOCKOUT_TEMPLATE = 'atelier/lockout.html'
+# Derrière le proxy de Render, la vraie adresse du visiteur est dans X-Forwarded-For.
+AXES_IPWARE_PROXY_COUNT = 1
+AXES_IPWARE_META_PRECEDENCE_ORDER = ('HTTP_X_FORWARDED_FOR', 'REMOTE_ADDR')
+
+AUTHENTICATION_BACKENDS = [
+    'axes.backends.AxesStandaloneBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+if TESTING:
+    # Le client de test (`client.login`) n'envoie pas de requête, ce qu'exige Axes.
+    # Les tests d'Axes réactivent le backend explicitement (voir test_securite_connexion).
+    AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
+    SILENCED_SYSTEM_CHECKS = ['axes.W003']
 
 
 # --- INTELLIGENCE ARTIFICIELLE (GEMINI) ---
