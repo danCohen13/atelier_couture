@@ -12,6 +12,9 @@ __pycache__/
 # Base de données locale (si jamais une traîne, même si on utilise PostgreSQL)
 *.sqlite3
 
+# Fichiers générés par collectstatic
+staticfiles/
+
 # Environnement et secrets
 .env
 
@@ -19,4 +22,3 @@ __pycache__/
 .DS_Store
 Thumbs.db
 .vscode/
-
