@@ -1,0 +1,41 @@
+{% extends 'atelier/base.html' %}
+
+{% block title %}Dépenses récurrentes — Cohen Haute Couture{% endblock %}
+
+{% block content %}
+<main class="page">
+    <div class="page-head"><div>
+        <span class="eyebrow">Comptabilité</span>
+        <h1>Dépenses récurrentes</h1>
+        <p>Loyer, abonnements… Chaque mois, l'écriture est ajoutée automatiquement aux dépenses (en ₪), à partir de la date choisie.</p>
+    </div></div>
+    {% include 'atelier/finances/_nav.html' %}
+
+    <div class="card">
+        <table class="ledger-table"><tbody>
+        {% for r in recurrentes %}
+            <tr>
+                <td class="ledger-model">{{ r.designation }}</td>
+                <td>{{ r.get_categorie_display }}</td>
+                <td class="ledger-amount ledger-amount--out">{{ r.montant }} ₪ / mois</td>
+                <td>le {{ r.jour_du_mois }} · depuis {{ r.date_debut|date:"d/m/Y" }}</td>
+                <td>{% if r.actif %}<span class="tag tag--auto">Active</span>{% else %}<span class="tag">En pause</span>{% endif %}</td>
+                <td class="ledger-actions">
+                    <form method="post" action="{% url 'basculer_depense_recurrente' r.pk %}" class="inline-form">{% csrf_token %}<button type="submit" class="pill-btn">{% if r.actif %}Mettre en pause{% else %}Réactiver{% endif %}</button></form>
+                    <form method="post" action="{% url 'supprimer_depense_recurrente' r.pk %}" class="inline-form" onsubmit="return confirm('Supprimer cette dépense récurrente ?');">{% csrf_token %}<button type="submit" class="delete-link">Supprimer</button></form>
+                </td>
+            </tr>
+        {% empty %}<tr><td class="empty-state">Aucune dépense récurrente.</td></tr>{% endfor %}
+        </tbody></table>
+    </div>
+
+    <div class="form-card"><div class="form-card__inner">
+        <h3>Ajouter une dépense récurrente</h3>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="form-actions"><button type="submit" class="btn btn--primary">Ajouter</button></div>
+        </form>
+    </div></div>
+</main>
+{% endblock %}

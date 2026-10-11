@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8">{% include 'atelier/pdf/_style_finance.html' %}</head>
+<body>
+<h1>Reçu {{ numero }}</h1>
+<p class="muted">Cohen Haute Couture — édité le {{ date_edition|date:"d/m/Y" }}</p>
+<p>Reçu de <strong>{{ client.prenom }} {{ client.nom }}</strong> la somme de <strong>{{ paiement.montant }} {{ symbole }}</strong>
+le {{ paiement.date|date:"d/m/Y" }} ({{ paiement.get_mode_display }}) pour : {{ designation }}.</p>
+{% if paiement.note %}<p>Note : {{ paiement.note }}</p>{% endif %}
+<p>Reste à payer après ce paiement : <strong>{{ reste }} {{ symbole }}</strong>.</p>
+<p class="mention">{{ mention }}</p>
+</body></html>

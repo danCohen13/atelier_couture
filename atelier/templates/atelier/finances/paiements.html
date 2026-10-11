@@ -1,0 +1,57 @@
+{% extends 'atelier/base.html' %}
+
+{% block title %}Paiements — Cohen Haute Couture{% endblock %}
+
+{% block content %}
+<main class="page">
+    <a href="{% if type == 'robe' %}{% url 'fiche_cliente' dossier.client.pk %}{% else %}{% url 'tableau_bord_locations' %}{% endif %}" class="back-link">← Retour</a>
+    <div class="page-head">
+        <div>
+            <span class="eyebrow">{% if type == 'robe' %}Confection sur mesure{% else %}Location{% endif %}</span>
+            <h1>{{ titre }}</h1>
+            <p>{{ dossier.client }}</p>
+        </div>
+        <div class="page-head__actions">
+            <a href="{% url 'document_pdf' type dossier.pk 'devis' %}" class="btn btn--outline" target="_blank">Devis PDF</a>
+            <a href="{% url 'document_pdf' type dossier.pk 'facture' %}" class="btn btn--outline" target="_blank">Facture PDF</a>
+        </div>
+    </div>
+
+    <div class="score-grid">
+        <div class="score-card"><span class="eyebrow">Prix</span><div class="value value--neutral">{{ prix }} {{ dossier.symbole_devise }}</div></div>
+        <div class="score-card"><span class="eyebrow">Déjà payé</span><div class="value value--positive">{{ dossier.total_paye }} {{ dossier.symbole_devise }}</div></div>
+        <div class="score-card"><span class="eyebrow">Reste à payer</span><div class="value {% if dossier.reste_a_payer > 0 %}value--negative{% else %}value--positive{% endif %}">{{ dossier.reste_a_payer }} {{ dossier.symbole_devise }}</div></div>
+    </div>
+
+    <div class="card">
+        <h4>Paiements reçus</h4>
+        <table class="ledger-table"><tbody>
+        {% for p in paiements %}
+            <tr>
+                <td class="ledger-date">{{ p.date|date:"d/m/Y" }}</td>
+                <td class="ledger-model">{{ p.get_mode_display }}</td>
+                <td class="ledger-desc">{{ p.note }}</td>
+                <td class="ledger-amount ledger-amount--in">{{ p.montant }} {{ p.symbole_devise }}</td>
+                <td class="ledger-actions">
+                    <a href="{% url 'recu_paiement' p.pk %}" target="_blank">Reçu PDF</a>
+                    <form method="post" action="{% url 'supprimer_paiement' p.pk %}" class="inline-form" onsubmit="return confirm('Supprimer ce paiement ?');">
+                        {% csrf_token %}<button type="submit" class="delete-link">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+        {% empty %}<tr><td class="empty-state">Aucun paiement enregistré.</td></tr>{% endfor %}
+        </tbody></table>
+    </div>
+
+    {% if dossier.reste_a_payer > 0 %}
+    <div class="form-card"><div class="form-card__inner">
+        <h3>Enregistrer un paiement</h3>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="form-actions"><button type="submit" class="btn btn--primary">Ajouter le paiement</button></div>
+        </form>
+    </div></div>
+    {% endif %}
+</main>
+{% endblock %}

@@ -1,5 +1,6 @@
 import datetime
 import secrets
+from decimal import Decimal
 from datetime import timedelta
 from django.db import models
 from django.core.validators import RegexValidator
@@ -51,12 +52,25 @@ class Robe(models.Model):
     cout_main_doeuvre = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
     prix_total = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
     devise = models.CharField(max_length=3, choices=DEVISE_CHOICES, default='ILS', verbose_name="Devise")
+    heures_travail = models.DecimalField(
+        max_digits=6, decimal_places=1, default=0, verbose_name="Heures de travail",
+        help_text="Sert à calculer le gain horaire réel de la robe (facultatif)"
+    )
     croquis = models.URLField(max_length=500, blank=True, null=True)
     photo_tissus = models.URLField(max_length=500, blank=True, null=True)
     
     @property
     def symbole_devise(self):
         return SYMBOLES_DEVISE.get(self.devise, '₪')
+
+    @property
+    def total_paye(self):
+        """Somme des paiements reçus (utilise le prefetch `paiements` s'il existe)."""
+        return sum((p.montant for p in self.paiements.all()), Decimal('0'))
+
+    @property
+    def reste_a_payer(self):
+        return (self.prix_total or Decimal('0')) - self.total_paye
 
     @property
     def jours_restants(self):
@@ -130,6 +144,14 @@ class Transaction(models.Model):
         related_name='transactions',
         verbose_name="Location associée"
     )
+    justificatif = models.URLField(
+        max_length=500, blank=True, default='', verbose_name="Photo du justificatif",
+        help_text="Photo du ticket ou de la facture (facultatif)"
+    )
+    recurrente = models.ForeignKey(
+        'DepenseRecurrente', on_delete=models.SET_NULL, null=True, blank=True,
+        related_name='transactions', verbose_name="Dépense récurrente d'origine"
+    )
 
     class Meta:
         ordering = ['-date', '-id']
@@ -186,6 +208,11 @@ class RobeLocation(models.Model):
     )
     caution_defaut = models.DecimalField(
         max_digits=10, decimal_places=2, verbose_name="Caution standard"
+    )
+
+    cout_revient = models.DecimalField(
+        max_digits=10, decimal_places=2, default=0, verbose_name="Coût de revient",
+        help_text="Prix d'achat ou de confection de la robe, dans la devise ci-dessus (pour mesurer sa rentabilité)"
     )
 
     statut_physique = models.CharField(
@@ -286,6 +313,11 @@ class Location(models.Model):
         verbose_name="Statut de la caution"
     )
 
+    caution_retenue = models.DecimalField(
+        max_digits=10, decimal_places=2, default=0, verbose_name="Montant de caution retenu",
+        help_text="Partie de la caution gardée (dégâts, perte). Elle devient alors un revenu."
+    )
+
     statut = models.CharField(
         max_length=30,
         choices=STATUT_LOCATION_CHOICES,
@@ -311,6 +343,23 @@ class Location(models.Model):
     @property
     def symbole_devise(self):
         return SYMBOLES_DEVISE.get(self.devise, '₪')
+
+    @property
+    def caution_gardee(self):
+        """Part de la caution conservée par l'atelier (donc un revenu)."""
+        if self.caution_statut == 'ENCAISSEE_TOTAL':
+            return self.caution_montant or Decimal('0')
+        if self.caution_statut == 'ENCAISSEE_PARTIEL':
+            return min(self.caution_retenue or Decimal('0'), self.caution_montant or Decimal('0'))
+        return Decimal('0')
+
+    @property
+    def total_paye(self):
+        return sum((p.montant for p in self.paiements.all()), Decimal('0'))
+
+    @property
+    def reste_a_payer(self):
+        return (self.prix_convenu or Decimal('0')) - self.total_paye
 
     def clean(self):
         super().clean()
@@ -338,3 +387,102 @@ class Location(models.Model):
         if self.statut == 'EN_COURS' and not self.date_retour_effectif:
             return timezone.localdate() > self.date_fin_prevue
         return False
+
+
+class Paiement(models.Model):
+    """Somme reçue d'une cliente (acompte ou solde) pour une robe sur mesure ou une location."""
+    MODE_CHOICES = [
+        ('ESPECES', 'Espèces'),
+        ('VIREMENT', 'Virement'),
+        ('CARTE', 'Carte bancaire'),
+        ('CHEQUE', 'Chèque'),
+        ('AUTRE', 'Autre'),
+    ]
+
+    robe = models.ForeignKey(Robe, on_delete=models.CASCADE, null=True, blank=True, related_name='paiements')
+    location = models.ForeignKey(Location, on_delete=models.CASCADE, null=True, blank=True, related_name='paiements')
+    montant = models.DecimalField(max_digits=10, decimal_places=2)
+    date = models.DateField(default=timezone.localdate)
+    mode = models.CharField(max_length=10, choices=MODE_CHOICES, default='ESPECES', verbose_name="Mode de paiement")
+    note = models.CharField(max_length=200, blank=True, verbose_name="Note")
+
+    class Meta:
+        ordering = ['date', 'id']
+
+    def clean(self):
+        super().clean()
+        if bool(self.robe_id) == bool(self.location_id):
+            raise ValidationError("Un paiement concerne soit une robe sur mesure, soit une location.")
+        if self.montant is not None and self.montant <= 0:
+            raise ValidationError({'montant': "Le montant doit être positif."})
+
+    @property
+    def cible(self):
+        return self.robe or self.location
+
+    @property
+    def devise(self):
+        return self.cible.devise if self.cible else 'ILS'
+
+    @property
+    def symbole_devise(self):
+        return SYMBOLES_DEVISE.get(self.devise, '₪')
+
+    def __str__(self):
+        return f"Paiement {self.montant} {self.symbole_devise} ({self.date})"
+
+
+class DepenseRecurrente(models.Model):
+    """Charge qui revient chaque mois (loyer, abonnement…) : l'écriture est créée automatiquement."""
+    designation = models.CharField(max_length=255)
+    montant = models.DecimalField(max_digits=10, decimal_places=2)
+    categorie = models.CharField(
+        max_length=20, choices=[c for c in Transaction.CATEGORIE_CHOICES if c[0] not in ('PAIEMENT_CLIENT', 'LOCATION_ROBE')],
+        default='AUTRE'
+    )
+    jour_du_mois = models.PositiveSmallIntegerField(default=1, verbose_name="Jour du mois (1 à 28)")
+    date_debut = models.DateField(default=timezone.localdate, verbose_name="À partir du")
+    actif = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ['designation']
+        verbose_name = "Dépense récurrente"
+        verbose_name_plural = "Dépenses récurrentes"
+
+    def clean(self):
+        super().clean()
+        if self.jour_du_mois is not None and not 1 <= self.jour_du_mois <= 28:
+            raise ValidationError({'jour_du_mois': "Choisis un jour entre 1 et 28."})
+        if self.montant is not None and self.montant <= 0:
+            raise ValidationError({'montant': "Le montant doit être positif."})
+
+    def __str__(self):
+        return f"{self.designation} ({self.montant} ₪/mois)"
+
+
+class ParametresFinance(models.Model):
+    """Réglages uniques de la comptabilité : taux de change vers le shekel et objectif mensuel."""
+    taux_eur = models.DecimalField(
+        max_digits=8, decimal_places=4, null=True, blank=True, verbose_name="1 € vaut … ₪")
+    taux_usd = models.DecimalField(
+        max_digits=8, decimal_places=4, null=True, blank=True, verbose_name="1 $ vaut … ₪")
+    objectif_mensuel = models.DecimalField(
+        max_digits=10, decimal_places=2, null=True, blank=True, verbose_name="Objectif de chiffre d'affaires mensuel (₪)")
+
+    class Meta:
+        verbose_name = "Paramètres de finance"
+        verbose_name_plural = "Paramètres de finance"
+
+    @classmethod
+    def charger(cls):
+        obj, _ = cls.objects.get_or_create(pk=1)
+        return obj
+
+    def taux(self, devise):
+        """Valeur d'une unité de `devise` en shekels, ou None si le taux n'est pas renseigné."""
+        if devise == 'ILS':
+            return Decimal('1')
+        return {'EUR': self.taux_eur, 'USD': self.taux_usd}.get(devise) or None
+
+    def __str__(self):
+        return "Paramètres de finance"

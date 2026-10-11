@@ -9,12 +9,37 @@
         <div>
             <span class="eyebrow">Comptabilité</span>
             <h1>Finances de l'atelier</h1>
-            <p>Le coût du tissu et le prix facturé de chaque robe sont importés automatiquement, ainsi que le prix de chaque location (à la date de retrait). La caution n'est jamais comptée : elle est restituée. La main d'œuvre n'apparaît pas ici : c'est une composante du prix facturé, pas une dépense séparée. Utilise l'ajout rapide uniquement pour les frais annexes — fournitures, matériel, autres opérations — et ne saisis pas à la main une location déjà enregistrée dans « Locations &amp; stock ».</p>
+            <p>Le coût du tissu et le prix facturé de chaque robe sont importés automatiquement, ainsi que le prix de chaque location (à la date de retrait). La caution n'est jamais comptée : elle est restituée. La main d'œuvre n'apparaît pas ici : c'est une composante du prix facturé, pas une dépense séparée. Les cautions conservées (dégâts, perte) comptent comme revenu. Utilise l'ajout rapide uniquement pour les frais annexes — fournitures, matériel, autres opérations — et ne saisis pas à la main une location déjà enregistrée dans « Locations &amp; stock ».</p>
         </div>
         <div class="page-head__actions">
             <a href="{% url 'ajouter_transaction' %}" class="btn btn--primary">+ Opération rapide</a>
+            <a href="{% url 'exporter_csv' %}?periode={{ periode }}{% if base == 'ENCAISSE' %}&amp;base=encaisse{% endif %}" class="btn btn--outline">Export CSV</a>
+            <a href="{% url 'exporter_pdf_recapitulatif' %}?periode={{ periode }}{% if base == 'ENCAISSE' %}&amp;base=encaisse{% endif %}" class="btn btn--outline">Récapitulatif PDF</a>
         </div>
     </div>
+
+    {% include 'atelier/finances/_nav.html' %}
+
+    {% if alertes %}
+    <div class="card finance-alertes" role="alert">
+        <h4>À surveiller</h4>
+        <ul>{% for a in alertes %}<li>{{ a }}</li>{% endfor %}</ul>
+        <a href="{% url 'impayes' %}">Voir le détail →</a>
+    </div>
+    {% endif %}
+
+    {% if objectif %}
+    <div class="card">
+        <div class="card-header-row">
+            <h4>Objectif du mois</h4>
+            <span class="eyebrow">{{ objectif.realise }} / {{ objectif.objectif }} {{ devise_symbole }} · {{ objectif.pct }} %</span>
+        </div>
+        <div class="progress-bar" role="progressbar" aria-valuenow="{{ objectif.pct_barre }}" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-bar__fill{% if objectif.atteint %} progress-bar__fill--ok{% endif %}" style="width: {{ objectif.pct_barre }}%"></div>
+        </div>
+        {% if objectif.atteint %}<p class="empty-state" style="padding: 8px 0 0; text-align: left;">Objectif atteint, bravo !</p>{% endif %}
+    </div>
+    {% endif %}
 
     <div class="score-grid">
         <div class="score-card">
@@ -31,11 +56,22 @@
         </div>
     </div>
 
+    <div class="score-grid">
+        <div class="score-card">
+            <span class="eyebrow">Reste à encaisser</span>
+            <div class="value value--neutral">{% include 'atelier/finances/_montants.html' with montants=reste_a_encaisser %}</div>
+        </div>
+        <div class="score-card">
+            <span class="eyebrow">Cautions détenues</span>
+            <div class="value value--neutral">{% include 'atelier/finances/_montants.html' with montants=cautions_detenues %}</div>
+        </div>
+    </div>
+
     {% if autres_bilans %}
     <div class="card">
         <h4>Autres devises</h4>
         <p class="empty-state" style="padding: 0 0 10px; text-align: left;">
-            Ces montants ne sont pas convertis ni ajoutés aux totaux en {{ devise_symbole }} ci-dessus.
+            Ces montants ne sont pas ajoutés aux totaux en {{ devise_symbole }} ci-dessus.
         </p>
         <table class="ledger-table">
             <tbody>
@@ -49,8 +85,55 @@
                 {% endfor %}
             </tbody>
         </table>
+        {% if total_global %}
+        <p><strong>Total global converti : {{ total_global.recettes }} {{ devise_symbole }} de recettes, {{ total_global.depenses }} {{ devise_symbole }} de dépenses, bénéfice {{ total_global.benefice }} {{ devise_symbole }}.</strong>
+        {% if total_global.incomplet %}<br>Taux manquant pour : {{ total_global.incomplet|join:", " }} — <a href="{% url 'parametres_finance' %}">renseigne-le</a> pour un total complet.{% endif %}</p>
+        {% endif %}
     </div>
     {% endif %}
+
+    <div class="card">
+        <h4>Comparaison mensuelle ({{ devise_symbole }})</h4>
+        <table class="ledger-table">
+            <thead><tr><th></th><th>Période</th><th class="ledger-amount">Recettes</th><th class="ledger-amount">Dépenses</th><th class="ledger-amount">Bénéfice</th><th class="ledger-amount">Recettes vs ce mois</th></tr></thead>
+            <tbody>
+            {% for c in comparaison %}
+                <tr>
+                    <td class="ledger-model">{{ c.label }}</td>
+                    <td>{{ c.mois }}</td>
+                    <td class="ledger-amount ledger-amount--in">{{ c.recettes }}</td>
+                    <td class="ledger-amount ledger-amount--out">{{ c.depenses }}</td>
+                    <td class="ledger-amount">{{ c.benefice }}</td>
+                    <td class="ledger-amount">{% if forloop.first %}—{% elif c.evolution is None %}n/a{% else %}{{ c.evolution }} %{% endif %}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="two-col">
+        <div class="card">
+            <h4>Confection vs location (période)</h4>
+            <table class="ledger-table"><tbody>
+            {% for a in activites %}
+                <tr><td class="ledger-model">{{ a.label }}</td>
+                    <td class="ledger-amount ledger-amount--in">+{{ a.recettes }}</td>
+                    <td class="ledger-amount ledger-amount--out">−{{ a.depenses }}</td>
+                    <td class="ledger-amount">{{ a.benefice }}</td></tr>
+            {% empty %}<tr><td class="empty-state">Aucune donnée.</td></tr>{% endfor %}
+            </tbody></table>
+        </div>
+        <div class="card">
+            <h4>Dépenses par catégorie (période)</h4>
+            <table class="ledger-table"><tbody>
+            {% for d in depenses_par_categorie %}
+                <tr><td class="ledger-model">{{ d.categorie }}</td>
+                    <td class="ledger-amount ledger-amount--out">{{ d.montant }}</td>
+                    <td class="ledger-amount">{{ d.part }} %</td></tr>
+            {% empty %}<tr><td class="empty-state">Aucune dépense.</td></tr>{% endfor %}
+            </tbody></table>
+        </div>
+    </div>
 
     <div class="card chart-card">
         <div class="card-header-row">
@@ -75,10 +158,15 @@
     <div class="legend-strip">
         <div class="filter-group">
             <span class="eyebrow">Période</span>
-            <a href="?periode=jour" class="filter-chip {% if periode == 'jour' %}is-active{% endif %}">Aujourd'hui</a>
-            <a href="?periode=mois" class="filter-chip {% if periode == 'mois' %}is-active{% endif %}">Ce mois-ci</a>
-            <a href="?periode=annee" class="filter-chip {% if periode == 'annee' %}is-active{% endif %}">Cette année</a>
-            <a href="?periode=tout" class="filter-chip {% if periode == 'tout' %}is-active{% endif %}">Tout</a>
+            <a href="?periode=jour{% if base == 'ENCAISSE' %}&amp;base=encaisse{% endif %}" class="filter-chip {% if periode == 'jour' %}is-active{% endif %}">Aujourd'hui</a>
+            <a href="?periode=mois{% if base == 'ENCAISSE' %}&amp;base=encaisse{% endif %}" class="filter-chip {% if periode == 'mois' %}is-active{% endif %}">Ce mois-ci</a>
+            <a href="?periode=annee{% if base == 'ENCAISSE' %}&amp;base=encaisse{% endif %}" class="filter-chip {% if periode == 'annee' %}is-active{% endif %}">Cette année</a>
+            <a href="?periode=tout{% if base == 'ENCAISSE' %}&amp;base=encaisse{% endif %}" class="filter-chip {% if periode == 'tout' %}is-active{% endif %}">Tout</a>
+        </div>
+        <div class="filter-group">
+            <span class="eyebrow">Base</span>
+            <a href="?periode={{ periode }}" class="filter-chip {% if base == 'FACTURE' %}is-active{% endif %}" title="Une robe est comptée à sa livraison, une location à son retrait">Facturé</a>
+            <a href="?periode={{ periode }}&amp;base=encaisse" class="filter-chip {% if base == 'ENCAISSE' %}is-active{% endif %}" title="Seuls les paiements réellement reçus sont comptés">Encaissé</a>
         </div>
     </div>
 
@@ -101,12 +189,22 @@
                         <td class="ledger-desc">
                             {{ ligne.designation }}
                             {% if ligne.auto %}<span class="tag tag--auto">Auto</span>{% endif %}
+                            {% if ligne.justificatif %}<a href="{{ ligne.justificatif }}" target="_blank" rel="noopener noreferrer">📎 justificatif</a>{% endif %}
                         </td>
                         <td class="ledger-model">
                             {% if ligne.robe %}{{ ligne.robe.nom_modele }}{% else %}—{% endif %}
                         </td>
                         <td class="ledger-amount {% if ligne.type == 'RECETTE' %}ledger-amount--in{% else %}ledger-amount--out{% endif %}">
                             {% if ligne.type == 'RECETTE' %}+{% else %}−{% endif %}{{ ligne.montant }} <span class="currency-symbol">{{ ligne.devise_symbole }}</span>
+                        </td>
+                        <td class="ledger-actions">
+                            {% if ligne.transaction %}
+                            <a href="{% url 'modifier_transaction' ligne.transaction.pk %}">Modifier</a>
+                            <form method="post" action="{% url 'supprimer_transaction' ligne.transaction.pk %}" class="inline-form"
+                                  onsubmit="return confirm('Supprimer cette opération ?');">
+                                {% csrf_token %}<button type="submit" class="delete-link">Supprimer</button>
+                            </form>
+                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}

@@ -6,6 +6,7 @@
             <span class="eyebrow">{{ robe.nom_modele }} — Actions sur cette confection</span>
             <div class="drawer-header__actions">
                 <a href="{% url 'modifier_robe' robe.id %}" class="btn btn--outline">Modifier</a>
+                <a href="{% url 'paiements_robe' robe.id %}" class="btn btn--outline">Paiements</a>
                 <form method="POST" action="{% url 'supprimer_robe' robe.id %}" class="inline-form"
                       data-confirm="Supprimer définitivement cette confection ?"
                       onsubmit="return confirm(this.dataset.confirm);">

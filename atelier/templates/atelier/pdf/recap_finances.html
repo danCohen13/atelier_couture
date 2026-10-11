@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8">{% include 'atelier/pdf/_style_finance.html' %}</head>
+<body>
+<h1>Récapitulatif financier</h1>
+<p class="muted">Cohen Haute Couture — {{ periode_label }} — base « {{ base_label }} » — édité le {{ date_edition|date:"d/m/Y" }}</p>
+<h2>Bilan</h2>
+<table>
+    <tr><th>Devise</th><th class="r">Recettes</th><th class="r">Dépenses</th><th class="r">Bénéfice</th></tr>
+    {% for b in bilans %}<tr><td>{{ b.devise }}</td><td class="r">{{ b.recettes }} {{ b.devise }}</td><td class="r">{{ b.depenses }} {{ b.devise }}</td><td class="r">{{ b.benefice }} {{ b.devise }}</td></tr>{% endfor %}
+</table>
+{% if activites %}<h2>Confection vs location (₪)</h2>
+<table>{% for a in activites %}<tr><td>{{ a.label }}</td><td class="r">+{{ a.recettes }}</td><td class="r">-{{ a.depenses }}</td><td class="r">{{ a.benefice }}</td></tr>{% endfor %}</table>{% endif %}
+{% if depenses_par_categorie %}<h2>Dépenses par catégorie (₪)</h2>
+<table>{% for d in depenses_par_categorie %}<tr><td>{{ d.categorie }}</td><td class="r">{{ d.montant }}</td><td class="r">{{ d.part }} %</td></tr>{% endfor %}</table>{% endif %}
+<h2>Détail des opérations</h2>
+<table>
+    <tr><th>Date</th><th>Catégorie</th><th>Désignation</th><th class="r">Montant</th></tr>
+    {% for l in lignes %}<tr><td>{{ l.date|date:"d/m/Y" }}</td><td>{{ l.categorie_label }}</td><td>{{ l.designation }}</td><td class="r">{% if l.type == 'RECETTE' %}+{% else %}-{% endif %}{{ l.montant }} {{ l.devise }}</td></tr>{% endfor %}
+</table>
+</body></html>

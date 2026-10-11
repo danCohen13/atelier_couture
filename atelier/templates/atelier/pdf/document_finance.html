@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8">{% include 'atelier/pdf/_style_finance.html' %}</head>
+<body>
+<h1>{{ titre }} {{ numero }}</h1>
+<p class="muted">Cohen Haute Couture — édité le {{ date_edition|date:"d/m/Y" }}</p>
+<h2>Cliente</h2>
+<p>{{ client.prenom }} {{ client.nom }}{% if client.telephone %}<br>{{ client.telephone }}{% endif %}</p>
+<table>
+    <tr><th>Désignation</th><th class="r">Montant</th></tr>
+    <tr><td>{{ designation }}</td><td class="r">{{ total }} {{ symbole }}</td></tr>
+    {% if caution %}<tr><td>Caution (restituée au retour, hors prix)</td><td class="r">{{ caution }} {{ symbole }}</td></tr>{% endif %}
+    <tr class="total"><td>Total</td><td class="r">{{ total }} {{ symbole }}</td></tr>
+</table>
+{% if genre == 'facture' %}
+<h2>Paiements reçus</h2>
+<table>
+    {% for p in paiements %}<tr><td>{{ p.date|date:"d/m/Y" }} — {{ p.get_mode_display }}{% if p.note %} ({{ p.note }}){% endif %}</td><td class="r">{{ p.montant }} {{ symbole }}</td></tr>
+    {% empty %}<tr><td>Aucun paiement enregistré</td><td class="r">0 {{ symbole }}</td></tr>{% endfor %}
+    <tr class="total"><td>Reste à payer</td><td class="r">{{ reste }} {{ symbole }}</td></tr>
+</table>
+{% endif %}
+<p class="mention">{{ mention }}</p>
+</body></html>

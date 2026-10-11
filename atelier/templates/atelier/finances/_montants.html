@@ -1,0 +1,1 @@
+{% for m in montants %}{% if not forloop.first %} · {% endif %}{{ m.montant }} {{ m.symbole }}{% empty %}0{% endfor %}

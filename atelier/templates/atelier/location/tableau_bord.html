@@ -69,6 +69,7 @@
                     </td>
                     <td class="cell-actions">
                         <a href="{% url 'retour_location' loc.id %}" class="btn btn--danger btn--sm">Enregistrer le retour</a>
+                        <a href="{% url 'paiements_location' loc.id %}" class="btn btn--outline btn--sm">Paiements</a>
                     </td>
                 </tr>
                 {% endfor %}
@@ -110,6 +111,7 @@
                     <td data-label="Caution">{% include 'atelier/location/_tag_caution.html' %}</td>
                     <td class="cell-actions">
                         <a href="{% url 'retour_location' loc.id %}" class="btn btn--outline btn--outline-accent btn--sm">Restitution</a>
+                        <a href="{% url 'paiements_location' loc.id %}" class="btn btn--outline btn--sm">Paiements</a>
                     </td>
                 </tr>
                 {% empty %}

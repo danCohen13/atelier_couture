@@ -1712,3 +1712,14 @@ body.pdf-body {
 }
 
 .price-cell { white-space: nowrap; }
+
+/* --- Finances : navigation, objectif, mises en page --- */
+.finance-nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; }
+.finance-alertes { border-left: 4px solid var(--wine); }
+.finance-alertes ul { margin: 6px 0 8px 18px; }
+.progress-bar { width: 100%; height: 12px; background: #e6dfcb; border-radius: 6px; overflow: hidden; }
+.progress-bar__fill { height: 100%; background: var(--blueprint-dark); }
+.progress-bar__fill--ok { background: var(--moss); }
+.two-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.ledger-actions { white-space: nowrap; text-align: right; }
+.ledger-actions a { margin-right: 8px; }

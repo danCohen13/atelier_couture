@@ -84,7 +84,7 @@
                 </a>
 
                 <!-- Finances & bilans -->
-                <a href="{% url 'finances' %}" class="sidebar-link {% if request.resolver_match.url_name == 'finances' %}is-active{% endif %}">
+                <a href="{% url 'finances' %}" class="sidebar-link {% if request.path|slice:':10' == '/finances/' %}is-active{% endif %}">
                     Finances &amp; bilans
                 </a>
             </nav>
@@ -184,6 +184,7 @@
 
             transformToCloudinaryButton("id_croquis", "Choisir un croquis");
             transformToCloudinaryButton("id_photo_tissus", "Choisir un tissu");
+            transformToCloudinaryButton("id_justificatif", "Photographier le justificatif");
         });
     </script>
 </body>

@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import Client, Robe, Tache
 from .models import RobeLocation, Location
+from .models import DepenseRecurrente, ParametresFinance, Paiement, Transaction
 
 # Enregistrement des modèles pour qu'ils apparaissent dans l'interface
 admin.site.register(Client)
@@ -20,3 +21,8 @@ class LocationAdmin(admin.ModelAdmin):
     list_display = ('id', 'client', 'robe_location', 'date_debut', 'date_fin_prevue', 'statut', 'caution_statut')
     list_filter = ('statut', 'caution_statut', 'date_debut')
     search_fields = ('client__nom', 'client__prenom', 'robe_location__reference_stock')
+
+admin.site.register(Paiement)
+admin.site.register(DepenseRecurrente)
+admin.site.register(ParametresFinance)
+admin.site.register(Transaction)

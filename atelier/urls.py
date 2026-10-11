@@ -28,6 +28,21 @@ urlpatterns = [
     # LA NOUVELLE ROUTE IA ICI : 
     # Elle pointe vers ta fonction d'analyse et permet d'appeler l'URL en AJAX depuis le template
     path('finances/analyser-ia/', views_finances.analyser_texte_ia, name='analyser_texte_ia'),
+    path('finances/operation/<int:pk>/modifier/', views_finances.modifier_transaction_view, name='modifier_transaction'),
+    path('finances/operation/<int:pk>/supprimer/', views_finances.supprimer_transaction, name='supprimer_transaction'),
+    path('finances/export.csv', views_finances.exporter_csv, name='exporter_csv'),
+    path('finances/recapitulatif.pdf', views_finances.exporter_pdf_recapitulatif, name='exporter_pdf_recapitulatif'),
+    path('finances/impayes/', views_finances.impayes_view, name='impayes'),
+    path('finances/rentabilite/', views_finances.rentabilite_view, name='rentabilite'),
+    path('finances/recurrentes/', views_finances.depenses_recurrentes, name='depenses_recurrentes'),
+    path('finances/recurrentes/<int:pk>/basculer/', views_finances.basculer_depense_recurrente, name='basculer_depense_recurrente'),
+    path('finances/recurrentes/<int:pk>/supprimer/', views_finances.supprimer_depense_recurrente, name='supprimer_depense_recurrente'),
+    path('finances/parametres/', views_finances.parametres_finance, name='parametres_finance'),
+    path('finances/robe/<int:robe_id>/paiements/', views_finances.paiements_robe, name='paiements_robe'),
+    path('finances/location/<int:location_id>/paiements/', views_finances.paiements_location, name='paiements_location'),
+    path('finances/paiement/<int:paiement_id>/supprimer/', views_finances.supprimer_paiement, name='supprimer_paiement'),
+    path('finances/paiement/<int:paiement_id>/recu/', views_finances.recu_paiement, name='recu_paiement'),
+    path('finances/document/<str:type_>/<int:pk>/<str:genre>.pdf', views_finances.document_pdf, name='document_pdf'),
     
     # --- ÉCRANS DE SÉCURITÉ ---
     path('login/', auth_views.LoginView.as_view(template_name='atelier/login.html'), name='login'),

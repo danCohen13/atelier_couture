@@ -1,0 +1,23 @@
+{% extends 'atelier/base.html' %}
+
+{% block title %}Modifier une opération — Cohen Haute Couture{% endblock %}
+
+{% block content %}
+<main class="page page--narrow">
+    <a href="{% url 'finances' %}" class="back-link">← Retour aux finances</a>
+    <div class="form-card">
+        <div class="form-card__inner">
+            <span class="eyebrow">Finances</span>
+            <h2>Modifier l'opération</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="form-actions">
+                    <a href="{% url 'finances' %}" class="btn btn--outline">Annuler</a>
+                    <button type="submit" class="btn btn--primary">Enregistrer les modifications</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+{% endblock %}
