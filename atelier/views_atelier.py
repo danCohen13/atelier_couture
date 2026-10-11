@@ -142,6 +142,7 @@ def modifier_robe(request, robe_id):
     return render(request, 'atelier/confection/modifier_robe.html', {'form': form, 'robe': robe})    
 
 @login_required
+@require_POST
 def ajouter_tache_rapide(request, robe_id, type_tache):
     robe = get_object_or_404(Robe, id=robe_id)
     correspondances = {
@@ -172,6 +173,7 @@ def ajouter_tache_personnalisee(request, robe_id):
     return redirect(f'/#tiroir-{robe.id}')
 
 @login_required
+@require_POST
 def toggle_tache(request, tache_id):
     tache = get_object_or_404(Tache, id=tache_id)
     tache.est_faite = not tache.est_faite
@@ -183,6 +185,7 @@ def toggle_tache(request, tache_id):
     return redirect(f'/#tiroir-{tache.robe.id}')
 
 @login_required
+@require_POST
 def supprimer_tache(request, tache_id):
     tache = get_object_or_404(Tache, id=tache_id)
     robe_id = tache.robe.id
@@ -195,6 +198,7 @@ def supprimer_tache(request, tache_id):
     return redirect(f'/#tiroir-{robe_id}')
 
 @login_required
+@require_POST
 def supprimer_robe(request, robe_id):
     robe = get_object_or_404(Robe, id=robe_id)
     robe.delete()

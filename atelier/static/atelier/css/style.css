@@ -789,6 +789,15 @@ select.field-input {
 }
 .delete-link:hover { opacity: 1; }
 
+/* Actions déclenchées en POST (formulaires) qui gardent l'aspect des anciens liens */
+.inline-form { display: inline; margin: 0; padding: 0; }
+button.delete-link,
+button.pill-btn { background: none; border: none; cursor: pointer; }
+button.pill-btn { padding: 0; }
+button.step-chip,
+button.header-link { cursor: pointer; }
+button.header-link { background: none; }
+
 /* ---------------------------------------------------------------------
    Répertoire des clientes
    --------------------------------------------------------------------- */
@@ -854,6 +863,17 @@ select.field-input {
   letter-spacing: 0.02em;
   text-align: left;
 }
+
+/* Message de succès (même gabarit que .form-alert, en vert mousse) */
+.form-alert--success {
+  color: var(--moss);
+  background: var(--moss-bg);
+  border-color: var(--moss);
+}
+
+/* Zone des messages, au-dessus du contenu de chaque page */
+.flash-messages { max-width: 1200px; margin: 0 auto; padding: 20px 28px 0; }
+.flash-messages .form-alert { margin-bottom: 8px; }
 
 .btn--block { width: 100%; justify-content: center; padding: 13px; margin-top: 20px; }
 
