@@ -2,6 +2,7 @@ from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views_atelier
 from . import views_auth
+from . import views_confidentialite
 from . import views_finances
 from . import views_location
 from . import views_planning
@@ -80,4 +81,12 @@ urlpatterns += [
     # Planning mensuel (livraisons, retraits et retours de location)
     path('planning/', views_planning.planning, name='planning'),
     path('api/planning/evenements/', views_planning.api_planning_evenements, name='api_planning_evenements'),
+]
+
+urlpatterns += [
+    # Protection de la vie privée des clientes
+    path('confidentialite/', views_confidentialite.confidentialite, name='confidentialite'),
+    path('confidentialite/fiche-information.pdf', views_confidentialite.fiche_information_pdf, name='confidentialite_fiche_pdf'),
+    path('clientes/<int:client_id>/information-remise/', views_confidentialite.information_remise, name='information_remise'),
+    path('clientes/<int:client_id>/supprimer/', views_confidentialite.supprimer_cliente, name='supprimer_cliente'),
 ]

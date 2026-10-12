@@ -1,0 +1,90 @@
+{% extends 'atelier/base.html' %}
+
+{% block title %}Confidentialité — Cohen Haute Couture{% endblock %}
+
+{% block content %}
+<main class="page fin-page">
+    <div class="page-head">
+        <div>
+            <span class="eyebrow">Protection des données</span>
+            <h1>Confidentialité des clientes</h1>
+            <p>Tes clientes te confient leur identité, leurs coordonnées et leurs mesures. La loi israélienne sur la protection de la vie privée te demande de les informer, de protéger ces données et de ne pas les garder sans raison.</p>
+        </div>
+        <div class="page-head__actions">
+            <a href="{% url 'confidentialite_fiche_pdf' %}" class="btn btn--primary" target="_blank">Imprimer la fiche d'information</a>
+        </div>
+    </div>
+
+    {% if not contact %}
+    <div class="fin-alert" role="alert">
+        <div class="fin-alert__icon" aria-hidden="true">!</div>
+        <div>
+            <strong>Coordonnées à renseigner</strong>
+            <p style="margin: 4px 0 0;">La fiche d'information doit indiquer comment te joindre pour exercer ses droits. Ajoute la variable d'environnement <code>CONTACT_CONFIDENTIALITE</code> (e-mail ou téléphone) sur Render, puis redéploie.</p>
+        </div>
+    </div>
+    {% endif %}
+
+    <section class="fin-section">
+        <div class="fin-section__head"><div>
+            <h2>1. Informer chaque cliente</h2>
+            <p>Remets la fiche d'information avant de prendre des mesures, puis enregistre la remise sur son dossier.</p>
+        </div></div>
+        <div class="card">
+            {% if sans_information %}
+            <p><strong>{{ sans_information }}</strong> dossier{{ sans_information|pluralize }} sans remise de fiche enregistrée. Ouvre le dossier de la cliente et clique sur « marquer comme remise ».</p>
+            {% else %}
+            <p>Toutes les clientes ont reçu la fiche d'information.</p>
+            {% endif %}
+        </div>
+    </section>
+
+    <section class="fin-section">
+        <div class="fin-section__head">
+            <div>
+                <h2>2. Dossiers inactifs</h2>
+                <p>Sans activité depuis plus de {{ annees }} an{{ annees|pluralize }} (ni commande, ni location, ni paiement). Efface leurs données personnelles : les montants et commandes restent pour la comptabilité.</p>
+            </div>
+            <form method="get" class="fin-filters__group">
+                <label class="fin-filters__label" for="annees">Inactif depuis</label>
+                <input id="annees" name="annees" type="number" min="1" max="20" value="{{ annees }}" class="field-input" style="width: 80px;">
+                <span class="fin-filters__label">ans</span>
+                <button type="submit" class="btn btn--outline">Afficher</button>
+            </form>
+        </div>
+        <ul class="tx-list">
+            {% for cliente, derniere in inactives %}
+            <li class="tx">
+                <div class="tx__main">
+                    <span class="tx__title"><a href="{% url 'fiche_cliente' cliente.pk %}">{{ cliente }}</a></span>
+                    <span class="tx__sub">{% if derniere %}Dernière activité : {{ derniere|date:"d/m/Y" }}{% else %}Aucune activité enregistrée{% endif %}</span>
+                </div>
+                <div class="tx__side">
+                    <form method="post" action="{% url 'supprimer_cliente' cliente.pk %}" class="inline-form"
+                          onsubmit="return confirm('Effacer définitivement les données personnelles de {{ cliente|escapejs }} ?');">
+                        {% csrf_token %}<button type="submit" class="delete-link">Effacer ses données</button>
+                    </form>
+                </div>
+            </li>
+            {% empty %}
+            <li class="tx"><div class="tx__main"><span class="tx__sub">Aucun dossier inactif.</span></div></li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <section class="fin-section">
+        <div class="fin-section__head"><div>
+            <h2>3. Sécurité et incidents</h2>
+            <p>Note tout incident (téléphone perdu, accès suspect…) dans le registre d'administration. Un incident grave doit être signalé immédiatement à l'Autorité israélienne de protection de la vie privée.</p>
+        </div></div>
+        <div class="card">
+            {% if user.is_staff %}
+            <p><a href="{% url 'admin:atelier_incidentsecurite_changelist' %}">Ouvrir le registre des incidents →</a></p>
+            {% else %}
+            <p>Le registre des incidents se trouve dans l'espace d'administration.</p>
+            {% endif %}
+            <p class="fin-hint">Le document « PROTECTION_DES_DONNEES.md » du dépôt décrit la base de données, les prestataires et la marche à suivre ; relis-le une fois par an.</p>
+        </div>
+    </section>
+</main>
+{% endblock %}

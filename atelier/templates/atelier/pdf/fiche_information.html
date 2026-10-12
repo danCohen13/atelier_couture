@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8">{% include 'atelier/pdf/_style_finance.html' %}
+<style> li { margin-bottom: 4px; } .sign td { border-bottom: 1px solid #211C17; height: 28px; } </style></head>
+<body>
+<h1>Information sur vos données personnelles</h1>
+<p class="muted">{{ atelier }} — version du {{ date_edition|date:"d/m/Y" }}</p>
+
+<h2>Qui détient ces données ?</h2>
+<p>{{ atelier }}. Pour toute question ou demande : {% if contact %}<strong>{{ contact }}</strong>{% else %}(coordonnées à compléter){% endif %}.</p>
+
+<h2>Quelles données et pourquoi ?</h2>
+<ul>
+    <li><strong>Identité et coordonnées</strong> (nom, téléphone, e-mail) : vous contacter pour les essayages, la remise et le suivi de votre commande.</li>
+    <li><strong>Mesures et notes de morphologie</strong> : réaliser ou ajuster votre robe.</li>
+    <li><strong>Date de naissance</strong> (facultative) : seulement si vous souhaitez la communiquer.</li>
+    <li><strong>Commandes, locations et paiements</strong> : facturation et comptabilité.</li>
+</ul>
+<p>Ces données ne servent à aucune publicité et ne sont ni vendues ni cédées.</p>
+
+<h2>Devez-vous les fournir ?</h2>
+<p>Votre nom et vos mesures sont nécessaires pour réaliser une robe sur mesure : sans eux, nous ne pourrons pas réaliser votre commande. Le téléphone est nécessaire pour vous joindre. L'e-mail et la date de naissance sont facultatifs.</p>
+
+<h2>Qui y a accès ?</h2>
+<p>Seule la personne qui gère l'atelier. Les données sont hébergées chez des prestataires techniques (hébergement du site, base de données, stockage d'images), situés en Israël, en Europe ou aux États-Unis, liés par contrat et tenus de les protéger.</p>
+
+<h2>Combien de temps ?</h2>
+<p>Les documents comptables sont conservés pendant la durée prévue par la loi. Vos coordonnées et mesures sont effacées après {{ annees }} ans sans commande, location ni paiement, ou plus tôt sur simple demande.</p>
+
+<h2>Vos droits</h2>
+<p>Vous pouvez consulter les données qui vous concernent, demander leur correction, ou leur suppression. Nous répondons par écrit, et motivons tout refus.</p>
+
+<table class="sign" style="margin-top: 24px;">
+    <tr><td>Nom de la cliente :</td><td>Date :</td><td>Signature :</td></tr>
+</table>
+<p class="mention">J'ai pris connaissance de cette information.</p>
+</body></html>

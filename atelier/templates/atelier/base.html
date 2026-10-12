@@ -69,7 +69,7 @@
             <div class="sidebar-title">Navigation</div>
             <nav class="sidebar-menu">
                 <!-- Atelier & confections sur mesure -->
-                <a href="{% url 'dashboard' %}" class="sidebar-link {% if request.resolver_match.url_name != 'finances' and request.resolver_match.url_name != 'planning' and 'location' not in request.resolver_match.url_name %}is-active{% endif %}">
+                <a href="{% url 'dashboard' %}" class="sidebar-link {% if request.resolver_match.url_name != 'finances' and request.resolver_match.url_name != 'planning' and 'location' not in request.resolver_match.url_name and 'confidentialite' not in request.resolver_match.url_name and request.path|slice:':10' != '/finances/' %}is-active{% endif %}">
                     Atelier &amp; modèles
                 </a>
 
@@ -86,6 +86,11 @@
                 <!-- Finances & bilans -->
                 <a href="{% url 'finances' %}" class="sidebar-link {% if request.path|slice:':10' == '/finances/' %}is-active{% endif %}">
                     Finances &amp; bilans
+                </a>
+
+                <!-- Protection des données des clientes -->
+                <a href="{% url 'confidentialite' %}" class="sidebar-link {% if 'confidentialite' in request.resolver_match.url_name %}is-active{% endif %}">
+                    Confidentialité
                 </a>
             </nav>
         </aside>

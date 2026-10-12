@@ -269,3 +269,11 @@ if TESTING:
 
 GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
 GEMINI_MODEL = os.environ.get('GEMINI_MODEL', 'gemini-3.5-flash')
+
+
+# --- PROTECTION DES DONNÉES (fiche d'information remise aux clientes) ---
+ATELIER_NOM = os.environ.get('ATELIER_NOM', 'Cohen Haute Couture')
+# Coordonnées (e-mail ou téléphone) où une cliente peut exercer ses droits.
+CONTACT_CONFIDENTIALITE = os.environ.get('CONTACT_CONFIDENTIALITE', '').strip()
+# Durée sans activité après laquelle un dossier cliente est proposé à l'anonymisation.
+CONSERVATION_ANNEES_INACTIVITE = int(os.environ.get('CONSERVATION_ANNEES_INACTIVITE', '3') or 3)

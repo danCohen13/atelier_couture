@@ -34,7 +34,21 @@ class Client(models.Model):
     tour_taille = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     tour_hanches = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     hauteur_buste = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
-    notes_morphologie = models.TextField(blank=True, null=True)
+    notes_morphologie = models.TextField(
+        blank=True, null=True,
+        help_text="Morphologie uniquement (épaules, posture…). N'écris aucune information médicale."
+    )
+
+    # Protection de la vie privée : preuve que la cliente a reçu la fiche d'information,
+    # date de création (pour repérer les dossiers inactifs) et trace d'une anonymisation.
+    information_remise_le = models.DateField(
+        blank=True, null=True, verbose_name="Fiche d'information remise le")
+    cree_le = models.DateTimeField(auto_now_add=True, null=True)
+    anonymisee_le = models.DateTimeField(blank=True, null=True)
+
+    @property
+    def est_anonymisee(self):
+        return self.anonymisee_le is not None
 
     def __str__(self):
         return f"{self.nom.upper()} {self.prenom}"
@@ -486,3 +500,25 @@ class ParametresFinance(models.Model):
 
     def __str__(self):
         return "Paramètres de finance"
+
+
+
+class IncidentSecurite(models.Model):
+    """Registre des incidents de sécurité (obligation de documenter, règlement de sécurité 2017)."""
+    date_constat = models.DateField(default=timezone.localdate, verbose_name="Date du constat")
+    description = models.TextField(help_text="Ce qui s'est passé (perte d'un téléphone, accès suspect…)")
+    donnees_concernees = models.CharField(max_length=255, blank=True, verbose_name="Données concernées")
+    mesures_prises = models.TextField(blank=True, verbose_name="Mesures prises")
+    grave = models.BooleanField(
+        default=False, verbose_name="Incident grave",
+        help_text="Accès non autorisé ou atteinte à l'intégrité d'une partie importante des données : "
+                  "à signaler immédiatement à l'Autorité israélienne de protection de la vie privée.")
+    signale_autorite_le = models.DateField(blank=True, null=True, verbose_name="Signalé à l'Autorité le")
+
+    class Meta:
+        ordering = ['-date_constat', '-id']
+        verbose_name = "Incident de sécurité"
+        verbose_name_plural = "Incidents de sécurité"
+
+    def __str__(self):
+        return f"{self.date_constat} — {self.description[:50]}"

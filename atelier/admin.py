@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import Client, Robe, Tache
 from .models import RobeLocation, Location
-from .models import DepenseRecurrente, ParametresFinance, Paiement, Transaction
+from .models import IncidentSecurite, DepenseRecurrente, ParametresFinance, Paiement, Transaction
 
 # Enregistrement des modèles pour qu'ils apparaissent dans l'interface
 admin.site.register(Client)
@@ -26,3 +26,9 @@ admin.site.register(Paiement)
 admin.site.register(DepenseRecurrente)
 admin.site.register(ParametresFinance)
 admin.site.register(Transaction)
+
+
+@admin.register(IncidentSecurite)
+class IncidentSecuriteAdmin(admin.ModelAdmin):
+    list_display = ('date_constat', 'description', 'grave', 'signale_autorite_le')
+    list_filter = ('grave',)

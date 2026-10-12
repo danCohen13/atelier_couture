@@ -11,6 +11,17 @@
                 {% if cliente.telephone %}{{ cliente.telephone }} · {% endif %}
                 {% if cliente.date_naissance %}Née le {{ cliente.date_naissance|date:"d/m/Y" }}{% endif %}
             </p>
+            <p style="margin: 6px 0 0; font-size: 12.5px; color: var(--ink-soft);">
+                {% if cliente.est_anonymisee %}
+                    Dossier anonymisé le {{ cliente.anonymisee_le|date:"d/m/Y" }}.
+                {% elif cliente.information_remise_le %}
+                    Fiche d'information remise le {{ cliente.information_remise_le|date:"d/m/Y" }}.
+                {% else %}
+                    Fiche d'information non remise —
+                    <form method="post" action="{% url 'information_remise' cliente.id %}" class="inline-form">{% csrf_token %}<button type="submit" class="pill-btn">marquer comme remise aujourd'hui</button></form>
+                    · <a href="{% url 'confidentialite_fiche_pdf' %}" target="_blank">imprimer la fiche</a>
+                {% endif %}
+            </p>
         </div>
         <div class="hero-card__meta" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
             <!-- 📄 Bouton d'exportation PDF -->
@@ -21,6 +32,13 @@
             <a href="{% url 'creer_location' %}?client_id={{ cliente.id }}" class="btn btn--outline">
                 👗 Louer une robe
             </a>
+            {% if not cliente.est_anonymisee %}
+            <form method="post" action="{% url 'supprimer_cliente' cliente.id %}" class="inline-form"
+                  onsubmit="return confirm('Effacer les données personnelles de cette cliente ? Cette action est définitive. Les commandes et paiements déjà enregistrés sont conservés sans son identité.');">
+                {% csrf_token %}
+                <button type="submit" class="btn btn--outline">Effacer ses données</button>
+            </form>
+            {% endif %}
             <!-- 🧵 Nouvelle confection sur mesure -->
             <a href="{% url 'ajouter_robe' %}?client_id={{ cliente.id }}" class="btn btn--primary">
                 Lancer une confection
