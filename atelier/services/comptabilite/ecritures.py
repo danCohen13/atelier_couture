@@ -1,7 +1,6 @@
 """Écritures (automatiques et manuelles), période et bilan, dépenses récurrentes."""
 from datetime import date
 
-from django.db import transaction as db_transaction
 from django.utils import timezone
 
 from ...models import SYMBOLES_DEVISE, DepenseRecurrente, Location, Robe, Transaction
@@ -13,29 +12,46 @@ def _mois_suivant(annee, mois):
 
 
 def generer_depenses_recurrentes(aujourdhui=None):
-    """Crée les écritures manquantes des dépenses récurrentes jusqu'à aujourd'hui (idempotent)."""
+    """Crée les écritures manquantes des dépenses récurrentes jusqu'à aujourd'hui (idempotent).
+
+    Deux requêtes de lecture au total (récurrentes actives, écritures déjà créées), et une seule
+    insertion groupée s'il manque quelque chose ; aucune écriture sinon.
+    """
     aujourdhui = aujourdhui or timezone.localdate()
-    creees = 0
-    with db_transaction.atomic():
-        for rec in DepenseRecurrente.objects.filter(actif=True):
-            existantes = set(rec.transactions.values_list('date', flat=True))
-            annee, mois = rec.date_debut.year, rec.date_debut.month
-            while (annee, mois) <= (aujourdhui.year, aujourdhui.month):
-                jour = date(annee, mois, min(max(rec.jour_du_mois, 1), 28))
-                if jour >= rec.date_debut and jour <= aujourdhui and jour not in existantes:
-                    Transaction.objects.create(
-                        type='DEPENSE', montant=rec.montant, categorie=rec.categorie,
-                        designation=rec.designation, date=jour, recurrente=rec,
-                    )
-                    creees += 1
-                annee, mois = _mois_suivant(annee, mois)
-    return creees
+    actives = list(DepenseRecurrente.objects.filter(actif=True))
+    if not actives:
+        return 0
+    deja = set(Transaction.objects.filter(recurrente__in=actives).values_list('recurrente_id', 'date'))
+    a_creer = []
+    for rec in actives:
+        annee, mois = rec.date_debut.year, rec.date_debut.month
+        while (annee, mois) <= (aujourdhui.year, aujourdhui.month):
+            jour = date(annee, mois, min(max(rec.jour_du_mois, 1), 28))
+            if rec.date_debut <= jour <= aujourdhui and (rec.pk, jour) not in deja:
+                a_creer.append(Transaction(
+                    type='DEPENSE', montant=rec.montant, categorie=rec.categorie,
+                    designation=rec.designation, date=jour, recurrente=rec))
+            annee, mois = _mois_suivant(annee, mois)
+    if a_creer:
+        Transaction.objects.bulk_create(a_creer)
+    return len(a_creer)
 
 
-def construire_lignes(base='FACTURE'):
-    """Toutes les écritures (automatiques + manuelles). base = 'FACTURE' ou 'ENCAISSE'."""
+def charger_dossiers():
+    """Robes et contrats non annulés, avec clientes et paiements : chargés UNE fois par page
+    puis partagés entre les calculs (écritures, créances, cautions, alertes)."""
+    robes = list(Robe.objects.select_related('client').prefetch_related('paiements'))
+    contrats = list(Location.objects.exclude(statut='ANNULEE')
+                    .select_related('client', 'robe_location').prefetch_related('paiements'))
+    return robes, contrats
+
+
+def construire_lignes(base='FACTURE', robes=None, contrats=None):
+    """Toutes les écritures (automatiques + manuelles). base = 'FACTURE' ou 'ENCAISSE'.
+    `robes` et `contrats` : dossiers déjà chargés (sinon chargés ici)."""
+    if robes is None or contrats is None:
+        robes, contrats = charger_dossiers()
     lignes = []
-    robes = Robe.objects.select_related('client').prefetch_related('paiements')
     for robe in robes:
         if robe.cout_tissu:
             lignes.append(LigneCompte(
@@ -52,8 +68,6 @@ def construire_lignes(base='FACTURE'):
                 robe.date_livraison, 'RECETTE', 'Paiement client (auto)', f"Facturation — {robe.nom_modele}",
                 robe, robe.prix_total, robe.devise, auto=True, source='confection'))
 
-    contrats = (Location.objects.exclude(statut='ANNULEE')
-                .select_related('client', 'robe_location').prefetch_related('paiements'))
     for loc in contrats:
         stock = loc.robe_location
         etiquette = f"{stock.nom_modele} ({stock.reference_stock}) · {loc.client}"

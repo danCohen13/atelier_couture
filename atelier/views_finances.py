@@ -29,7 +29,7 @@ def lire_filtres(request):
 @login_required
 def finances_view(request):
     periode, base = lire_filtres(request)
-    return render(request, 'atelier/finances/finances.html', compta.tableau_de_bord(periode, base))
+    return render(request, 'atelier/finances/finances.html', compta.tableau_de_bord(periode, base, page=request.GET.get('page')))
 
 
 @login_required

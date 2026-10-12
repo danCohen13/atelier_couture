@@ -1,6 +1,7 @@
 """Données de la page Finances."""
 from itertools import groupby
 
+from django.core.paginator import Paginator
 from django.utils import timezone
 
 from ...models import SYMBOLES_DEVISE, ParametresFinance
@@ -9,7 +10,7 @@ from .analyses import comparaison_mensuelle, objectif_mensuel, repartition_activ
 from .base import DEVISE_PRINCIPALE, MOIS_FR
 from .conversion import somme_par_devise, total_global
 from .creances import alertes, cautions_a_suivre, creances, previsionnel
-from .ecritures import bilan, construire_lignes, filtrer_periode, generer_depenses_recurrentes
+from .ecritures import bilan, charger_dossiers, construire_lignes, filtrer_periode, generer_depenses_recurrentes
 
 
 def grouper_par_mois(lignes):
@@ -21,13 +22,17 @@ def grouper_par_mois(lignes):
     ]
 
 
-def tableau_de_bord(periode, base, aujourdhui=None):
+LIGNES_PAR_PAGE = 50
+
+
+def tableau_de_bord(periode, base, aujourdhui=None, page=1):
     """Tout ce qu'affiche la page Finances (la vue n'a plus qu'à rendre ce dictionnaire)."""
     aujourdhui = aujourdhui or timezone.localdate()
     params = ParametresFinance.charger()
 
     generer_depenses_recurrentes(aujourdhui)
-    toutes = construire_lignes(base)
+    robes, contrats = charger_dossiers()
+    toutes = construire_lignes(base, robes, contrats)
 
     # Graphe : historique complet, uniquement dans la devise de l'atelier.
     lignes_graphe = [l for l in toutes if l.devise == DEVISE_PRINCIPALE]
@@ -37,8 +42,12 @@ def tableau_de_bord(periode, base, aujourdhui=None):
     principal = bilan(lignes, DEVISE_PRINCIPALE)
     autres_bilans = [bilan(lignes, d) for d in sorted({l.devise for l in lignes} - {DEVISE_PRINCIPALE})]
 
-    elements = creances(aujourdhui)
-    cautions = cautions_a_suivre()
+    elements = creances(aujourdhui, robes, contrats)
+    cautions = cautions_a_suivre(contrats)
+
+    # Le grand livre est paginé : une page de plusieurs centaines d'opérations pèse plus d'1 Mo.
+    lignes.sort(key=lambda l: l.date, reverse=True)
+    pagination = Paginator(lignes, LIGNES_PAR_PAGE).get_page(page)
 
     return {
         'total_recettes': principal['recettes'],
@@ -47,7 +56,9 @@ def tableau_de_bord(periode, base, aujourdhui=None):
         'devise_symbole': SYMBOLES_DEVISE[DEVISE_PRINCIPALE],
         'autres_bilans': autres_bilans,
         'total_global': total_global(lignes, params) if autres_bilans else None,
-        'groupes': grouper_par_mois(lignes),
+        'groupes': grouper_par_mois(pagination.object_list),
+        'pagination': pagination,
+        'nb_operations': len(lignes),
         'periode': periode,
         'base': base,
         'chart_data': chart_data,
@@ -59,6 +70,6 @@ def tableau_de_bord(periode, base, aujourdhui=None):
         'cautions_detenues': somme_par_devise(
             (c['location'].devise, c['location'].caution_montant) for c in cautions),
         'previsionnel': previsionnel(elements, aujourdhui),
-        'alertes': alertes(elements, cautions, aujourdhui),
+        'alertes': alertes(elements, cautions, aujourdhui, contrats),
         'parametres': params,
     }

@@ -22,6 +22,7 @@ from .tableau import grouper_par_mois, tableau_de_bord
 
 __all__ = [
     'DEVISE_PRINCIPALE', 'MOIS_FR', 'ZERO', 'LigneCompte', 'alertes', 'bilan', 'cautions_a_suivre',
+    'charger_dossiers',
     'comparaison_mensuelle', 'construire_lignes', 'convertir_lignes', 'creances', 'en_shekels',
     'filtrer_periode', 'generer_depenses_recurrentes', 'grouper_par_mois', 'lignes_csv',
     'objectif_mensuel', 'previsionnel', 'rentabilite_robes', 'rentabilite_stock', 'repartition_activites',

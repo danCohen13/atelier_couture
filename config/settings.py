@@ -98,6 +98,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'django.middleware.gzip.GZipMiddleware',  # Pages HTML compressées : 5 à 10 fois plus légères
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',  # Fichiers statiques servis directement par Python
     'django.contrib.sessions.middleware.SessionMiddleware',

@@ -275,6 +275,18 @@
         {% empty %}
         <div class="card empty-state">Aucune opération sur cette période.</div>
         {% endfor %}
+
+        {% if pagination.paginator.num_pages > 1 %}
+        <nav class="pager" aria-label="Pages d'opérations">
+            {% if pagination.has_previous %}
+            <a class="btn btn--outline" href="?periode={{ periode }}{% if base == 'ENCAISSE' %}&amp;base=encaisse{% endif %}&amp;page={{ pagination.previous_page_number }}">← Plus récentes</a>
+            {% endif %}
+            <span class="pager__info">Page {{ pagination.number }} sur {{ pagination.paginator.num_pages }} · {{ nb_operations }} opérations</span>
+            {% if pagination.has_next %}
+            <a class="btn btn--outline" href="?periode={{ periode }}{% if base == 'ENCAISSE' %}&amp;base=encaisse{% endif %}&amp;page={{ pagination.next_page_number }}">Plus anciennes →</a>
+            {% endif %}
+        </nav>
+        {% endif %}
     </section>
 
     <details class="fin-help">

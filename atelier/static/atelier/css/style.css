@@ -1867,3 +1867,6 @@ body.pdf-body {
   .tx__icon { width: 30px; height: 30px; font-size: 14px; }
   .fin-alert__link { margin-left: 0; }
 }
+
+.pager { display: flex; justify-content: center; align-items: center; gap: 16px; flex-wrap: wrap; margin: 20px 0 0; }
+.pager__info { color: var(--ink-soft); font-size: 13.5px; }

@@ -1,15 +1,18 @@
 """Créances, cautions à suivre, prévisionnel et alertes."""
 from django.utils import timezone
 
-from ...models import Location, Robe
 from .conversion import somme_par_devise
+from .ecritures import charger_dossiers
 
 
-def creances(aujourdhui=None):
-    """Sommes restant à encaisser (robes et locations non annulées), avec retard éventuel."""
+def creances(aujourdhui=None, robes=None, contrats=None):
+    """Sommes restant à encaisser (robes et locations non annulées), avec retard éventuel.
+    `robes` et `contrats` : dossiers déjà chargés (sinon chargés ici)."""
     aujourdhui = aujourdhui or timezone.localdate()
+    if robes is None or contrats is None:
+        robes, contrats = charger_dossiers()
     elements = []
-    for robe in Robe.objects.select_related('client').prefetch_related('paiements'):
+    for robe in robes:
         reste = robe.reste_a_payer
         if robe.prix_total and reste > 0:
             elements.append({
@@ -18,8 +21,7 @@ def creances(aujourdhui=None):
                 'paye': robe.total_paye, 'reste': reste, 'echeance': robe.date_livraison,
                 'en_retard': robe.date_livraison < aujourdhui,
             })
-    for loc in (Location.objects.exclude(statut='ANNULEE').select_related('client', 'robe_location')
-                .prefetch_related('paiements')):
+    for loc in contrats:
         reste = loc.reste_a_payer
         if loc.prix_convenu and reste > 0:
             elements.append({
@@ -32,11 +34,14 @@ def creances(aujourdhui=None):
     return elements
 
 
-def cautions_a_suivre():
+def cautions_a_suivre(contrats=None):
     """Cautions détenues (chèque / empreinte) : à restituer une fois la robe rentrée."""
+    if contrats is None:
+        contrats = charger_dossiers()[1]
     res = []
-    for loc in (Location.objects.exclude(statut='ANNULEE').filter(caution_statut='ENREGISTREE')
-                .select_related('client', 'robe_location')):
+    for loc in contrats:
+        if loc.caution_statut != 'ENREGISTREE':
+            continue
         res.append({'location': loc, 'a_restituer': bool(loc.date_retour_effectif) or loc.statut == 'TERMINEE'})
     res.sort(key=lambda c: (not c['a_restituer'], c['location'].date_fin_prevue))
     return res
@@ -61,7 +66,9 @@ def previsionnel(elements, aujourdhui=None):
     return res
 
 
-def alertes(elements, cautions, aujourdhui=None):
+def alertes(elements, cautions, aujourdhui=None, contrats=None):
+    if contrats is None:
+        contrats = charger_dossiers()[1]
     aujourdhui = aujourdhui or timezone.localdate()
     liste = []
     en_retard = [e for e in elements if e['en_retard']]
@@ -70,8 +77,9 @@ def alertes(elements, cautions, aujourdhui=None):
     a_restituer = [c for c in cautions if c['a_restituer']]
     if a_restituer:
         liste.append(f"{len(a_restituer)} caution(s) à restituer ou à régulariser")
-    retards = Location.objects.filter(statut__in=['EN_COURS', 'EN_RETARD'], date_retour_effectif__isnull=True,
-                                      date_fin_prevue__lt=aujourdhui).count()
+    retards = sum(1 for loc in contrats
+                  if loc.statut in ('EN_COURS', 'EN_RETARD') and loc.date_retour_effectif is None
+                  and loc.date_fin_prevue < aujourdhui)
     if retards:
         liste.append(f"{retards} robe(s) louée(s) pas encore rendue(s)")
     return liste
