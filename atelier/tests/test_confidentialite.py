@@ -7,7 +7,7 @@ from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.utils import timezone
 
-from atelier.models import Client, IncidentSecurite, Location, Paiement, Robe, RobeLocation, Transaction
+from atelier.models import Client, IncidentSecurite, Location, Paiement, Robe, RobeLocation
 from atelier.services import confidentialite as vp
 
 

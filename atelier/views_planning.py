@@ -19,7 +19,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.http import require_GET
 
-from .models import Robe, Location
+from .models import Location, Robe
 
 # Garde-fou : FullCalendar demande au plus ~6 semaines en vue mensuelle.
 DUREE_MAX_JOURS = 120

@@ -1,7 +1,17 @@
 from django.contrib import admin
-from .models import Client, Robe, Tache
-from .models import RobeLocation, Location
-from .models import IncidentSecurite, DepenseRecurrente, ParametresFinance, Paiement, Transaction
+
+from .models import (
+    Client,
+    DepenseRecurrente,
+    IncidentSecurite,
+    Location,
+    Paiement,
+    ParametresFinance,
+    Robe,
+    RobeLocation,
+    Tache,
+    Transaction,
+)
 
 # Enregistrement des modèles pour qu'ils apparaissent dans l'interface
 admin.site.register(Client)

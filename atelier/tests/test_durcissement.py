@@ -189,7 +189,7 @@ class DatesLocalesTests(TestCase):
             client=cliente, nom_modele='Robe', date_commencement=datetime.date(2026, 10, 1),
             date_livraison=datetime.date(2026, 10, 14),
         )
-        with mock.patch('atelier.models.timezone.localdate', return_value=datetime.date(2026, 10, 11)):
+        with mock.patch('django.utils.timezone.localdate', return_value=datetime.date(2026, 10, 11)):
             self.assertEqual(robe.jours_restants, 3)
 
     def test_une_location_est_en_retard_selon_la_date_locale(self):
@@ -202,7 +202,7 @@ class DatesLocalesTests(TestCase):
         loc = Location(client=cliente, robe_location=stock, date_debut=datetime.date(2026, 10, 1),
                        date_fin_prevue=datetime.date(2026, 10, 10), prix_convenu=100, caution_montant=100,
                        statut='EN_COURS')
-        with mock.patch('atelier.models.timezone.localdate', return_value=datetime.date(2026, 10, 11)):
+        with mock.patch('django.utils.timezone.localdate', return_value=datetime.date(2026, 10, 11)):
             self.assertTrue(loc.est_en_retard)
-        with mock.patch('atelier.models.timezone.localdate', return_value=datetime.date(2026, 10, 10)):
+        with mock.patch('django.utils.timezone.localdate', return_value=datetime.date(2026, 10, 10)):
             self.assertFalse(loc.est_en_retard)

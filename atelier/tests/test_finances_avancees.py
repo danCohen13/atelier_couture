@@ -9,7 +9,14 @@ from django.test import TestCase
 from django.urls import reverse
 
 from atelier.models import (
-    Client, DepenseRecurrente, Location, Paiement, ParametresFinance, Robe, RobeLocation, Transaction,
+    Client,
+    DepenseRecurrente,
+    Location,
+    Paiement,
+    ParametresFinance,
+    Robe,
+    RobeLocation,
+    Transaction,
 )
 from atelier.services import comptabilite as compta
 
@@ -469,7 +476,7 @@ class ExportsEtDocumentsTests(Base):
         self.assertEqual(self.client.get(f'/finances/document/autre/{robe.pk}/devis.pdf').status_code, 404)
 
     def test_contenu_du_document_avec_mention(self):
-        from atelier.views_finances import MENTION_DOCUMENT
+        from atelier.views_documents import MENTION_DOCUMENT
         robe = self.robe()
         page = self.client.get(reverse('paiements_robe', args=[robe.pk]))
         self.assertContains(page, 'Facture PDF')

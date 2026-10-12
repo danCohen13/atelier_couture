@@ -137,14 +137,15 @@ class FormatDatesFrancaisTests(TestCase):
 
     def test_widgets_affichent_jj_mm_aaaa(self):
         import datetime
-        from atelier.forms import TransactionForm, LocationForm, RetourLocationForm
+
+        from atelier.forms import LocationForm, RetourLocationForm, TransactionForm
         d = datetime.date(2026, 7, 4)
         self.assertIn('value="04/07/2026"', str(TransactionForm(initial={'date': d})['date']))
         self.assertIn('value="04/07/2026"', str(LocationForm(initial={'date_debut': d})['date_debut']))
         self.assertIn('value="04/07/2026"', str(RetourLocationForm(initial={'date_retour_effectif': d})['date_retour_effectif']))
 
     def test_champs_relies_au_selecteur_flatpickr(self):
-        from atelier.forms import TransactionForm, LocationForm
+        from atelier.forms import LocationForm, TransactionForm
         for html in (str(TransactionForm()['date']), str(LocationForm()['date_fin_prevue'])):
             self.assertIn('datepicker', html)
             self.assertIn('placeholder="jj/mm/aaaa"', html)

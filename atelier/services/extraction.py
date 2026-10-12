@@ -7,8 +7,8 @@ import datetime
 
 from django.utils import timezone
 
-from .gemini import generer_json
 from ..models import Transaction
+from .gemini import generer_json
 
 CHAMPS_MESURES = ("tour_poitrine", "tour_taille", "tour_hanches", "hauteur_buste", "longueur_robe")
 

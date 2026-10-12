@@ -1,0 +1,19 @@
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+extend-exclude = ["migrations", "staticfiles", "venv"]
+
+[tool.ruff.lint]
+# F : erreurs réelles (imports inutilisés, noms indéfinis) ; I : imports triés.
+select = ["F", "I"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["atelier", "config"]
+
+[tool.coverage.run]
+source = ["atelier"]
+omit = ["*/migrations/*", "*/tests/*"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true

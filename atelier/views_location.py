@@ -1,9 +1,10 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
-from .models import RobeLocation, Location, Client
-from .forms import RobeLocationForm, LocationForm, RetourLocationForm
+
+from .forms import LocationForm, RetourLocationForm, RobeLocationForm
+from .models import Client, Location, RobeLocation
 
 
 @login_required

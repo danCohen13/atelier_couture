@@ -1,10 +1,10 @@
 import datetime
 from decimal import Decimal
+
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.urls import reverse
-from django.utils import timezone
 
 from atelier.forms import LocationForm, RetourLocationForm, RobeLocationForm
 from atelier.models import Client, Location, RobeLocation

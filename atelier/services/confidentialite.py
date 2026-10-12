@@ -1,10 +1,9 @@
 """Règles de vie privée : dossiers inactifs, suppression ou anonymisation d'une cliente."""
-import datetime
 
 from django.db import transaction
 from django.utils import timezone
 
-from ..models import Client, Location, Paiement, Robe
+from ..models import Client, Paiement
 
 
 def peut_etre_supprimee(cliente):

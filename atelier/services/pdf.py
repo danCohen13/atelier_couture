@@ -3,8 +3,10 @@ import os
 from io import BytesIO
 
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.staticfiles import finders
 from django.http import HttpResponse
+from django.shortcuts import redirect
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 
@@ -33,3 +35,13 @@ def render_to_pdf(template_src, context_dict=None):
     if not pdf.err:
         return HttpResponse(result.getvalue(), content_type="application/pdf")
     return None
+
+
+def reponse_pdf(request, gabarit, contexte, nom_fichier, redirection):
+    """PDF affiché dans le navigateur ; en cas d'échec, message d'erreur et retour à `redirection`."""
+    reponse = render_to_pdf(gabarit, contexte)
+    if reponse is None:
+        messages.error(request, "Le PDF n'a pas pu être généré.")
+        return redirect(redirection)
+    reponse['Content-Disposition'] = f'inline; filename="{nom_fichier}"'
+    return reponse

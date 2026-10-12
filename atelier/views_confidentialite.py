@@ -7,7 +7,7 @@ from django.views.decorators.http import require_POST
 
 from .models import Client
 from .services import confidentialite as vie_privee
-from .services.pdf import render_to_pdf
+from .services.pdf import reponse_pdf
 
 
 def _annees(request):
@@ -32,17 +32,14 @@ def confidentialite(request):
 
 @login_required
 def fiche_information_pdf(request):
-    reponse = render_to_pdf('atelier/pdf/fiche_information.html', {
+    contexte = {
         'atelier': settings.ATELIER_NOM,
         'contact': settings.CONTACT_CONFIDENTIALITE,
         'annees': settings.CONSERVATION_ANNEES_INACTIVITE,
         'date_edition': timezone.localdate(),
-    })
-    if reponse is None:
-        messages.error(request, "Le PDF n'a pas pu être généré.")
-        return redirect('confidentialite')
-    reponse['Content-Disposition'] = 'inline; filename="fiche-information-cliente.pdf"'
-    return reponse
+    }
+    return reponse_pdf(request, 'atelier/pdf/fiche_information.html', contexte,
+                       'fiche-information-cliente.pdf', 'confidentialite')
 
 
 @login_required

@@ -2,16 +2,15 @@ import json
 
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 
 from .forms import ClientForm, RobeForm
 from .models import Client, Robe, Tache
 from .services.extraction import extraire_mesures
 from .services.gemini import ErreurIA
-from .services.pdf import render_to_pdf
-
+from .services.pdf import reponse_pdf
 
 # ==============================================================================
 # Vues Confection & Atelier
@@ -71,13 +70,8 @@ def exporter_pdf_cliente(request, client_id):
             'total_prix': total_prix,
         }
         
-        response = render_to_pdf('atelier/pdf/fiche_cliente.html', context)
-        if response:
-            filename = f"Recapitulatif_{cliente.nom}_{cliente.prenom}.pdf"
-            response['Content-Disposition'] = f'inline; filename="{filename}"'
-            return response
-            
-        return HttpResponse("Erreur lors de la génération du PDF", status=500)
+        return reponse_pdf(request, 'atelier/pdf/fiche_cliente.html', context,
+                           f"Recapitulatif_{cliente.nom}_{cliente.prenom}.pdf", 'fiche_cliente')
 
     robes = cliente.robes.all()
     return render(request, 'atelier/pdf/selection_robes.html', {'client': cliente, 'robes': robes})
