@@ -959,6 +959,34 @@ button.header-link { background: none; }
 .flatpickr-day.nextMonthDay { color: var(--ink-faint) !important; }
 .flatpickr-prev-month svg, .flatpickr-next-month svg { fill: var(--ink-soft) !important; }
 
+/* Dates déjà réservées de la robe choisie (contrat de location) */
+.flatpickr-day.jour-reserve:not(.selected) {
+  background: var(--wine-bg) !important;
+  border-color: var(--wine) !important;
+  color: var(--wine) !important;
+  text-decoration: line-through;
+}
+.flatpickr-day.jour-pressing:not(.selected) {
+  background: var(--amber-bg) !important;
+  border-color: var(--amber-bg) !important;
+  color: var(--amber) !important;
+}
+.legende-reservations {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  align-items: center;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  margin: 4px 0 18px;
+}
+.legende-reservations[hidden] { display: none; }
+.legende-reservations__item { display: inline-flex; align-items: center; gap: 6px; }
+.legende-reservations__note { flex-basis: 100%; color: var(--ink-faint); }
+.pastille { width: 12px; height: 12px; border-radius: 2px; border: 1px solid; }
+.pastille--reservee { background: var(--wine-bg); border-color: var(--wine); }
+.pastille--pressing { background: var(--amber-bg); border-color: var(--amber); }
+
 /* ---------------------------------------------------------------------
    Bouton d'import Cloudinary (croquis / tissu)
    --------------------------------------------------------------------- */

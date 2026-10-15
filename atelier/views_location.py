@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
@@ -64,6 +66,30 @@ def tableau_bord_locations(request):
     })
 
 
+def periodes_reservees_par_robe():
+    """
+    Périodes déjà occupées de chaque robe, pour les afficher dans le calendrier
+    du contrat : {robe_id: [{debut, fin, fin_pressing, cliente, contrat}]}.
+    Seules les réservations non annulées et pas encore terminées (pressing compris) sont reprises.
+    """
+    aujourdhui = timezone.localdate()
+    periodes = {}
+    locations = Location.objects.exclude(statut='ANNULEE').select_related('client')
+    for loc in locations:
+        fin = loc.date_retour_effectif or loc.date_fin_prevue
+        fin_pressing = fin + timedelta(days=loc.delai_tampon_jours)
+        if fin_pressing < aujourdhui:
+            continue
+        periodes.setdefault(loc.robe_location_id, []).append({
+            'debut': loc.date_debut.isoformat(),
+            'fin': fin.isoformat(),
+            'fin_pressing': fin_pressing.isoformat(),
+            'cliente': str(loc.client),
+            'contrat': loc.pk,
+        })
+    return periodes
+
+
 @login_required
 def creer_location(request):
     """Création d'un contrat avec préremplissage automatique si demandé depuis une fiche cliente ou robe."""
@@ -91,7 +117,8 @@ def creer_location(request):
 
     return render(request, 'atelier/location/form_location.html', {
         'form': form,
-        'titre': "Établir un nouveau contrat de location"
+        'titre': "Établir un nouveau contrat de location",
+        'periodes_reservees': periodes_reservees_par_robe(),
     })
 
 
