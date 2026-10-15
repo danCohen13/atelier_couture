@@ -290,3 +290,37 @@ class LocationViewsTests(TestCase):
         self.assertEqual(self.location.statut, 'TERMINEE')
         self.assertEqual(self.location.caution_statut, 'RESTITUEE')
         self.assertEqual(self.location.date_retour_effectif, datetime.date.today())
+    def test_creer_location_expose_les_periodes_reservees(self):
+        """Le formulaire reçoit les dates déjà prises de chaque robe pour le calendrier."""
+        Location.objects.create(
+            client=self.cliente,
+            robe_location=self.robe,
+            date_debut=datetime.date.today() + datetime.timedelta(days=20),
+            date_fin_prevue=datetime.date.today() + datetime.timedelta(days=22),
+            prix_convenu=Decimal("220.00"),
+            caution_montant=Decimal("600.00"),
+            statut="ANNULEE",
+        )
+        self.client.login(username="couturiere", password="Password123!")
+        response = self.client.get(reverse('creer_location'))
+        self.assertEqual(response.status_code, 200)
+
+        periodes = response.context['periodes_reservees'][self.robe.id]
+        aujourdhui = datetime.date.today()
+        # Le contrat annulé n'apparaît pas ; seul le contrat en cours est repris, pressing compris
+        self.assertEqual(periodes, [{
+            'debut': aujourdhui.isoformat(),
+            'fin': (aujourdhui + datetime.timedelta(days=2)).isoformat(),
+            'fin_pressing': (aujourdhui + datetime.timedelta(days=4)).isoformat(),
+            'cliente': str(self.cliente),
+            'contrat': self.location.id,
+        }])
+        self.assertContains(response, 'id="periodes-reservees"')
+
+    def test_periodes_reservees_ignore_les_contrats_passes(self):
+        self.location.date_debut = datetime.date.today() - datetime.timedelta(days=10)
+        self.location.date_fin_prevue = datetime.date.today() - datetime.timedelta(days=5)
+        self.location.save()
+        self.client.login(username="couturiere", password="Password123!")
+        response = self.client.get(reverse('creer_location'))
+        self.assertNotIn(self.robe.id, response.context['periodes_reservees'])

@@ -15,6 +15,11 @@
             <form method="post">
                 {% csrf_token %}
                 {{ form.as_p }}
+                <p class="legende-reservations" id="legende-reservations" hidden>
+                    <span class="legende-reservations__item"><span class="pastille pastille--reservee"></span>Déjà réservée</span>
+                    <span class="legende-reservations__item"><span class="pastille pastille--pressing"></span>Pressing (battement)</span>
+                    <span class="legende-reservations__note">Dates indicatives : elles restent sélectionnables, le contrat est vérifié à l'enregistrement.</span>
+                </p>
                 <div class="form-actions">
                     <a href="{% url 'tableau_bord_locations' %}" class="btn btn--outline">Annuler</a>
                     <button type="submit" class="btn btn--primary">Enregistrer le contrat</button>
@@ -23,4 +28,58 @@
         </div>
     </div>
 </main>
+{% endblock %}
+
+{% block scripts %}
+{{ periodes_reservees|json_script:"periodes-reservees" }}
+<script>
+    // Colore dans le calendrier les dates déjà réservées de la robe choisie
+    // (rouge = location, orange = jours de pressing). Les dates restent sélectionnables.
+    window.addEventListener('load', function () {
+        var periodes = JSON.parse(document.getElementById('periodes-reservees').textContent);
+        var selectRobe = document.getElementById('id_robe_location');
+        var legende = document.getElementById('legende-reservations');
+        var calendriers = ['id_date_debut', 'id_date_fin_prevue']
+            .map(function (id) { var el = document.getElementById(id); return el && el._flatpickr; })
+            .filter(Boolean);
+        if (!selectRobe || !calendriers.length) return;
+
+        // La légende se place juste sous la date de retour
+        var champFin = document.getElementById('id_date_fin_prevue').closest('p');
+        if (champFin) champFin.after(legende);
+
+        function formatFr(iso) {
+            var p = iso.split('-');
+            return p[2] + '/' + p[1] + '/' + p[0];
+        }
+
+        function marquerJour(dObj, dStr, fp, dayElem) {
+            var reservations = periodes[selectRobe.value] || [];
+            var jour = fp.formatDate(dayElem.dateObj, 'Y-m-d');
+            var infos = [];
+            reservations.forEach(function (r) {
+                var periode = formatFr(r.debut) + ' → ' + formatFr(r.fin);
+                if (jour >= r.debut && jour <= r.fin) {
+                    dayElem.classList.add('jour-reserve');
+                    infos.push('Réservée – ' + r.cliente + ' (contrat #' + r.contrat + ', ' + periode + ')');
+                } else if (jour > r.fin && jour <= r.fin_pressing) {
+                    dayElem.classList.add('jour-pressing');
+                    infos.push('Pressing après le contrat #' + r.contrat + ' (' + r.cliente + ')');
+                }
+            });
+            if (infos.length) dayElem.title = infos.join('\n');
+        }
+
+        function rafraichir() {
+            calendriers.forEach(function (fp) { fp.redraw(); });
+            legende.hidden = !(periodes[selectRobe.value] || []).length;
+        }
+
+        calendriers.forEach(function (fp) {
+            fp.set('onDayCreate', marquerJour);
+        });
+        selectRobe.addEventListener('change', rafraichir);
+        rafraichir();
+    });
+</script>
 {% endblock %}
