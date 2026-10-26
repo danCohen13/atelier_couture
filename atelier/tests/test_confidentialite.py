@@ -2,13 +2,13 @@
 import datetime
 from decimal import Decimal
 
-from django.contrib.auth.models import User
 from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.utils import timezone
 
-from atelier.models import Client, IncidentSecurite, Location, Paiement, Robe, RobeLocation
+from atelier.models import Atelier, Client, IncidentSecurite, Location, Paiement, Robe, RobeLocation
 from atelier.services import confidentialite as vp
+from atelier.tests.outils import atelier_test, utilisateur_test
 
 
 def jour(offset=0):
@@ -17,9 +17,9 @@ def jour(offset=0):
 
 class Base(TestCase):
     def setUp(self):
-        User.objects.create_user('atelier', password='motdepasse123')
+        utilisateur_test('atelier', password='motdepasse123')
         self.client.login(username='atelier', password='motdepasse123')
-        self.cliente = Client.objects.create(
+        self.cliente = Client.objects.create(atelier=atelier_test(), 
             nom='Dupont', prenom='Claire', telephone='+972501234567', email='c@example.com',
             date_naissance=datetime.date(1990, 1, 1), tour_taille=Decimal('70'),
             notes_morphologie='Épaules larges', information_remise_le=jour(-5))
@@ -51,7 +51,7 @@ class SuppressionEtAnonymisationTests(Base):
         self.assertEqual(robe.paiements.get().montant, Decimal('300'))
 
     def test_notes_de_location_effacees(self):
-        stock = RobeLocation.objects.create(reference_stock='L1', nom_modele='A', taille='38', couleur='x',
+        stock = RobeLocation.objects.create(atelier=atelier_test(), reference_stock='L1', nom_modele='A', taille='38', couleur='x',
                                             prix_location_defaut=1, caution_defaut=1)
         loc = Location.objects.create(client=self.cliente, robe_location=stock, date_debut=jour(), date_fin_prevue=jour(2),
                                       prix_convenu=1, caution_montant=1, notes='Claire veut un ourlet', etat_avant='ok')
@@ -115,29 +115,29 @@ class InformationRemiseTests(Base):
 class InactivesTests(Base):
     def test_dossier_recent_pas_inactif(self):
         Client.objects.filter(pk=self.cliente.pk).update(cree_le=timezone.now())
-        self.assertEqual(vp.clientes_inactives(3), [])
+        self.assertEqual(vp.clientes_inactives(atelier_test(), 3), [])
 
     def test_dossier_ancien_sans_activite(self):
         Client.objects.filter(pk=self.cliente.pk).update(cree_le=timezone.now() - datetime.timedelta(days=5 * 365))
-        ((cliente, derniere),) = vp.clientes_inactives(3)
+        ((cliente, derniere),) = vp.clientes_inactives(atelier_test(), 3)
         self.assertEqual(cliente.pk, self.cliente.pk)
 
     def test_activite_recente_ecarte_le_dossier(self):
         Client.objects.filter(pk=self.cliente.pk).update(cree_le=timezone.now() - datetime.timedelta(days=5 * 365))
         robe = self.robe(livraison=-30)
-        self.assertEqual(vp.clientes_inactives(3), [])
+        self.assertEqual(vp.clientes_inactives(atelier_test(), 3), [])
         robe.date_livraison = jour(-4 * 365)
         robe.save()
-        self.assertEqual(len(vp.clientes_inactives(3)), 1)
+        self.assertEqual(len(vp.clientes_inactives(atelier_test(), 3)), 1)
         Paiement.objects.create(robe=robe, montant=Decimal('10'), date=jour(-10))
-        self.assertEqual(vp.clientes_inactives(3), [])
+        self.assertEqual(vp.clientes_inactives(atelier_test(), 3), [])
 
     def test_anonymisees_exclues_et_ancien_dossier_sans_date_de_creation(self):
         Client.objects.filter(pk=self.cliente.pk).update(cree_le=None)
-        self.assertEqual(len(vp.clientes_inactives(3)), 1)   # dossier historique sans aucune trace
+        self.assertEqual(len(vp.clientes_inactives(atelier_test(), 3)), 1)   # dossier historique sans aucune trace
         self.robe(livraison=-2000)
         vp.anonymiser_cliente(self.cliente)
-        self.assertEqual(vp.clientes_inactives(3), [])
+        self.assertEqual(vp.clientes_inactives(atelier_test(), 3), [])
 
     def test_page_hub(self):
         Client.objects.filter(pk=self.cliente.pk).update(cree_le=timezone.now() - datetime.timedelta(days=5 * 365))
@@ -145,8 +145,8 @@ class InactivesTests(Base):
         self.assertContains(page, 'DUPONT Claire')
         self.assertContains(page, 'Coordonnées à renseigner')
 
-    @override_settings(CONTACT_CONFIDENTIALITE='contact@atelier.example')
     def test_hub_sans_alerte_quand_le_contact_est_renseigne(self):
+        Atelier.objects.filter(pk=atelier_test().pk).update(contact_confidentialite='contact@atelier.example')
         self.assertNotContains(self.client.get(reverse('confidentialite')), 'Coordonnées à renseigner')
 
     def test_parametre_annees_borne(self):
@@ -155,7 +155,7 @@ class InactivesTests(Base):
         self.assertEqual(self.client.get(reverse('confidentialite'), {'annees': '-4'}).context['annees'], 1)
 
     def test_compte_des_dossiers_sans_fiche(self):
-        Client.objects.create(nom='X', prenom='Y')
+        Client.objects.create(atelier=atelier_test(), nom='X', prenom='Y')
         self.assertEqual(self.client.get(reverse('confidentialite')).context['sans_information'], 1)
 
 
@@ -177,7 +177,7 @@ class FicheEtIncidentsTests(Base):
         self.assertEqual(page.count('sidebar-link is-active'), 1)
 
     def test_registre_des_incidents(self):
-        incident = IncidentSecurite.objects.create(description='Téléphone perdu', grave=False)
+        incident = IncidentSecurite.objects.create(atelier=atelier_test(), description='Téléphone perdu', grave=False)
         self.assertEqual(IncidentSecurite.objects.get(), incident)
         self.assertIn('Téléphone perdu', str(incident))
 

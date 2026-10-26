@@ -12,7 +12,7 @@ class ClientForm(forms.ModelForm):
 
     class Meta:
         model = Client
-        exclude = ['cree_le', 'anonymisee_le']
+        exclude = ['atelier', 'cree_le', 'anonymisee_le']
         widgets = {
             'telephone': forms.TextInput(attrs={'placeholder': '+972... ou +336...'}),
             'notes_morphologie': forms.Textarea(attrs={

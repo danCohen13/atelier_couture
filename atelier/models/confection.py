@@ -5,10 +5,12 @@ from decimal import Decimal
 from django.db import models
 from django.utils import timezone
 
+from .ateliers import ModeleAtelier
 from .constantes import DEVISE_CHOICES, SYMBOLES_DEVISE
 
 
-class Robe(models.Model):
+class Robe(ModeleAtelier):
+    PARENTS_ATELIER = ('client',)
     DEVISE_CHOICES = DEVISE_CHOICES
 
     client = models.ForeignKey('Client', on_delete=models.CASCADE, related_name='robes')
@@ -67,7 +69,8 @@ class Robe(models.Model):
         return f"{self.nom_modele} - Client : {self.client.nom}"
 
 
-class Tache(models.Model):
+class Tache(ModeleAtelier):
+    PARENTS_ATELIER = ('robe',)
     robe = models.ForeignKey(Robe, on_delete=models.CASCADE, related_name='taches')
     libelle = models.CharField(max_length=250)
     est_faite = models.BooleanField(default=False)

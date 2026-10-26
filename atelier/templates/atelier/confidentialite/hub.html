@@ -1,6 +1,6 @@
 {% extends 'atelier/base.html' %}
 
-{% block title %}Confidentialité — Cohen Haute Couture{% endblock %}
+{% block title %}Confidentialité — {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
 
 {% block content %}
 <main class="page fin-page">
@@ -20,10 +20,25 @@
         <div class="fin-alert__icon" aria-hidden="true">!</div>
         <div>
             <strong>Coordonnées à renseigner</strong>
-            <p style="margin: 4px 0 0;">La fiche d'information doit indiquer comment te joindre pour exercer ses droits. Ajoute la variable d'environnement <code>CONTACT_CONFIDENTIALITE</code> (e-mail ou téléphone) sur Render, puis redéploie.</p>
+            <p style="margin: 4px 0 0;">La fiche d'information doit indiquer comment te joindre pour exercer ses droits. Renseigne ton e-mail ou ton téléphone dans le formulaire « Mon atelier » ci-dessous.</p>
         </div>
     </div>
     {% endif %}
+
+    <section class="fin-section">
+        <div class="fin-section__head"><div>
+            <h2>Mon atelier</h2>
+            <p>Ces informations figurent sur la fiche d'information remise aux clientes.</p>
+        </div></div>
+        <form method="post" action="{% url 'reglages_atelier' %}" class="card">
+            {% csrf_token %}
+            <label class="fin-filters__label" for="{{ form_atelier.nom.id_for_label }}">Nom de l'atelier</label>
+            {{ form_atelier.nom }}
+            <label class="fin-filters__label" for="{{ form_atelier.contact_confidentialite.id_for_label }}" style="margin-top: 12px; display: block;">Contact pour exercer ses droits</label>
+            {{ form_atelier.contact_confidentialite }}
+            <button type="submit" class="btn btn--primary" style="margin-top: 14px;">Enregistrer</button>
+        </form>
+    </section>
 
     <section class="fin-section">
         <div class="fin-section__head"><div>

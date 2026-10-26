@@ -1,7 +1,7 @@
 """Formulaire robe sur mesure."""
 from django import forms
 
-from ..models import Robe
+from ..models import Client, Robe
 from .commun import date_field
 
 
@@ -12,11 +12,13 @@ class RobeForm(forms.ModelForm):
 
     class Meta:
         model = Robe
-        fields = '__all__'  # Inclut automatiquement client, nom, finances ET les nouvelles images
+        exclude = ['atelier']  # tout le reste : client, nom, finances, images ; l'atelier vient de la cliente
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, atelier=None, **kwargs):
         super().__init__(*args, **kwargs)
-        
+        # Une robe ne peut être rattachée qu'à une cliente de SON atelier.
+        self.fields['client'].queryset = Client.objects.de(atelier) if atelier else Client.objects.none()
+
         # 1. Application automatique des classes CSS sur les composants
         for field_name, field in self.fields.items():
             if field_name not in ['date_commencement', 'date_livraison']:

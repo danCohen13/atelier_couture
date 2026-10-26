@@ -1,6 +1,6 @@
 {% extends 'atelier/base.html' %}
 
-{% block title %}Nouveau contrat — Cohen Haute Couture{% endblock %}
+{% block title %}Nouveau contrat — {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
 
 {% block content %}
 <main class="page page--narrow">

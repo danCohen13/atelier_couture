@@ -4,8 +4,10 @@
 from django.core.validators import RegexValidator
 from django.db import models
 
+from .ateliers import ModeleAtelier
 
-class Client(models.Model):
+
+class Client(ModeleAtelier):
     nom = models.CharField(max_length=100)
     prenom = models.CharField(max_length=100)
     

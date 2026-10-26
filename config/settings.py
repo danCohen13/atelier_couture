@@ -123,6 +123,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'atelier.contexte.atelier_courant',
             ],
         },
     },
@@ -273,7 +274,13 @@ GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
 GEMINI_MODEL = os.environ.get('GEMINI_MODEL', 'gemini-3.5-flash')
 
 
+# --- NOM DU PRODUIT (provisoire) : affiché sur la page d'accueil, la connexion et les pages sans atelier ---
+PRODUIT_NOM = os.environ.get('PRODUIT_NOM', 'Atelier Pro')
+
+
 # --- PROTECTION DES DONNÉES (fiche d'information remise aux clientes) ---
+# ATELIER_NOM et CONTACT_CONFIDENTIALITE ne servent plus qu'à nommer le PREMIER atelier lors de la
+# migration 0014 ; ensuite chaque atelier a son propre nom et son propre contact (modèle Atelier).
 ATELIER_NOM = os.environ.get('ATELIER_NOM', 'Cohen Haute Couture')
 # Coordonnées (e-mail ou téléphone) où une cliente peut exercer ses droits.
 CONTACT_CONFIDENTIALITE = os.environ.get('CONTACT_CONFIDENTIALITE', '').strip()

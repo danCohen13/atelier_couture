@@ -92,6 +92,7 @@ urlpatterns += [
 urlpatterns += [
     # Protection de la vie privée des clientes
     path('confidentialite/', views_confidentialite.confidentialite, name='confidentialite'),
+    path('confidentialite/atelier/', views_confidentialite.reglages_atelier, name='reglages_atelier'),
     path('confidentialite/fiche-information.pdf', views_confidentialite.fiche_information_pdf, name='confidentialite_fiche_pdf'),
     path('clientes/<int:client_id>/information-remise/', views_confidentialite.information_remise, name='information_remise'),
     path('clientes/<int:client_id>/supprimer/', views_confidentialite.supprimer_cliente, name='supprimer_cliente'),

@@ -1,12 +1,12 @@
 {% extends 'atelier/base.html' %}
-{% block title %}Connexion — Cohen Haute Couture{% endblock %}
+{% block title %}Connexion — {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
 
 {% block content %}
 <main class="page login-page">
     <div class="form-card">
         <div class="form-card__inner">
             <span class="eyebrow">Accès restreint</span>
-            <h2>Atelier Cohen</h2>
+            <h2>{{ PRODUIT_NOM }}</h2>
             <p class="auth-subtitle">
                 Veuillez vous connecter pour accéder aux fiches clientes et aux suivis de confection.
             </p>

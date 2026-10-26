@@ -1,5 +1,5 @@
 {% extends 'atelier/base.html' %}
-{% block title %}Accès temporairement bloqué — Cohen Haute Couture{% endblock %}
+{% block title %}Accès temporairement bloqué — {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
 
 {% block content %}
 <main class="page login-page">

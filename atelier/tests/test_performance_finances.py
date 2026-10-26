@@ -2,7 +2,6 @@
 import datetime
 from decimal import Decimal
 
-from django.contrib.auth.models import User
 from django.db import connection
 from django.test import TestCase
 from django.test.utils import CaptureQueriesContext
@@ -11,17 +10,19 @@ from django.urls import reverse
 from atelier.models import Client, DepenseRecurrente, Transaction
 from atelier.services.comptabilite import ecritures
 from atelier.services.comptabilite.tableau import LIGNES_PAR_PAGE
+from atelier.tests.outils import atelier_test, utilisateur_test
 
 
 class PerformanceFinancesTests(TestCase):
     def setUp(self):
-        User.objects.create_user('atelier', password='motdepasse123')
+        utilisateur_test('atelier', password='motdepasse123')
         self.client.login(username='atelier', password='motdepasse123')
-        Client.objects.create(nom='Dupont', prenom='Claire')
+        Client.objects.create(atelier=atelier_test(), nom='Dupont', prenom='Claire')
         aujourdhui = datetime.date.today()
+        atelier = atelier_test()
         Transaction.objects.bulk_create([
             Transaction(type='DEPENSE', categorie='AUTRE', montant=Decimal('10'),
-                        date=aujourdhui - datetime.timedelta(days=i % 300), designation=f'op {i}')
+                        date=aujourdhui - datetime.timedelta(days=i % 300), designation=f'op {i}', atelier=atelier)
             for i in range(LIGNES_PAR_PAGE * 2 + 5)
         ])
 
@@ -46,9 +47,9 @@ class PerformanceFinancesTests(TestCase):
         self.assertLess(len(ctx), 25)
 
     def test_depenses_recurrentes_groupees_et_idempotentes(self):
-        DepenseRecurrente.objects.create(
+        DepenseRecurrente.objects.create(atelier=atelier_test(), 
             designation='Loyer', categorie='AUTRE', montant=Decimal('100'),
             jour_du_mois=1, date_debut=datetime.date.today() - datetime.timedelta(days=100), actif=True)
-        premiere = ecritures.generer_depenses_recurrentes()
+        premiere = ecritures.generer_depenses_recurrentes(atelier_test())
         self.assertGreater(premiere, 0)
-        self.assertEqual(ecritures.generer_depenses_recurrentes(), 0)
+        self.assertEqual(ecritures.generer_depenses_recurrentes(atelier_test()), 0)

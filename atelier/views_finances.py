@@ -2,12 +2,12 @@
 import json
 
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 
+from .acces import atelier_requis
 from .forms import TransactionForm
 from .models import Transaction
 from .services import comptabilite as compta
@@ -26,13 +26,13 @@ def lire_filtres(request):
     return periode, base
 
 
-@login_required
+@atelier_requis
 def finances_view(request):
     periode, base = lire_filtres(request)
-    return render(request, 'atelier/finances/finances.html', compta.tableau_de_bord(periode, base, page=request.GET.get('page')))
+    return render(request, 'atelier/finances/finances.html', compta.tableau_de_bord(request.atelier, periode, base, page=request.GET.get('page')))
 
 
-@login_required
+@atelier_requis
 def ajouter_transaction_view(request):
     """
     Deux formulaires sur la page :
@@ -58,7 +58,9 @@ def ajouter_transaction_view(request):
     elif request.method == 'POST':
         form = TransactionForm(request.POST)
         if form.is_valid():
-            form.save()
+            operation = form.save(commit=False)
+            operation.atelier = request.atelier
+            operation.save()
             return redirect('finances')
 
     else:
@@ -68,9 +70,9 @@ def ajouter_transaction_view(request):
     return render(request, 'atelier/finances/ajouter_transaction.html', contexte)
 
 
-@login_required
+@atelier_requis
 def modifier_transaction_view(request, pk):
-    transaction = get_object_or_404(Transaction, pk=pk)
+    transaction = get_object_or_404(Transaction.objects.de(request.atelier), pk=pk)
     if request.method == 'POST':
         form = TransactionForm(request.POST, instance=transaction)
         if form.is_valid():
@@ -82,15 +84,15 @@ def modifier_transaction_view(request, pk):
     return render(request, 'atelier/finances/form_transaction.html', {'form': form, 'transaction': transaction})
 
 
-@login_required
+@atelier_requis
 @require_POST
 def supprimer_transaction(request, pk):
-    get_object_or_404(Transaction, pk=pk).delete()
+    get_object_or_404(Transaction.objects.de(request.atelier), pk=pk).delete()
     messages.success(request, "Opération supprimée.")
     return redirect('finances')
 
 
-@login_required
+@atelier_requis
 @require_POST
 def analyser_texte_ia(request):
     """Variante AJAX de la saisie rapide : renvoie les champs extraits au format JSON."""

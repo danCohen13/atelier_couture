@@ -2,20 +2,20 @@
 import datetime
 from decimal import Decimal
 
-from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 
 from atelier.models import Client, Location, RobeLocation
+from atelier.tests.outils import atelier_test, utilisateur_test
 
 
 class LocationsTestCase(TestCase):
     def setUp(self):
-        User.objects.create_user('atelier', password='motdepasse123')
+        utilisateur_test('atelier', password='motdepasse123')
         self.client.login(username='atelier', password='motdepasse123')
-        self.cliente = Client.objects.create(nom='Dupont', prenom='Claire')
+        self.cliente = Client.objects.create(atelier=atelier_test(), nom='Dupont', prenom='Claire')
         self.jour = datetime.date.today()
-        self.stock = RobeLocation.objects.create(
+        self.stock = RobeLocation.objects.create(atelier=atelier_test(), 
             reference_stock='LOC-001', nom_modele='Aurore', taille='38', couleur='Ivoire',
             prix_location_defaut=Decimal('300.00'), caution_defaut=Decimal('500.00'),
         )
@@ -23,7 +23,7 @@ class LocationsTestCase(TestCase):
     def contrat(self, prix='300.00', caution='500.00', devise='ILS', statut='RESERVEE', jours=0, reference=None):
         stock = self.stock
         if reference:
-            stock = RobeLocation.objects.create(
+            stock = RobeLocation.objects.create(atelier=atelier_test(), 
                 reference_stock=reference, nom_modele=f'Modèle {reference}', taille='40', couleur='Noir',
                 prix_location_defaut=prix, caution_defaut=caution,
             )
@@ -70,7 +70,7 @@ class DeviseDesLocationsTests(LocationsTestCase):
         self.assertEqual(Location.objects.get().devise, 'ILS')
 
     def test_la_devise_de_la_robe_de_stock_prerempli_le_contrat(self):
-        stock_euro = RobeLocation.objects.create(
+        stock_euro = RobeLocation.objects.create(atelier=atelier_test(), 
             reference_stock='LOC-EUR', nom_modele='Importée', taille='36', couleur='Bleu',
             prix_location_defaut=Decimal('200.00'), caution_defaut=Decimal('300.00'), devise='EUR',
         )
@@ -94,7 +94,7 @@ class DeviseDesLocationsTests(LocationsTestCase):
         self.assertNotIn('300,00 €', page)
 
     def test_le_catalogue_affiche_la_devise_de_la_robe(self):
-        RobeLocation.objects.create(
+        RobeLocation.objects.create(atelier=atelier_test(), 
             reference_stock='LOC-USD', nom_modele='Dollar', taille='38', couleur='Vert',
             prix_location_defaut=Decimal('99.00'), caution_defaut=Decimal('120.00'), devise='USD',
         )

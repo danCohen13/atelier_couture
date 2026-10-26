@@ -1,7 +1,7 @@
 {% extends 'atelier/base.html' %}
 {% load static %}
 
-{% block title %}Planning — Cohen Haute Couture{% endblock %}
+{% block title %}Planning — {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
 
 {% block extra_css %}<link rel="stylesheet" href="{% static 'atelier/css/planning.css' %}">{% endblock %}
 

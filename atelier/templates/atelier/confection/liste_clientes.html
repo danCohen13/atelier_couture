@@ -1,5 +1,5 @@
 {% extends 'atelier/base.html' %}
-{% block title %}Répertoire des clientes — Cohen Haute Couture{% endblock %}
+{% block title %}Répertoire des clientes — {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
 
 {% block content %}
 <main class="page">

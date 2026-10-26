@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>{% block title %}Cohen Haute Couture{% endblock %}</title>
+    <title>{% block title %}{{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -28,14 +28,14 @@
                     <line x1="20" y1="9" x2="20" y2="14" stroke="#211D1A" stroke-width="1" />
                 </svg>
                 <span class="brand__text">
-                    <span class="brand__name">Cohen Haute Couture</span>
+                    <span class="brand__name">{{ atelier_courant.nom|default:PRODUIT_NOM }}</span>
                     <span class="brand__tagline">Maison &amp; atelier de confection</span>
                 </span>
             </a>
 
             <!-- Zone d'actions avec affichage contextuel des liens -->
             <div class="header-actions">
-                {% if user.is_authenticated %}
+                {% if user.is_authenticated and atelier_courant %}
 
                     <!-- S'affiche partout SAUF sur le tableau de bord -->
                     {% if request.resolver_match.url_name != 'dashboard' %}
@@ -64,7 +64,7 @@
     <!-- Structure de l'application : navigation secondaire + contenu -->
     <div class="app-container">
 
-        {% if user.is_authenticated %}
+        {% if user.is_authenticated and atelier_courant %}
         <aside class="sidebar">
             <div class="sidebar-title">Navigation</div>
             <nav class="sidebar-menu">

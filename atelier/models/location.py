@@ -7,10 +7,11 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
 
+from .ateliers import ModeleAtelier
 from .constantes import DEVISE_CHOICES, SYMBOLES_DEVISE
 
 
-class RobeLocation(models.Model):
+class RobeLocation(ModeleAtelier):
     """
     Représente une pièce physique en stock destinée à la location.
     """
@@ -23,7 +24,6 @@ class RobeLocation(models.Model):
 
     reference_stock = models.CharField(
         max_length=50,
-        unique=True,
         verbose_name="Référence stock (ex: LOC-042)",
         help_text="Identifiant unique étiqueté sur la robe"
     )
@@ -68,6 +68,9 @@ class RobeLocation(models.Model):
         verbose_name = "Robe en location"
         verbose_name_plural = "Robes en location"
         ordering = ['nom_modele', 'reference_stock']
+        constraints = [
+            models.UniqueConstraint(fields=['atelier', 'reference_stock'], name='reference_stock_unique_par_atelier'),
+        ]
 
     def __str__(self):
         return f"{self.reference_stock} - {self.nom_modele} (T.{self.taille})"
@@ -91,7 +94,8 @@ class RobeLocation(models.Model):
         return True
 
 
-class Location(models.Model):
+class Location(ModeleAtelier):
+    PARENTS_ATELIER = ('client', 'robe_location')
     """
     Contrat et événement de location reliant une cliente à une robe physique.
     """

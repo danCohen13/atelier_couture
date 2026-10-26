@@ -5,32 +5,33 @@ from django.core.exceptions import ValidationError
 from django.test import TestCase
 
 from atelier.models import Client, Robe, Tache, Transaction
+from atelier.tests.outils import atelier_test
 
 
 class ClientModelTests(TestCase):
 
     def test_str_representation_uppercases_nom(self):
-        client = Client.objects.create(nom="dupont", prenom="Claire")
+        client = Client.objects.create(atelier=atelier_test(), nom="dupont", prenom="Claire")
         self.assertEqual(str(client), "DUPONT Claire")
 
     def test_telephone_accepts_international_format(self):
         client = Client(nom="Martin", prenom="Sophie", telephone="+33612345678")
-        client.full_clean()  # ne doit pas lever
+        client.full_clean(exclude=['atelier'])  # ne doit pas lever
 
     def test_telephone_rejects_invalid_format(self):
         client = Client(nom="Martin", prenom="Sophie", telephone="0612345678-invalide")
         with self.assertRaises(ValidationError):
-            client.full_clean()
+            client.full_clean(exclude=['atelier'])
 
     def test_telephone_and_email_are_optional(self):
         client = Client(nom="Martin", prenom="Sophie")
-        client.full_clean()  # ne doit pas lever malgré l'absence de coordonnées
+        client.full_clean(exclude=['atelier'])  # ne doit pas lever malgré l'absence de coordonnées
 
 
 class RobeModelTests(TestCase):
 
     def setUp(self):
-        self.client_ = Client.objects.create(nom="Dupont", prenom="Claire")
+        self.client_ = Client.objects.create(atelier=atelier_test(), nom="Dupont", prenom="Claire")
 
     def _creer_robe(self, **kwargs):
         defaults = dict(
@@ -93,7 +94,7 @@ class RobeModelTests(TestCase):
 class TacheModelTests(TestCase):
 
     def setUp(self):
-        client = Client.objects.create(nom="Dupont", prenom="Claire")
+        client = Client.objects.create(atelier=atelier_test(), nom="Dupont", prenom="Claire")
         self.robe = Robe.objects.create(
             client=client, nom_modele="Robe Test",
             date_commencement=datetime.date.today(),
@@ -112,7 +113,7 @@ class TacheModelTests(TestCase):
 class TransactionModelTests(TestCase):
 
     def setUp(self):
-        client = Client.objects.create(nom="Dupont", prenom="Claire")
+        client = Client.objects.create(atelier=atelier_test(), nom="Dupont", prenom="Claire")
         self.robe = Robe.objects.create(
             client=client, nom_modele="Robe Test",
             date_commencement=datetime.date.today(),
@@ -120,7 +121,7 @@ class TransactionModelTests(TestCase):
         )
 
     def test_str_representation(self):
-        t = Transaction.objects.create(
+        t = Transaction.objects.create(atelier=atelier_test(), 
             type='DEPENSE', montant=Decimal("45.00"), categorie='MATERIEL',
             designation="Entretien machine", date=datetime.date.today(),
         )
@@ -128,11 +129,11 @@ class TransactionModelTests(TestCase):
         self.assertIn("45.00", str(t))
 
     def test_ordering_plus_recent_en_premier(self):
-        ancienne = Transaction.objects.create(
+        ancienne = Transaction.objects.create(atelier=atelier_test(), 
             type='DEPENSE', montant=Decimal("10.00"), categorie='AUTRE',
             designation="Ancienne", date=datetime.date.today() - datetime.timedelta(days=5),
         )
-        recente = Transaction.objects.create(
+        recente = Transaction.objects.create(atelier=atelier_test(), 
             type='DEPENSE', montant=Decimal("10.00"), categorie='AUTRE',
             designation="Récente", date=datetime.date.today(),
         )
@@ -141,7 +142,7 @@ class TransactionModelTests(TestCase):
         self.assertEqual(transactions[1], ancienne)
 
     def test_robe_devient_null_si_robe_supprimee(self):
-        transaction = Transaction.objects.create(
+        transaction = Transaction.objects.create(atelier=atelier_test(), 
             type='RECETTE', montant=Decimal("100.00"), categorie='PAIEMENT_CLIENT',
             designation="Acompte", date=datetime.date.today(), robe=self.robe,
         )

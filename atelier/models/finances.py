@@ -6,10 +6,13 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
 
+from .ateliers import Atelier, ModeleAtelier
 from .constantes import SYMBOLES_DEVISE
 
 
-class Transaction(models.Model):
+class Transaction(ModeleAtelier):
+    PARENTS_ATELIER = ('robe', 'location', 'recurrente')
+
     TYPE_CHOICES = [
         ('RECETTE', '🟢 Recette (Entrée d\'argent)'),
         ('DEPENSE', '🔴 Dépense (Sortie d\'argent)'),
@@ -61,7 +64,9 @@ class Transaction(models.Model):
         return f"{self.designation} ({self.montant} ₪)"
 
 
-class Paiement(models.Model):
+class Paiement(ModeleAtelier):
+    PARENTS_ATELIER = ('robe', 'location')
+
     """Somme reçue d'une cliente (acompte ou solde) pour une robe sur mesure ou une location."""
     MODE_CHOICES = [
         ('ESPECES', 'Espèces'),
@@ -104,7 +109,7 @@ class Paiement(models.Model):
         return f"Paiement {self.montant} {self.symbole_devise} ({self.date})"
 
 
-class DepenseRecurrente(models.Model):
+class DepenseRecurrente(ModeleAtelier):
     """Charge qui revient chaque mois (loyer, abonnement…) : l'écriture est créée automatiquement."""
     designation = models.CharField(max_length=255)
     montant = models.DecimalField(max_digits=10, decimal_places=2)
@@ -133,7 +138,8 @@ class DepenseRecurrente(models.Model):
 
 
 class ParametresFinance(models.Model):
-    """Réglages uniques de la comptabilité : taux de change vers le shekel et objectif mensuel."""
+    """Réglages de la comptabilité d'un atelier : taux de change vers le shekel et objectif mensuel."""
+    atelier = models.OneToOneField(Atelier, on_delete=models.PROTECT, related_name='parametres_finance')
     taux_eur = models.DecimalField(
         max_digits=8, decimal_places=4, null=True, blank=True, verbose_name="1 € vaut … ₪")
     taux_usd = models.DecimalField(
@@ -146,8 +152,9 @@ class ParametresFinance(models.Model):
         verbose_name_plural = "Paramètres de finance"
 
     @classmethod
-    def charger(cls):
-        obj, _ = cls.objects.get_or_create(pk=1)
+    def charger(cls, atelier):
+        """Réglages de cet atelier (créés à la première lecture)."""
+        obj, _ = cls.objects.get_or_create(atelier=atelier)
         return obj
 
     def taux(self, devise):

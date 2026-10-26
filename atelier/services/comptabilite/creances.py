@@ -5,12 +5,12 @@ from .conversion import somme_par_devise
 from .ecritures import charger_dossiers
 
 
-def creances(aujourdhui=None, robes=None, contrats=None):
+def creances(atelier, aujourdhui=None, robes=None, contrats=None):
     """Sommes restant à encaisser (robes et locations non annulées), avec retard éventuel.
     `robes` et `contrats` : dossiers déjà chargés (sinon chargés ici)."""
     aujourdhui = aujourdhui or timezone.localdate()
     if robes is None or contrats is None:
-        robes, contrats = charger_dossiers()
+        robes, contrats = charger_dossiers(atelier)
     elements = []
     for robe in robes:
         reste = robe.reste_a_payer
@@ -34,10 +34,10 @@ def creances(aujourdhui=None, robes=None, contrats=None):
     return elements
 
 
-def cautions_a_suivre(contrats=None):
+def cautions_a_suivre(atelier, contrats=None):
     """Cautions détenues (chèque / empreinte) : à restituer une fois la robe rentrée."""
     if contrats is None:
-        contrats = charger_dossiers()[1]
+        contrats = charger_dossiers(atelier)[1]
     res = []
     for loc in contrats:
         if loc.caution_statut != 'ENREGISTREE':
@@ -66,9 +66,9 @@ def previsionnel(elements, aujourdhui=None):
     return res
 
 
-def alertes(elements, cautions, aujourdhui=None, contrats=None):
+def alertes(atelier, elements, cautions, aujourdhui=None, contrats=None):
     if contrats is None:
-        contrats = charger_dossiers()[1]
+        contrats = charger_dossiers(atelier)[1]
     aujourdhui = aujourdhui or timezone.localdate()
     liste = []
     en_retard = [e for e in elements if e['en_retard']]

@@ -2,19 +2,19 @@ import datetime
 import json
 from unittest import mock
 
-from django.contrib.auth.models import User
 from django.core import mail
 from django.test import TestCase
 from django.urls import reverse
 
 from atelier.models import Client, CodeReinitialisation, Robe, Tache, Transaction
 from atelier.services.gemini import ErreurIA
+from atelier.tests.outils import atelier_test, utilisateur_test
 
 
 class ConnecteTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.user = User.objects.create_user("couturiere", "c@example.com", "Password123!")
+        cls.user = utilisateur_test("couturiere", "c@example.com", "Password123!")
 
     def setUp(self):
         self.client.login(username="couturiere", password="Password123!")
@@ -90,7 +90,7 @@ class ReinitialisationMotDePasseTests(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        cls.user = User.objects.create_user("couturiere", "c@example.com", "AncienMdp123!")
+        cls.user = utilisateur_test("couturiere", "c@example.com", "AncienMdp123!")
 
     def test_parcours_complet(self):
         r = self.client.post(reverse("demander_code_reset"), {"email": "c@example.com"})
@@ -185,7 +185,7 @@ class ReinitialisationMotDePasseTests(TestCase):
 
 class ProgressionSansRequetesTests(ConnecteTestCase):
     def creer_robes(self, n):
-        cliente = Client.objects.create(nom="Test", prenom="Cliente")
+        cliente = Client.objects.create(atelier=atelier_test(), nom="Test", prenom="Cliente")
         for i in range(n):
             robe = Robe.objects.create(client=cliente, nom_modele=f"R{i}", prix_total=100,
                                        date_commencement=datetime.date.today(),
@@ -194,7 +194,7 @@ class ProgressionSansRequetesTests(ConnecteTestCase):
                 Tache.objects.create(robe=robe, libelle=f"T{j}", est_faite=(j == 0))
 
     def test_valeurs(self):
-        cliente = Client.objects.create(nom="Test", prenom="Cliente")
+        cliente = Client.objects.create(atelier=atelier_test(), nom="Test", prenom="Cliente")
         robe = Robe.objects.create(client=cliente, nom_modele="R", date_commencement=datetime.date.today(),
                                    date_livraison=datetime.date.today())
         self.assertEqual(robe.progression, 0)

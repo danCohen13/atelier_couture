@@ -25,14 +25,14 @@ def grouper_par_mois(lignes):
 LIGNES_PAR_PAGE = 50
 
 
-def tableau_de_bord(periode, base, aujourdhui=None, page=1):
+def tableau_de_bord(atelier, periode, base, aujourdhui=None, page=1):
     """Tout ce qu'affiche la page Finances (la vue n'a plus qu'à rendre ce dictionnaire)."""
     aujourdhui = aujourdhui or timezone.localdate()
-    params = ParametresFinance.charger()
+    params = ParametresFinance.charger(atelier)
 
-    generer_depenses_recurrentes(aujourdhui)
-    robes, contrats = charger_dossiers()
-    toutes = construire_lignes(base, robes, contrats)
+    generer_depenses_recurrentes(atelier, aujourdhui)
+    robes, contrats = charger_dossiers(atelier)
+    toutes = construire_lignes(atelier, base, robes, contrats)
 
     # Graphe : historique complet, uniquement dans la devise de l'atelier.
     lignes_graphe = [l for l in toutes if l.devise == DEVISE_PRINCIPALE]
@@ -42,8 +42,8 @@ def tableau_de_bord(periode, base, aujourdhui=None, page=1):
     principal = bilan(lignes, DEVISE_PRINCIPALE)
     autres_bilans = [bilan(lignes, d) for d in sorted({l.devise for l in lignes} - {DEVISE_PRINCIPALE})]
 
-    elements = creances(aujourdhui, robes, contrats)
-    cautions = cautions_a_suivre(contrats)
+    elements = creances(atelier, aujourdhui, robes, contrats)
+    cautions = cautions_a_suivre(atelier, contrats)
 
     # Le grand livre est paginé : une page de plusieurs centaines d'opérations pèse plus d'1 Mo.
     lignes.sort(key=lambda l: l.date, reverse=True)
@@ -70,6 +70,6 @@ def tableau_de_bord(periode, base, aujourdhui=None, page=1):
         'cautions_detenues': somme_par_devise(
             (c['location'].devise, c['location'].caution_montant) for c in cautions),
         'previsionnel': previsionnel(elements, aujourdhui),
-        'alertes': alertes(elements, cautions, aujourdhui, contrats),
+        'alertes': alertes(atelier, elements, cautions, aujourdhui, contrats),
         'parametres': params,
     }

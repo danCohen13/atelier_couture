@@ -44,22 +44,22 @@ def derniere_activite(cliente):
     dates += list(cliente.robes.values_list('date_livraison', flat=True))
     for debut, fin, retour in cliente.locations.values_list('date_debut', 'date_fin_prevue', 'date_retour_effectif'):
         dates += [d for d in (debut, fin, retour) if d]
-    dates += list(Paiement.objects.filter(robe__client=cliente).values_list('date', flat=True))
-    dates += list(Paiement.objects.filter(location__client=cliente).values_list('date', flat=True))
+    dates += list(Paiement.objects.de(cliente.atelier_id).filter(robe__client=cliente).values_list('date', flat=True))
+    dates += list(Paiement.objects.de(cliente.atelier_id).filter(location__client=cliente).values_list('date', flat=True))
     if cliente.cree_le:
         dates.append(timezone.localtime(cliente.cree_le).date())
     return max(dates) if dates else None
 
 
-def clientes_inactives(annees, aujourdhui=None):
-    """[(cliente, dernière_activité)] des dossiers sans activité depuis `annees` ans (hors anonymisés)."""
+def clientes_inactives(atelier, annees, aujourdhui=None):
+    """[(cliente, dernière_activité)] des dossiers de l'atelier sans activité depuis `annees` ans (hors anonymisés)."""
     aujourdhui = aujourdhui or timezone.localdate()
     try:
         limite = aujourdhui.replace(year=aujourdhui.year - annees)
     except ValueError:  # 29 février
         limite = aujourdhui.replace(year=aujourdhui.year - annees, day=28)
     resultat = []
-    for cliente in Client.objects.filter(anonymisee_le__isnull=True).order_by('nom', 'prenom'):
+    for cliente in Client.objects.de(atelier).filter(anonymisee_le__isnull=True).order_by('nom', 'prenom'):
         derniere = derniere_activite(cliente)
         if derniere is None or derniere < limite:
             resultat.append((cliente, derniere))

@@ -1,11 +1,11 @@
 """Exports (CSV, PDF récapitulatif) et documents PDF : devis, factures, reçus."""
 import csv
 
-from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 
+from .acces import atelier_requis
 from .models import Paiement, ParametresFinance
 from .services import comptabilite as compta
 from .services.comptabilite import DEVISE_PRINCIPALE
@@ -16,12 +16,12 @@ from .views_paiements import _dossier
 
 def _lignes_de_la_requete(request):
     periode, base = lire_filtres(request)
-    compta.generer_depenses_recurrentes()
-    lignes = compta.filtrer_periode(compta.construire_lignes(base), periode)
+    compta.generer_depenses_recurrentes(request.atelier)
+    lignes = compta.filtrer_periode(compta.construire_lignes(request.atelier, base), periode)
     return periode, base, lignes
 
 
-@login_required
+@atelier_requis
 def exporter_csv(request):
     periode, base, lignes = _lignes_de_la_requete(request)
     reponse = HttpResponse(content_type='text/csv; charset=utf-8')
@@ -31,10 +31,10 @@ def exporter_csv(request):
     return reponse
 
 
-@login_required
+@atelier_requis
 def exporter_pdf_recapitulatif(request):
     periode, base, lignes = _lignes_de_la_requete(request)
-    params = ParametresFinance.charger()
+    params = ParametresFinance.charger(request.atelier)
     lignes.sort(key=lambda l: l.date, reverse=True)
     contexte = {
         'periode_label': {'jour': "Aujourd'hui", 'mois': 'Ce mois-ci', 'annee': 'Cette année', 'tout': 'Tout'}[periode],
@@ -52,11 +52,11 @@ MENTION_DOCUMENT = ("Document de gestion interne. Il ne remplace pas une facture
                     "(numérotation et mentions légales à établir selon la réglementation en vigueur).")
 
 
-@login_required
+@atelier_requis
 def document_pdf(request, type_, pk, genre):
     if type_ not in ('robe', 'location') or genre not in ('devis', 'facture'):
         raise Http404
-    dossier = _dossier(type_, pk)
+    dossier = _dossier(request, type_, pk)
     if type_ == 'robe':
         designation = f"Confection sur mesure — {dossier.nom_modele}"
         total = dossier.prix_total
@@ -79,9 +79,9 @@ def document_pdf(request, type_, pk, genre):
     return reponse_pdf(request, 'atelier/pdf/document_finance.html', contexte, f'{numero}.pdf', 'finances')
 
 
-@login_required
+@atelier_requis
 def recu_paiement(request, paiement_id):
-    paiement = get_object_or_404(Paiement.objects.select_related('robe__client', 'location__client', 'location__robe_location'), pk=paiement_id)
+    paiement = get_object_or_404(Paiement.objects.de(request.atelier).select_related('robe__client', 'location__client', 'location__robe_location'), pk=paiement_id)
     cible = paiement.cible
     designation = (f"Confection sur mesure — {cible.nom_modele}" if paiement.robe_id
                    else f"Location — {cible.robe_location.nom_modele} ({cible.robe_location.reference_stock})")

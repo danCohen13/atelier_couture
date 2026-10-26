@@ -38,7 +38,10 @@ def render_to_pdf(template_src, context_dict=None):
 
 
 def reponse_pdf(request, gabarit, contexte, nom_fichier, redirection):
-    """PDF affiché dans le navigateur ; en cas d'échec, message d'erreur et retour à `redirection`."""
+    """PDF affiché dans le navigateur ; en cas d'échec, message d'erreur et retour à `redirection`.
+    Le nom de l'atelier est ajouté au contexte (`atelier_nom`) pour les en-têtes."""
+    atelier = getattr(request, 'atelier', None)
+    contexte = {**contexte, 'atelier_nom': atelier.nom if atelier else ''}
     reponse = render_to_pdf(gabarit, contexte)
     if reponse is None:
         messages.error(request, "Le PDF n'a pas pu être généré.")

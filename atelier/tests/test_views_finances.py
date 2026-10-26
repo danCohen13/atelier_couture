@@ -2,11 +2,11 @@ import datetime
 import json
 from decimal import Decimal
 
-from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 
 from atelier.models import Client, Robe, Transaction
+from atelier.tests.outils import atelier_test, utilisateur_test
 
 
 class FinancesAuthTests(TestCase):
@@ -26,9 +26,9 @@ class FinancesAutoLignesTests(TestCase):
     """Les coûts d'une robe doivent apparaître dans les finances sans ressaisie."""
 
     def setUp(self):
-        User.objects.create_user(username='atelier', password='motdepasse123')
+        utilisateur_test(username='atelier', password='motdepasse123')
         self.client.login(username='atelier', password='motdepasse123')
-        self.cliente = Client.objects.create(nom="Dupont", prenom="Claire")
+        self.cliente = Client.objects.create(atelier=atelier_test(), nom="Dupont", prenom="Claire")
 
     def test_couts_de_robe_generent_des_totaux_sans_transaction_manuelle(self):
         Robe.objects.create(
@@ -71,7 +71,7 @@ class FinancesAutoLignesTests(TestCase):
             date_commencement=datetime.date.today(), date_livraison=datetime.date.today(),
             cout_tissu=Decimal("100.00"), prix_total=Decimal("300.00"),
         )
-        Transaction.objects.create(
+        Transaction.objects.create(atelier=atelier_test(), 
             type='DEPENSE', montant=Decimal("50.00"), categorie='MATERIEL',
             designation="Entretien machine", date=datetime.date.today(),
         )
@@ -82,14 +82,14 @@ class FinancesAutoLignesTests(TestCase):
 class FinancesPeriodeTests(TestCase):
 
     def setUp(self):
-        User.objects.create_user(username='atelier', password='motdepasse123')
+        utilisateur_test(username='atelier', password='motdepasse123')
         self.client.login(username='atelier', password='motdepasse123')
         aujourdhui = datetime.date.today()
-        Transaction.objects.create(
+        Transaction.objects.create(atelier=atelier_test(), 
             type='RECETTE', montant=Decimal("100.00"), categorie='PAIEMENT_CLIENT',
             designation="Aujourd'hui", date=aujourdhui,
         )
-        Transaction.objects.create(
+        Transaction.objects.create(atelier=atelier_test(), 
             type='RECETTE', montant=Decimal("200.00"), categorie='PAIEMENT_CLIENT',
             designation="Il y a 2 ans", date=aujourdhui.replace(year=aujourdhui.year - 2),
         )
@@ -115,15 +115,15 @@ class FinancesPeriodeTests(TestCase):
 class FinancesGroupementMensuelTests(TestCase):
 
     def setUp(self):
-        User.objects.create_user(username='atelier', password='motdepasse123')
+        utilisateur_test(username='atelier', password='motdepasse123')
         self.client.login(username='atelier', password='motdepasse123')
 
     def test_les_lignes_sont_regroupees_par_mois(self):
-        Transaction.objects.create(
+        Transaction.objects.create(atelier=atelier_test(), 
             type='RECETTE', montant=Decimal("100.00"), categorie='PAIEMENT_CLIENT',
             designation="Juin", date=datetime.date(2026, 6, 15),
         )
-        Transaction.objects.create(
+        Transaction.objects.create(atelier=atelier_test(), 
             type='RECETTE', montant=Decimal("200.00"), categorie='PAIEMENT_CLIENT',
             designation="Juillet", date=datetime.date(2026, 7, 5),
         )
@@ -138,7 +138,7 @@ class FinancesGroupementMensuelTests(TestCase):
 class AjouterTransactionTests(TestCase):
 
     def setUp(self):
-        User.objects.create_user(username='atelier', password='motdepasse123')
+        utilisateur_test(username='atelier', password='motdepasse123')
         self.client.login(username='atelier', password='motdepasse123')
 
     def test_creation_valide_redirige_vers_finances(self):
@@ -164,9 +164,9 @@ class FinancesChartDataTests(TestCase):
     """Le graphe recettes/dépenses doit recevoir des séries semaine/mois/année."""
 
     def setUp(self):
-        User.objects.create_user(username='atelier', password='motdepasse123')
+        utilisateur_test(username='atelier', password='motdepasse123')
         self.client.login(username='atelier', password='motdepasse123')
-        cliente = Client.objects.create(nom="Dupont", prenom="Claire")
+        cliente = Client.objects.create(atelier=atelier_test(), nom="Dupont", prenom="Claire")
         Robe.objects.create(
             client=cliente, nom_modele="Robe Sirène",
             date_commencement=datetime.date.today(), date_livraison=datetime.date.today(),

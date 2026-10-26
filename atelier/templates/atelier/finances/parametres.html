@@ -1,6 +1,6 @@
 {% extends 'atelier/base.html' %}
 
-{% block title %}Paramètres finances — Cohen Haute Couture{% endblock %}
+{% block title %}Paramètres finances — {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
 
 {% block content %}
 <main class="page page--narrow fin-page">

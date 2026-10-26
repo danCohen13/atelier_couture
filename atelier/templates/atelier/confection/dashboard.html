@@ -1,7 +1,7 @@
 {% extends 'atelier/base.html' %}
 {% load static %}
 
-{% block title %}Tableau de bord — Cohen Haute Couture{% endblock %}
+{% block title %}Tableau de bord — {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
 
 {% block content %}
 <main class="page">

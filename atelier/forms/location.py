@@ -1,7 +1,7 @@
 """Formulaires de location et de stock."""
 from django import forms
 
-from ..models import Location, RobeLocation
+from ..models import Client, Location, RobeLocation
 from .commun import date_field
 
 
@@ -14,9 +14,20 @@ class DeviseParDefautMixin:
 
 
 class RobeLocationForm(DeviseParDefautMixin, forms.ModelForm):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, atelier=None, **kwargs):
         super().__init__(*args, **kwargs)
+        self.atelier = atelier
         self.fields['cout_revient'].required = False
+
+    def clean_reference_stock(self):
+        """La référence est unique DANS l'atelier (la contrainte de base ne voit pas ce champ du formulaire)."""
+        reference = self.cleaned_data['reference_stock']
+        doublons = RobeLocation.objects.de(self.atelier).filter(reference_stock=reference)
+        if self.instance.pk:
+            doublons = doublons.exclude(pk=self.instance.pk)
+        if doublons.exists():
+            raise forms.ValidationError("Une robe du stock porte déjà cette référence.")
+        return reference
 
     def clean_cout_revient(self):
         return self.cleaned_data.get('cout_revient') or 0
@@ -46,6 +57,13 @@ class RobeLocationForm(DeviseParDefautMixin, forms.ModelForm):
 class LocationForm(DeviseParDefautMixin, forms.ModelForm):
     date_debut = date_field("Date de retrait prévue")
     date_fin_prevue = date_field("Date de retour prévue")
+
+    def __init__(self, *args, atelier=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Cliente et robe de stock : uniquement celles de l'atelier.
+        self.fields['client'].queryset = Client.objects.de(atelier) if atelier else Client.objects.none()
+        self.fields['robe_location'].queryset = (
+            RobeLocation.objects.de(atelier) if atelier else RobeLocation.objects.none())
 
     class Meta:
         model = Location

@@ -1,11 +1,11 @@
 import json
 
-from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 
+from .acces import atelier_requis
 from .forms import ClientForm, RobeForm
 from .models import Client, Robe, Tache
 from .services.extraction import extraire_mesures
@@ -16,9 +16,9 @@ from .services.pdf import reponse_pdf
 # Vues Confection & Atelier
 # ==============================================================================
 
-@login_required
+@atelier_requis
 def dashboard(request):
-    all_robes = Robe.objects.select_related('client').prefetch_related('taches')
+    all_robes = Robe.objects.de(request.atelier).select_related('client').prefetch_related('taches')
     filtre_status = request.GET.get('status', 'actifs')
     tri = request.GET.get('tri', 'urgence')
     
@@ -44,16 +44,16 @@ def dashboard(request):
         'current_tri': tri,
     })
 
-@login_required
+@atelier_requis
 def fiche_cliente(request, client_id):
-    cliente = get_object_or_404(Client, id=client_id)
+    cliente = get_object_or_404(Client.objects.de(request.atelier), id=client_id)
     robes = cliente.robes.prefetch_related('taches').all().order_by('-date_livraison')
     return render(request, 'atelier/confection/fiche_cliente.html', {'cliente': cliente, 'robes': robes})
 
-@login_required
+@atelier_requis
 def exporter_pdf_cliente(request, client_id):
     """Permet de sélectionner les robes à inclure et de télécharger la fiche PDF."""
-    cliente = get_object_or_404(Client, id=client_id)
+    cliente = get_object_or_404(Client.objects.de(request.atelier), id=client_id)
     
     if request.method == 'POST':
         robe_ids = request.POST.getlist('robes')
@@ -76,41 +76,43 @@ def exporter_pdf_cliente(request, client_id):
     robes = cliente.robes.all()
     return render(request, 'atelier/pdf/selection_robes.html', {'client': cliente, 'robes': robes})
 
-@login_required
+@atelier_requis
 def ajouter_client(request):
     if request.method == 'POST':
         form = ClientForm(request.POST)
         if form.is_valid():
-            form.save()
+            cliente = form.save(commit=False)
+            cliente.atelier = request.atelier
+            cliente.save()
             return redirect('dashboard')
     else:
         form = ClientForm()
     return render(request, 'atelier/confection/ajouter_client.html', {'form': form})
 
-@login_required
+@atelier_requis
 def ajouter_robe(request):
     client_id = request.GET.get('client_id')
     initial_data = {}
     
     if client_id:
-        cliente = get_object_or_404(Client, id=client_id)
+        cliente = get_object_or_404(Client.objects.de(request.atelier), id=client_id)
         initial_data['client'] = cliente.id
 
     if request.method == 'POST':
-        form = RobeForm(request.POST, request.FILES)
+        form = RobeForm(request.POST, request.FILES, atelier=request.atelier)
         if form.is_valid():
             form.save()
             return redirect('dashboard')
     else:
-        form = RobeForm(initial=initial_data)
+        form = RobeForm(initial=initial_data, atelier=request.atelier)
 
     return render(request, 'atelier/confection/ajouter_robe.html', {
         'form': form,
     })
 
-@login_required
+@atelier_requis
 def modifier_client(request, client_id):
-    cliente = get_object_or_404(Client, id=client_id)
+    cliente = get_object_or_404(Client.objects.de(request.atelier), id=client_id)
     if request.method == 'POST':
         form = ClientForm(request.POST, instance=cliente)
         if form.is_valid():
@@ -120,11 +122,11 @@ def modifier_client(request, client_id):
         form = ClientForm(instance=cliente)
     return render(request, 'atelier/confection/modifier_client.html', {'form': form, 'cliente': cliente})
 
-@login_required
+@atelier_requis
 def modifier_robe(request, robe_id):
-    robe = get_object_or_404(Robe, id=robe_id)
+    robe = get_object_or_404(Robe.objects.de(request.atelier), id=robe_id)
     if request.method == 'POST':
-        form = RobeForm(request.POST, request.FILES, instance=robe)
+        form = RobeForm(request.POST, request.FILES, instance=robe, atelier=request.atelier)
         if form.is_valid():
             form.save()
             referer = request.META.get('HTTP_REFERER', '')
@@ -132,13 +134,13 @@ def modifier_robe(request, robe_id):
                 return redirect(f'/clientes/{robe.client.id}/#tiroir-{robe.id}')
             return redirect('dashboard')
     else:
-        form = RobeForm(instance=robe)
+        form = RobeForm(instance=robe, atelier=request.atelier)
     return render(request, 'atelier/confection/modifier_robe.html', {'form': form, 'robe': robe})    
 
-@login_required
+@atelier_requis
 @require_POST
 def ajouter_tache_rapide(request, robe_id, type_tache):
-    robe = get_object_or_404(Robe, id=robe_id)
+    robe = get_object_or_404(Robe.objects.de(request.atelier), id=robe_id)
     correspondances = {
         'toile': "Toile d'essai",
         'coupe': "Coupe du tissu",
@@ -153,9 +155,9 @@ def ajouter_tache_rapide(request, robe_id, type_tache):
         return redirect(f'/clientes/{robe.client.id}/#tiroir-{robe.id}')
     return redirect(f'/#tiroir-{robe.id}')
 
-@login_required
+@atelier_requis
 def ajouter_tache_personnalisee(request, robe_id):
-    robe = get_object_or_404(Robe, id=robe_id)
+    robe = get_object_or_404(Robe.objects.de(request.atelier), id=robe_id)
     if request.method == 'POST':
         texte_saisi = request.POST.get('libelle', '').strip()
         if texte_saisi:
@@ -166,10 +168,10 @@ def ajouter_tache_personnalisee(request, robe_id):
         return redirect(f'/clientes/{robe.client.id}/#tiroir-{robe.id}')
     return redirect(f'/#tiroir-{robe.id}')
 
-@login_required
+@atelier_requis
 @require_POST
 def toggle_tache(request, tache_id):
-    tache = get_object_or_404(Tache, id=tache_id)
+    tache = get_object_or_404(Tache.objects.de(request.atelier), id=tache_id)
     tache.est_faite = not tache.est_faite
     tache.save()
     
@@ -178,10 +180,10 @@ def toggle_tache(request, tache_id):
         return redirect(f'/clientes/{tache.robe.client.id}/#tiroir-{tache.robe.id}')
     return redirect(f'/#tiroir-{tache.robe.id}')
 
-@login_required
+@atelier_requis
 @require_POST
 def supprimer_tache(request, tache_id):
-    tache = get_object_or_404(Tache, id=tache_id)
+    tache = get_object_or_404(Tache.objects.de(request.atelier), id=tache_id)
     robe_id = tache.robe.id
     client_id = tache.robe.client.id
     tache.delete()
@@ -191,23 +193,23 @@ def supprimer_tache(request, tache_id):
         return redirect(f'/clientes/{client_id}/#tiroir-{robe_id}')
     return redirect(f'/#tiroir-{robe_id}')
 
-@login_required
+@atelier_requis
 @require_POST
 def supprimer_robe(request, robe_id):
-    robe = get_object_or_404(Robe, id=robe_id)
+    robe = get_object_or_404(Robe.objects.de(request.atelier), id=robe_id)
     robe.delete()
     return redirect('dashboard')
 
-@login_required
+@atelier_requis
 def liste_clientes(request):
     query = request.GET.get('q', '').strip()
     if query:
-        clientes = Client.objects.filter(Q(nom__icontains=query) | Q(prenom__icontains=query)).order_by('nom')
+        clientes = Client.objects.de(request.atelier).filter(Q(nom__icontains=query) | Q(prenom__icontains=query)).order_by('nom')
     else:
-        clientes = Client.objects.all().order_by('nom')
+        clientes = Client.objects.de(request.atelier).order_by('nom')
     return render(request, 'atelier/confection/liste_clientes.html', {'clientes': clientes, 'search_query': query})
 
-@login_required
+@atelier_requis
 @require_POST
 def analyser_mesures_ia(request):
     """Dictée vocale → mesures (JSON). Le travail est fait par services.extraction."""

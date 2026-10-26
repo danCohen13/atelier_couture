@@ -5,10 +5,10 @@ from ...models import Robe, RobeLocation
 from .base import ZERO
 
 
-def rentabilite_robes():
+def rentabilite_robes(atelier):
     """Bénéfice de chaque robe sur mesure = prix − tissu − frais rattachés ; gain horaire si heures saisies."""
     res = []
-    for robe in (Robe.objects.select_related('client').prefetch_related('transactions')):
+    for robe in (Robe.objects.de(atelier).select_related('client').prefetch_related('transactions')):
         frais = sum((t.montant for t in robe.transactions.all() if t.type == 'DEPENSE'), ZERO)
         benefice = (robe.prix_total or ZERO) - (robe.cout_tissu or ZERO) - frais
         heures = robe.heures_travail or ZERO
@@ -22,10 +22,10 @@ def rentabilite_robes():
     return res
 
 
-def rentabilite_stock():
+def rentabilite_stock(atelier):
     """Pour chaque robe du stock : revenus des locations (même devise), nombre de sorties, amortissement."""
     res = []
-    for stock in RobeLocation.objects.prefetch_related('locations'):
+    for stock in RobeLocation.objects.de(atelier).prefetch_related('locations'):
         contrats = [c for c in stock.locations.all() if c.statut != 'ANNULEE' and c.devise == stock.devise]
         revenus = sum((c.prix_convenu + c.caution_gardee for c in contrats), ZERO)
         cout = stock.cout_revient or ZERO

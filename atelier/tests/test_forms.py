@@ -5,6 +5,7 @@ from django.test import TestCase
 
 from atelier.forms import ClientForm, RobeForm, TransactionForm
 from atelier.models import Client, Robe
+from atelier.tests.outils import atelier_test
 
 
 class ClientFormTests(TestCase):
@@ -41,7 +42,7 @@ class ClientFormTests(TestCase):
 class RobeFormTests(TestCase):
 
     def setUp(self):
-        self.cliente = Client.objects.create(nom="Dupont", prenom="Claire")
+        self.cliente = Client.objects.create(atelier=atelier_test(), nom="Dupont", prenom="Claire")
 
     def _donnees_valides(self, **overrides):
         data = {
@@ -58,27 +59,27 @@ class RobeFormTests(TestCase):
         return data
 
     def test_valide_avec_toutes_les_donnees(self):
-        form = RobeForm(data=self._donnees_valides())
+        form = RobeForm(atelier=atelier_test(), data=self._donnees_valides())
         self.assertTrue(form.is_valid(), form.errors)
 
     def test_client_manquant_bloque_le_formulaire(self):
         data = self._donnees_valides()
         del data['client']
-        form = RobeForm(data=data)
+        form = RobeForm(atelier=atelier_test(), data=data)
         self.assertFalse(form.is_valid())
         self.assertIn('client', form.errors)
 
     def test_dates_au_mauvais_format_sont_rejetees(self):
-        form = RobeForm(data=self._donnees_valides(date_commencement='2026-06-01'))
+        form = RobeForm(atelier=atelier_test(), data=self._donnees_valides(date_commencement='2026-06-01'))
         self.assertFalse(form.is_valid())
         self.assertIn('date_commencement', form.errors)
 
     def test_devise_par_defaut_est_ils(self):
-        form = RobeForm()
+        form = RobeForm(atelier=atelier_test())
         self.assertEqual(form.fields['devise'].initial, 'ILS')
 
     def test_couts_initiaux_a_none_pour_une_nouvelle_robe(self):
-        form = RobeForm()
+        form = RobeForm(atelier=atelier_test())
         self.assertIsNone(form.initial.get('cout_tissu'))
         self.assertIsNone(form.initial.get('cout_main_doeuvre'))
         self.assertIsNone(form.initial.get('prix_total'))
@@ -91,7 +92,7 @@ class RobeFormTests(TestCase):
             cout_tissu=Decimal("80.00"), cout_main_doeuvre=Decimal("150.00"),
             prix_total=Decimal("400.00"),
         )
-        form = RobeForm(instance=robe)
+        form = RobeForm(atelier=atelier_test(), instance=robe)
         # Le prix existant ne doit pas être écrasé à None pour une modification
         self.assertEqual(form.initial.get('cout_tissu'), Decimal("80.00"))
         self.assertEqual(form.initial.get('prix_total'), Decimal("400.00"))
@@ -141,11 +142,11 @@ class FormatDatesFrancaisTests(TestCase):
         from atelier.forms import LocationForm, RetourLocationForm, TransactionForm
         d = datetime.date(2026, 7, 4)
         self.assertIn('value="04/07/2026"', str(TransactionForm(initial={'date': d})['date']))
-        self.assertIn('value="04/07/2026"', str(LocationForm(initial={'date_debut': d})['date_debut']))
+        self.assertIn('value="04/07/2026"', str(LocationForm(atelier=atelier_test(), initial={'date_debut': d})['date_debut']))
         self.assertIn('value="04/07/2026"', str(RetourLocationForm(initial={'date_retour_effectif': d})['date_retour_effectif']))
 
     def test_champs_relies_au_selecteur_flatpickr(self):
         from atelier.forms import LocationForm, TransactionForm
-        for html in (str(TransactionForm()['date']), str(LocationForm()['date_fin_prevue'])):
+        for html in (str(TransactionForm()['date']), str(LocationForm(atelier=atelier_test())['date_fin_prevue'])):
             self.assertIn('datepicker', html)
             self.assertIn('placeholder="jj/mm/aaaa"', html)

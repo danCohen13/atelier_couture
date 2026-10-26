@@ -1,11 +1,11 @@
 import datetime
 from decimal import Decimal
 
-from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 
 from atelier.models import Client, Location, Robe, RobeLocation, Tache
+from atelier.tests.outils import atelier_test, utilisateur_test
 
 
 def jour(offset):
@@ -15,9 +15,9 @@ def jour(offset):
 class PlanningBase(TestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.user = User.objects.create_user(username="couturiere", password="Password123!")
-        cls.cliente = Client.objects.create(nom="Gautier", prenom="Chloé", telephone="+33611223344")
-        cls.stock = RobeLocation.objects.create(
+        cls.user = utilisateur_test(username="couturiere", password="Password123!")
+        cls.cliente = Client.objects.create(atelier=atelier_test(), nom="Gautier", prenom="Chloé", telephone="+33611223344")
+        cls.stock = RobeLocation.objects.create(atelier=atelier_test(), 
             reference_stock="LOC-001", nom_modele="Aurore", taille="38", couleur="Ivoire",
             prix_location_defaut=Decimal("150.00"), caution_defaut=Decimal("400.00"),
         )
@@ -126,8 +126,8 @@ class PlanningLivraisonsTests(PlanningBase):
             robe = Robe.objects.create(client=self.cliente, nom_modele=f"R{i}",
                                        date_commencement=jour(-5), date_livraison=jour(i + 1))
             Tache.objects.create(robe=robe, libelle="x")
-        with self.assertNumQueries(1 + 1 + 2 + 1 + 1):
-            # session + utilisateur, robes, taches (prefetch), 2 requêtes locations
+        with self.assertNumQueries(1 + 1 + 1 + 2 + 1 + 1):
+            # session + utilisateur + atelier, robes, taches (prefetch), 2 requêtes locations
             self.evenements(jour(0), jour(30))
 
 

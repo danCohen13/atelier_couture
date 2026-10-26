@@ -1,6 +1,6 @@
 {% extends 'atelier/base.html' %}
 
-{% block title %}Enregistrer une opération — Cohen Haute Couture{% endblock %}
+{% block title %}Enregistrer une opération — {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
 
 {% block content %}
 <main class="page page--narrow">

@@ -2,7 +2,7 @@
 <html lang="fr"><head><meta charset="utf-8">{% include 'atelier/pdf/_style_finance.html' %}</head>
 <body>
 <h1>Récapitulatif financier</h1>
-<p class="muted">Cohen Haute Couture — {{ periode_label }} — base « {{ base_label }} » — édité le {{ date_edition|date:"d/m/Y" }}</p>
+<p class="muted">{{ atelier_nom }} — {{ periode_label }} — base « {{ base_label }} » — édité le {{ date_edition|date:"d/m/Y" }}</p>
 <h2>Bilan</h2>
 <table>
     <tr><th>Devise</th><th class="r">Recettes</th><th class="r">Dépenses</th><th class="r">Bénéfice</th></tr>

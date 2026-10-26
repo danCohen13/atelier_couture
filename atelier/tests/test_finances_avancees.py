@@ -4,7 +4,6 @@ import datetime
 import io
 from decimal import Decimal
 
-from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 
@@ -19,6 +18,7 @@ from atelier.models import (
     Transaction,
 )
 from atelier.services import comptabilite as compta
+from atelier.tests.outils import atelier_test, utilisateur_test
 
 
 def jour(offset=0):
@@ -27,10 +27,10 @@ def jour(offset=0):
 
 class Base(TestCase):
     def setUp(self):
-        User.objects.create_user('atelier', password='motdepasse123')
+        utilisateur_test('atelier', password='motdepasse123')
         self.client.login(username='atelier', password='motdepasse123')
-        self.cliente = Client.objects.create(nom='Dupont', prenom='Claire')
-        self.stock = RobeLocation.objects.create(
+        self.cliente = Client.objects.create(atelier=atelier_test(), nom='Dupont', prenom='Claire')
+        self.stock = RobeLocation.objects.create(atelier=atelier_test(), 
             reference_stock='LOC-001', nom_modele='Aurore', taille='38', couleur='Ivoire',
             prix_location_defaut=Decimal('300'), caution_defaut=Decimal('500'), cout_revient=Decimal('1000'))
 
@@ -166,7 +166,7 @@ class CreancesEtPrevisionnelTests(Base):
     def test_impayes_et_retard(self):
         retard = self.robe(prix='1000', livraison=-5)
         Paiement.objects.create(robe=retard, montant=Decimal('400'))
-        elements = compta.creances()
+        elements = compta.creances(atelier_test())
         self.assertEqual(len(elements), 1)
         self.assertEqual(elements[0]['reste'], Decimal('600'))
         self.assertTrue(elements[0]['en_retard'])
@@ -175,7 +175,7 @@ class CreancesEtPrevisionnelTests(Base):
         robe = self.robe(prix='100')
         Paiement.objects.create(robe=robe, montant=Decimal('100'))
         self.location(statut='ANNULEE')
-        self.assertEqual(compta.creances(), [])
+        self.assertEqual(compta.creances(atelier_test()), [])
 
     def test_previsionnel_par_tranche(self):
         self.robe(prix='100', livraison=-2)
@@ -185,7 +185,7 @@ class CreancesEtPrevisionnelTests(Base):
                             date_livraison=jour(20), prix_total=Decimal('300'))
         Robe.objects.create(client=self.cliente, nom_modele='D', date_commencement=jour(-5),
                             date_livraison=jour(90), prix_total=Decimal('400'))
-        tranches = {t['label']: t['montants'] for t in compta.previsionnel(compta.creances())}
+        tranches = {t['label']: t['montants'] for t in compta.previsionnel(compta.creances(atelier_test()))}
         self.assertEqual(tranches['En retard'][0]['montant'], Decimal('100'))
         self.assertEqual(tranches['Cette semaine'][0]['montant'], Decimal('200'))
         self.assertEqual(tranches['Dans le mois'][0]['montant'], Decimal('300'))
@@ -202,21 +202,21 @@ class CreancesEtPrevisionnelTests(Base):
 
 class RecurrentesTests(Base):
     def test_generation_mensuelle_idempotente(self):
-        rec = DepenseRecurrente.objects.create(
+        rec = DepenseRecurrente.objects.create(atelier=atelier_test(), 
             designation='Loyer', montant=Decimal('2000'), categorie='AUTRE', jour_du_mois=1,
             date_debut=datetime.date(2026, 1, 1))
-        n = compta.generer_depenses_recurrentes(datetime.date(2026, 3, 15))
+        n = compta.generer_depenses_recurrentes(atelier_test(), datetime.date(2026, 3, 15))
         self.assertEqual(n, 3)
-        self.assertEqual(compta.generer_depenses_recurrentes(datetime.date(2026, 3, 15)), 0)
+        self.assertEqual(compta.generer_depenses_recurrentes(atelier_test(), datetime.date(2026, 3, 15)), 0)
         self.assertEqual(rec.transactions.count(), 3)
-        self.assertEqual(compta.generer_depenses_recurrentes(datetime.date(2026, 4, 2)), 1)
+        self.assertEqual(compta.generer_depenses_recurrentes(atelier_test(), datetime.date(2026, 4, 2)), 1)
 
     def test_pas_d_ecriture_future_ni_inactive(self):
-        DepenseRecurrente.objects.create(designation='Futur', montant=Decimal('10'), jour_du_mois=20,
+        DepenseRecurrente.objects.create(atelier=atelier_test(), designation='Futur', montant=Decimal('10'), jour_du_mois=20,
                                          date_debut=datetime.date(2026, 3, 1))
-        DepenseRecurrente.objects.create(designation='Pause', montant=Decimal('10'), actif=False,
+        DepenseRecurrente.objects.create(atelier=atelier_test(), designation='Pause', montant=Decimal('10'), actif=False,
                                          date_debut=datetime.date(2026, 1, 1))
-        self.assertEqual(compta.generer_depenses_recurrentes(datetime.date(2026, 3, 10)), 0)
+        self.assertEqual(compta.generer_depenses_recurrentes(atelier_test(), datetime.date(2026, 3, 10)), 0)
 
     def test_crud_et_visibilite_dans_les_finances(self):
         r = self.client.post(reverse('depenses_recurrentes'), {
@@ -247,7 +247,7 @@ class OperationsTests(Base):
         defaults = dict(type='DEPENSE', montant=Decimal('40'), categorie='FOURNITURES',
                         designation='Fils', date=jour())
         defaults.update(kw)
-        return Transaction.objects.create(**defaults)
+        return Transaction.objects.create(atelier=atelier_test(), **defaults)
 
     def test_modifier(self):
         t = self.operation()
@@ -288,21 +288,21 @@ class OperationsTests(Base):
 class RentabiliteTests(Base):
     def test_robe_benefice_et_gain_horaire(self):
         robe = self.robe(prix='1000', tissu='200', heures_travail=Decimal('20'))
-        Transaction.objects.create(type='DEPENSE', montant=Decimal('50'), categorie='FOURNITURES',
+        Transaction.objects.create(atelier=atelier_test(), type='DEPENSE', montant=Decimal('50'), categorie='FOURNITURES',
                                    designation='Boutons', date=jour(), robe=robe)
-        (r,) = compta.rentabilite_robes()
+        (r,) = compta.rentabilite_robes(atelier_test())
         self.assertEqual(r['benefice'], Decimal('750'))
         self.assertEqual(r['gain_horaire'], Decimal('37.50'))
 
     def test_pas_de_gain_horaire_sans_heures(self):
         self.robe()
-        self.assertIsNone(compta.rentabilite_robes()[0]['gain_horaire'])
+        self.assertIsNone(compta.rentabilite_robes(atelier_test())[0]['gain_horaire'])
 
     def test_stock_amortissement(self):
         self.location(prix='300', caution_statut='ENCAISSEE_TOTAL')   # 300 + 500 conservée
         self.location(prix='400', debut=10)
         self.location(prix='999', debut=20, statut='ANNULEE')
-        (r,) = compta.rentabilite_stock()
+        (r,) = compta.rentabilite_stock(atelier_test())
         self.assertEqual(r['nb_locations'], 2)
         self.assertEqual(r['revenus'], Decimal('1200'))
         self.assertEqual(r['amortissement'], Decimal('120.0'))
@@ -311,7 +311,7 @@ class RentabiliteTests(Base):
     def test_stock_sans_cout_de_revient(self):
         self.stock.cout_revient = 0
         self.stock.save()
-        self.assertIsNone(compta.rentabilite_stock()[0]['amortissement'])
+        self.assertIsNone(compta.rentabilite_stock(atelier_test())[0]['amortissement'])
 
     def test_page(self):
         self.robe()
@@ -330,23 +330,23 @@ class RentabiliteTests(Base):
 
 class ComparaisonsEtGlobalTests(Base):
     def test_comparaison_mois_precedent_et_n_moins_1(self):
-        params = ParametresFinance.charger()
+        params = ParametresFinance.charger(atelier_test())
         aujourdhui = datetime.date(2026, 5, 15)
-        Transaction.objects.create(type='RECETTE', montant=Decimal('1000'), categorie='AUTRE',
+        Transaction.objects.create(atelier=atelier_test(), type='RECETTE', montant=Decimal('1000'), categorie='AUTRE',
                                    designation='a', date=datetime.date(2026, 5, 2))
-        Transaction.objects.create(type='RECETTE', montant=Decimal('500'), categorie='AUTRE',
+        Transaction.objects.create(atelier=atelier_test(), type='RECETTE', montant=Decimal('500'), categorie='AUTRE',
                                    designation='b', date=datetime.date(2026, 4, 20))
-        Transaction.objects.create(type='RECETTE', montant=Decimal('800'), categorie='AUTRE',
+        Transaction.objects.create(atelier=atelier_test(), type='RECETTE', montant=Decimal('800'), categorie='AUTRE',
                                    designation='c', date=datetime.date(2025, 5, 20))
-        comp = compta.comparaison_mensuelle(compta.construire_lignes(), params, aujourdhui)
+        comp = compta.comparaison_mensuelle(compta.construire_lignes(atelier_test()), params, aujourdhui)
         self.assertEqual([c['recettes'] for c in comp], [Decimal('1000'), Decimal('500'), Decimal('800')])
         self.assertEqual(comp[1]['evolution'], Decimal('100.0'))
         self.assertEqual(comp[2]['evolution'], Decimal('25.0'))
 
     def test_comparaison_janvier_regarde_decembre(self):
-        Transaction.objects.create(type='RECETTE', montant=Decimal('10'), categorie='AUTRE',
+        Transaction.objects.create(atelier=atelier_test(), type='RECETTE', montant=Decimal('10'), categorie='AUTRE',
                                    designation='d', date=datetime.date(2025, 12, 31))
-        comp = compta.comparaison_mensuelle(compta.construire_lignes(), ParametresFinance.charger(),
+        comp = compta.comparaison_mensuelle(compta.construire_lignes(atelier_test()), ParametresFinance.charger(atelier_test()),
                                             datetime.date(2026, 1, 10))
         self.assertEqual(comp[1]['recettes'], Decimal('10'))
 
@@ -355,28 +355,28 @@ class ComparaisonsEtGlobalTests(Base):
 
     def test_repartition_depenses(self):
         for cat, m in (('FOURNITURES', '30'), ('FOURNITURES', '30'), ('MATERIEL', '40')):
-            Transaction.objects.create(type='DEPENSE', montant=Decimal(m), categorie=cat, designation='x', date=jour())
-        rep = compta.repartition_depenses(compta.construire_lignes(), ParametresFinance.charger())
+            Transaction.objects.create(atelier=atelier_test(), type='DEPENSE', montant=Decimal(m), categorie=cat, designation='x', date=jour())
+        rep = compta.repartition_depenses(compta.construire_lignes(atelier_test()), ParametresFinance.charger(atelier_test()))
         self.assertEqual(rep[0]['montant'], Decimal('60'))
         self.assertEqual(rep[0]['part'], Decimal('60.0'))
 
     def test_confection_vs_location(self):
         self.robe(prix='1000', tissu='200')
         self.location(prix='300')
-        act = {a['label']: a for a in compta.repartition_activites(compta.construire_lignes(), ParametresFinance.charger())}
+        act = {a['label']: a for a in compta.repartition_activites(compta.construire_lignes(atelier_test()), ParametresFinance.charger(atelier_test()))}
         self.assertEqual(act['Confection sur mesure']['benefice'], Decimal('800'))
         self.assertEqual(act['Location']['recettes'], Decimal('300'))
 
     def test_total_global_avec_taux(self):
         self.location(prix='100', devise='EUR')
         self.location(prix='50', debut=10)
-        params = ParametresFinance.charger()
-        glob = compta.total_global(compta.construire_lignes(), params)
+        params = ParametresFinance.charger(atelier_test())
+        glob = compta.total_global(compta.construire_lignes(atelier_test()), params)
         self.assertEqual(glob['recettes'], Decimal('50'))
         self.assertEqual(glob['incomplet'], ['EUR'])
         params.taux_eur = Decimal('4')
         params.save()
-        glob = compta.total_global(compta.construire_lignes(), params)
+        glob = compta.total_global(compta.construire_lignes(atelier_test()), params)
         self.assertEqual(glob['recettes'], Decimal('450.00'))
         self.assertEqual(glob['incomplet'], [])
 
@@ -396,20 +396,20 @@ class ObjectifTests(Base):
         self.assertIsNone(self.lignes()[0]['objectif'])
 
     def test_progression(self):
-        params = ParametresFinance.charger()
+        params = ParametresFinance.charger(atelier_test())
         params.objectif_mensuel = Decimal('1000')
         params.save()
-        Transaction.objects.create(type='RECETTE', montant=Decimal('250'), categorie='AUTRE',
+        Transaction.objects.create(atelier=atelier_test(), type='RECETTE', montant=Decimal('250'), categorie='AUTRE',
                                    designation='x', date=jour())
         obj = self.lignes()[0]['objectif']
         self.assertEqual(obj['pct'], Decimal('25.0'))
         self.assertFalse(obj['atteint'])
 
     def test_barre_plafonnee_et_atteint(self):
-        params = ParametresFinance.charger()
+        params = ParametresFinance.charger(atelier_test())
         params.objectif_mensuel = Decimal('100')
         params.save()
-        Transaction.objects.create(type='RECETTE', montant=Decimal('250'), categorie='AUTRE',
+        Transaction.objects.create(atelier=atelier_test(), type='RECETTE', montant=Decimal('250'), categorie='AUTRE',
                                    designation='x', date=jour())
         obj = self.lignes()[0]['objectif']
         self.assertEqual(obj['pct_barre'], 100)
@@ -419,19 +419,19 @@ class ObjectifTests(Base):
         r = self.client.post(reverse('parametres_finance'), {
             'taux_eur': '4.05', 'taux_usd': '3.7', 'objectif_mensuel': '12000'})
         self.assertRedirects(r, reverse('parametres_finance'))
-        p = ParametresFinance.charger()
+        p = ParametresFinance.charger(atelier_test())
         self.assertEqual((p.taux_eur, p.objectif_mensuel), (Decimal('4.05'), Decimal('12000')))
         self.assertEqual(ParametresFinance.objects.count(), 1)
 
     def test_taux_negatif_refuse(self):
         self.client.post(reverse('parametres_finance'), {'taux_eur': '-1'})
-        self.assertIsNone(ParametresFinance.charger().taux_eur)
+        self.assertIsNone(ParametresFinance.charger(atelier_test()).taux_eur)
 
 
 class ExportsEtDocumentsTests(Base):
     def test_csv(self):
         self.robe(prix='1000', tissu='0')
-        Transaction.objects.create(type='DEPENSE', montant=Decimal('12.5'), categorie='AUTRE',
+        Transaction.objects.create(atelier=atelier_test(), type='DEPENSE', montant=Decimal('12.5'), categorie='AUTRE',
                                    designation='=HYPERLINK("http://x")', date=jour())
         r = self.client.get(reverse('exporter_csv'))
         self.assertEqual(r.status_code, 200)
@@ -443,7 +443,7 @@ class ExportsEtDocumentsTests(Base):
         self.assertTrue(any('1000.00' in l for l in lignes))
 
     def test_csv_respecte_la_periode(self):
-        Transaction.objects.create(type='DEPENSE', montant=Decimal('9'), categorie='AUTRE',
+        Transaction.objects.create(atelier=atelier_test(), type='DEPENSE', montant=Decimal('9'), categorie='AUTRE',
                                    designation='vieux', date=jour(-800))
         self.assertEqual(len(list(csv.reader(io.StringIO(
             self.client.get(reverse('exporter_csv'), {'periode': 'mois'}).content.decode('utf-8-sig')),

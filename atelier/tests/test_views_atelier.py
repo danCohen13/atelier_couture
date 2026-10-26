@@ -1,18 +1,18 @@
 import datetime
 from decimal import Decimal
 
-from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 
 from atelier.models import Client, Robe, Tache
+from atelier.tests.outils import atelier_test, utilisateur_test
 
 
 class AuthRequiredTests(TestCase):
     """Toutes les pages de l'atelier doivent exiger une connexion."""
 
     def setUp(self):
-        self.cliente = Client.objects.create(nom="Dupont", prenom="Claire")
+        self.cliente = Client.objects.create(atelier=atelier_test(), nom="Dupont", prenom="Claire")
         self.robe = Robe.objects.create(
             client=self.cliente, nom_modele="Robe Test",
             date_commencement=datetime.date.today(), date_livraison=datetime.date.today(),
@@ -48,9 +48,9 @@ class AuthRequiredTests(TestCase):
 class DashboardViewTests(TestCase):
 
     def setUp(self):
-        self.user = User.objects.create_user(username='atelier', password='motdepasse123')
+        self.user = utilisateur_test(username='atelier', password='motdepasse123')
         self.client.login(username='atelier', password='motdepasse123')
-        self.cliente = Client.objects.create(nom="Dupont", prenom="Claire")
+        self.cliente = Client.objects.create(atelier=atelier_test(), nom="Dupont", prenom="Claire")
 
         self.robe_en_cours = Robe.objects.create(
             client=self.cliente, nom_modele="Robe Alpha",
@@ -98,7 +98,7 @@ class DashboardViewTests(TestCase):
 class ClientCrudTests(TestCase):
 
     def setUp(self):
-        User.objects.create_user(username='atelier', password='motdepasse123')
+        utilisateur_test(username='atelier', password='motdepasse123')
         self.client.login(username='atelier', password='motdepasse123')
 
     def test_ajouter_client_valide_cree_et_redirige(self):
@@ -114,7 +114,7 @@ class ClientCrudTests(TestCase):
         self.assertFalse(Client.objects.filter(prenom='Sophie').exists())
 
     def test_modifier_client_met_a_jour(self):
-        cliente = Client.objects.create(nom="Dupont", prenom="Claire")
+        cliente = Client.objects.create(atelier=atelier_test(), nom="Dupont", prenom="Claire")
         response = self.client.post(reverse('modifier_client', args=[cliente.id]), {
             'nom': 'Dupont', 'prenom': 'Claire', 'telephone': '+33612345678',
         })
@@ -125,7 +125,7 @@ class ClientCrudTests(TestCase):
     def test_modifier_client_affiche_les_champs_de_la_cliente_pas_dune_robe(self):
         # Régression : la page avait par erreur hérité du gabarit de robe
         # (_robe_form.html) au lieu du formulaire de la cliente.
-        cliente = Client.objects.create(nom="Dupont", prenom="Claire")
+        cliente = Client.objects.create(atelier=atelier_test(), nom="Dupont", prenom="Claire")
         response = self.client.get(reverse('modifier_client', args=[cliente.id]))
         contenu = response.content.decode()
         self.assertIn('name="tour_poitrine"', contenu)
@@ -134,23 +134,23 @@ class ClientCrudTests(TestCase):
         self.assertNotIn('name="cout_tissu"', contenu)
 
     def test_recherche_par_nom(self):
-        Client.objects.create(nom="Dupont", prenom="Claire")
-        Client.objects.create(nom="Martin", prenom="Sophie")
+        Client.objects.create(atelier=atelier_test(), nom="Dupont", prenom="Claire")
+        Client.objects.create(atelier=atelier_test(), nom="Martin", prenom="Sophie")
         response = self.client.get(reverse('liste_clientes'), {'q': 'dupont'})
         clientes = response.context['clientes']
         self.assertEqual(list(clientes), list(Client.objects.filter(nom='Dupont')))
 
     def test_recherche_par_prenom(self):
-        Client.objects.create(nom="Dupont", prenom="Claire")
-        Client.objects.create(nom="Martin", prenom="Sophie")
+        Client.objects.create(atelier=atelier_test(), nom="Dupont", prenom="Claire")
+        Client.objects.create(atelier=atelier_test(), nom="Martin", prenom="Sophie")
         response = self.client.get(reverse('liste_clientes'), {'q': 'sophie'})
         clientes = response.context['clientes']
         self.assertEqual(clientes.count(), 1)
         self.assertEqual(clientes.first().prenom, 'Sophie')
 
     def test_fiche_cliente_ne_montre_que_ses_propres_robes(self):
-        cliente_a = Client.objects.create(nom="Dupont", prenom="Claire")
-        cliente_b = Client.objects.create(nom="Martin", prenom="Sophie")
+        cliente_a = Client.objects.create(atelier=atelier_test(), nom="Dupont", prenom="Claire")
+        cliente_b = Client.objects.create(atelier=atelier_test(), nom="Martin", prenom="Sophie")
         robe_a = Robe.objects.create(
             client=cliente_a, nom_modele="Robe A",
             date_commencement=datetime.date.today(), date_livraison=datetime.date.today(),
@@ -167,9 +167,9 @@ class ClientCrudTests(TestCase):
 class RobeCrudTests(TestCase):
 
     def setUp(self):
-        User.objects.create_user(username='atelier', password='motdepasse123')
+        utilisateur_test(username='atelier', password='motdepasse123')
         self.client.login(username='atelier', password='motdepasse123')
-        self.cliente = Client.objects.create(nom="Dupont", prenom="Claire")
+        self.cliente = Client.objects.create(atelier=atelier_test(), nom="Dupont", prenom="Claire")
 
     def test_ajouter_robe_valide_cree_et_redirige(self):
         response = self.client.post(reverse('ajouter_robe'), {
@@ -229,9 +229,9 @@ class RobeCrudTests(TestCase):
 class TacheTests(TestCase):
 
     def setUp(self):
-        User.objects.create_user(username='atelier', password='motdepasse123')
+        utilisateur_test(username='atelier', password='motdepasse123')
         self.client.login(username='atelier', password='motdepasse123')
-        cliente = Client.objects.create(nom="Dupont", prenom="Claire")
+        cliente = Client.objects.create(atelier=atelier_test(), nom="Dupont", prenom="Claire")
         self.robe = Robe.objects.create(
             client=cliente, nom_modele="Robe Test",
             date_commencement=datetime.date.today(), date_livraison=datetime.date.today(),

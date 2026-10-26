@@ -12,13 +12,13 @@ Trois types d'évènements, tous à la journée :
 """
 import datetime
 
-from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.http import require_GET
 
+from .acces import atelier_requis
 from .models import Location, Robe
 
 # Garde-fou : FullCalendar demande au plus ~6 semaines en vue mensuelle.
@@ -40,7 +40,7 @@ def _nom_cliente(client):
     return f"{client.nom.upper()} {client.prenom}"
 
 
-@login_required
+@atelier_requis
 def planning(request):
     """Page du calendrier. Les évènements sont chargés en AJAX."""
     return render(request, 'atelier/planning/planning.html', {
@@ -128,7 +128,7 @@ def _evenement_location(loc, kind):
     }
 
 
-@login_required
+@atelier_requis
 @require_GET
 def api_planning_evenements(request):
     """Évènements entre `start` (inclus) et `end` (exclu), au format FullCalendar."""
@@ -144,13 +144,13 @@ def api_planning_evenements(request):
     aujourdhui = timezone.localdate()
     evenements = []
 
-    robes = (Robe.objects
+    robes = (Robe.objects.de(request.atelier)
              .filter(date_livraison__gte=debut, date_livraison__lt=fin)
              .select_related('client')
              .prefetch_related('taches'))
     evenements += [_evenement_livraison(r, aujourdhui) for r in robes]
 
-    actives = Location.objects.exclude(statut='ANNULEE').select_related('client', 'robe_location')
+    actives = Location.objects.de(request.atelier).exclude(statut='ANNULEE').select_related('client', 'robe_location')
 
     for loc in actives.filter(date_debut__gte=debut, date_debut__lt=fin):
         evenements.append(_evenement_location(loc, 'retrait'))

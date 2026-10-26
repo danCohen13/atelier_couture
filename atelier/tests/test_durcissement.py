@@ -8,6 +8,7 @@ from django.test import TestCase, override_settings
 from django.urls import reverse
 
 from atelier.models import Client, Robe, RobeLocation, Transaction
+from atelier.tests.outils import atelier_test, utilisateur_test
 
 BACKENDS_AVEC_AXES = [
     'axes.backends.AxesStandaloneBackend',
@@ -17,7 +18,7 @@ BACKENDS_AVEC_AXES = [
 
 class DeconnexionTests(TestCase):
     def setUp(self):
-        User.objects.create_user('atelier', password='motdepasse123')
+        utilisateur_test('atelier', password='motdepasse123')
         self.client.login(username='atelier', password='motdepasse123')
 
     def test_la_deconnexion_par_simple_lien_est_refusee(self):
@@ -41,12 +42,12 @@ class LienAdministrationTests(TestCase):
         self.assertNotIn('href="/admin/"', page)
 
     def test_pas_de_lien_admin_pour_un_compte_sans_droit(self):
-        User.objects.create_user('simple', password='motdepasse123')
+        utilisateur_test('simple', password='motdepasse123')
         self.client.login(username='simple', password='motdepasse123')
         self.assertNotContains(self.client.get(reverse('dashboard')), 'Administration')
 
     def test_lien_admin_pour_un_compte_staff(self):
-        User.objects.create_user('chef', password='motdepasse123', is_staff=True)
+        utilisateur_test('chef', password='motdepasse123', is_staff=True)
         self.client.login(username='chef', password='motdepasse123')
         self.assertContains(self.client.get(reverse('dashboard')), reverse('admin:index'))
 
@@ -56,7 +57,7 @@ class LienAdministrationTests(TestCase):
 
 class MessagesTests(TestCase):
     def setUp(self):
-        User.objects.create_user('atelier', password='motdepasse123')
+        utilisateur_test('atelier', password='motdepasse123')
         self.client.login(username='atelier', password='motdepasse123')
 
     def test_le_message_de_succes_s_affiche_apres_ajout_au_stock(self):
@@ -93,7 +94,7 @@ class BlocageApresEchecsTests(TestCase):
     """django-axes : 5 mauvais mots de passe bloquent la connexion pendant une heure."""
 
     def setUp(self):
-        User.objects.create_user('atelier', password='BonMotDePasse123!')
+        utilisateur_test('atelier', password='BonMotDePasse123!')
 
     def tenter(self, mot_de_passe, username='atelier'):
         return self.client.post(reverse('login'), {'username': username, 'password': mot_de_passe})
@@ -122,7 +123,7 @@ class BlocageApresEchecsTests(TestCase):
             self.assertEqual(self.tenter('mauvais').status_code, 200)
 
     def test_un_autre_identifiant_n_est_pas_affecte(self):
-        User.objects.create_user('autre', password='BonMotDePasse123!')
+        utilisateur_test('autre', password='BonMotDePasse123!')
         for _ in range(5):
             self.tenter('mauvais')
         self.assertEqual(self.tenter('BonMotDePasse123!', username='autre').status_code, 302)
@@ -130,9 +131,9 @@ class BlocageApresEchecsTests(TestCase):
 
 class FinancesMultiDevisesTests(TestCase):
     def setUp(self):
-        User.objects.create_user('atelier', password='motdepasse123')
+        utilisateur_test('atelier', password='motdepasse123')
         self.client.login(username='atelier', password='motdepasse123')
-        self.cliente = Client.objects.create(nom='Dupont', prenom='Claire')
+        self.cliente = Client.objects.create(atelier=atelier_test(), nom='Dupont', prenom='Claire')
         self.jour = datetime.date.today()
 
     def robe(self, nom, prix, devise, tissu=0):
@@ -175,7 +176,7 @@ class FinancesMultiDevisesTests(TestCase):
         self.assertNotContains(self.client.get(reverse('finances')), 'Autres devises')
 
     def test_les_operations_manuelles_sont_comptees_en_shekels(self):
-        Transaction.objects.create(type='DEPENSE', montant=Decimal('80.00'), categorie='FOURNITURES',
+        Transaction.objects.create(atelier=atelier_test(), type='DEPENSE', montant=Decimal('80.00'), categorie='FOURNITURES',
                                    designation='Fils', date=self.jour)
         ctx = self.client.get(reverse('finances')).context
         self.assertEqual(ctx['total_depenses'], Decimal('80.00'))
@@ -184,7 +185,7 @@ class FinancesMultiDevisesTests(TestCase):
 
 class DatesLocalesTests(TestCase):
     def test_jours_restants_utilise_la_date_locale_de_l_atelier(self):
-        cliente = Client.objects.create(nom='Dupont', prenom='Claire')
+        cliente = Client.objects.create(atelier=atelier_test(), nom='Dupont', prenom='Claire')
         robe = Robe.objects.create(
             client=cliente, nom_modele='Robe', date_commencement=datetime.date(2026, 10, 1),
             date_livraison=datetime.date(2026, 10, 14),
@@ -194,8 +195,8 @@ class DatesLocalesTests(TestCase):
 
     def test_une_location_est_en_retard_selon_la_date_locale(self):
         from atelier.models import Location
-        cliente = Client.objects.create(nom='Dupont', prenom='Claire')
-        stock = RobeLocation.objects.create(
+        cliente = Client.objects.create(atelier=atelier_test(), nom='Dupont', prenom='Claire')
+        stock = RobeLocation.objects.create(atelier=atelier_test(), 
             reference_stock='LOC-9', nom_modele='M', taille='38', couleur='Noir',
             prix_location_defaut=100, caution_defaut=100,
         )

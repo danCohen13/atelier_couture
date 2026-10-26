@@ -7,6 +7,8 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
 
+from .ateliers import ModeleAtelier
+
 
 class CodeReinitialisation(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -23,7 +25,7 @@ class CodeReinitialisation(models.Model):
         return str(100000 + secrets.randbelow(900000))
 
 
-class IncidentSecurite(models.Model):
+class IncidentSecurite(ModeleAtelier):
     """Registre des incidents de sécurité (obligation de documenter, règlement de sécurité 2017)."""
     date_constat = models.DateField(default=timezone.localdate, verbose_name="Date du constat")
     description = models.TextField(help_text="Ce qui s'est passé (perte d'un téléphone, accès suspect…)")

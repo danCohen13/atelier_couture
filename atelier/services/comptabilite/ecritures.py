@@ -11,17 +11,17 @@ def _mois_suivant(annee, mois):
     return (annee + 1, 1) if mois == 12 else (annee, mois + 1)
 
 
-def generer_depenses_recurrentes(aujourdhui=None):
-    """Crée les écritures manquantes des dépenses récurrentes jusqu'à aujourd'hui (idempotent).
+def generer_depenses_recurrentes(atelier, aujourdhui=None):
+    """Crée les écritures manquantes des dépenses récurrentes de l'atelier jusqu'à aujourd'hui (idempotent).
 
     Deux requêtes de lecture au total (récurrentes actives, écritures déjà créées), et une seule
     insertion groupée s'il manque quelque chose ; aucune écriture sinon.
     """
     aujourdhui = aujourdhui or timezone.localdate()
-    actives = list(DepenseRecurrente.objects.filter(actif=True))
+    actives = list(DepenseRecurrente.objects.de(atelier).filter(actif=True))
     if not actives:
         return 0
-    deja = set(Transaction.objects.filter(recurrente__in=actives).values_list('recurrente_id', 'date'))
+    deja = set(Transaction.objects.de(atelier).filter(recurrente__in=actives).values_list('recurrente_id', 'date'))
     a_creer = []
     for rec in actives:
         annee, mois = rec.date_debut.year, rec.date_debut.month
@@ -30,27 +30,27 @@ def generer_depenses_recurrentes(aujourdhui=None):
             if rec.date_debut <= jour <= aujourdhui and (rec.pk, jour) not in deja:
                 a_creer.append(Transaction(
                     type='DEPENSE', montant=rec.montant, categorie=rec.categorie,
-                    designation=rec.designation, date=jour, recurrente=rec))
+                    designation=rec.designation, date=jour, recurrente=rec, atelier=atelier))
             annee, mois = _mois_suivant(annee, mois)
     if a_creer:
         Transaction.objects.bulk_create(a_creer)
     return len(a_creer)
 
 
-def charger_dossiers():
+def charger_dossiers(atelier):
     """Robes et contrats non annulés, avec clientes et paiements : chargés UNE fois par page
     puis partagés entre les calculs (écritures, créances, cautions, alertes)."""
-    robes = list(Robe.objects.select_related('client').prefetch_related('paiements'))
-    contrats = list(Location.objects.exclude(statut='ANNULEE')
+    robes = list(Robe.objects.de(atelier).select_related('client').prefetch_related('paiements'))
+    contrats = list(Location.objects.de(atelier).exclude(statut='ANNULEE')
                     .select_related('client', 'robe_location').prefetch_related('paiements'))
     return robes, contrats
 
 
-def construire_lignes(base='FACTURE', robes=None, contrats=None):
+def construire_lignes(atelier, base='FACTURE', robes=None, contrats=None):
     """Toutes les écritures (automatiques + manuelles). base = 'FACTURE' ou 'ENCAISSE'.
     `robes` et `contrats` : dossiers déjà chargés (sinon chargés ici)."""
     if robes is None or contrats is None:
-        robes, contrats = charger_dossiers()
+        robes, contrats = charger_dossiers(atelier)
     lignes = []
     for robe in robes:
         if robe.cout_tissu:
@@ -86,7 +86,7 @@ def construire_lignes(base='FACTURE', robes=None, contrats=None):
                 loc.date_retour_effectif or loc.date_fin_prevue, 'RECETTE', 'Caution retenue (auto)',
                 f"Caution conservée — {etiquette}", None, gardee, loc.devise, auto=True, source='location'))
 
-    for t in Transaction.objects.select_related('robe'):
+    for t in Transaction.objects.de(atelier).select_related('robe'):
         if t.categorie in ('LOCATION_ROBE',):
             source = 'location'
         elif t.categorie in ('PAIEMENT_CLIENT', 'TISSU'):

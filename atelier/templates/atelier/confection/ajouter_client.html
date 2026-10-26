@@ -1,6 +1,6 @@
 {% extends 'atelier/base.html' %}
 
-{% block title %}Nouvelle cliente — Cohen Haute Couture{% endblock %}
+{% block title %}Nouvelle cliente — {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
 
 {% block content %}
 <main class="page" style="max-width: 760px;">

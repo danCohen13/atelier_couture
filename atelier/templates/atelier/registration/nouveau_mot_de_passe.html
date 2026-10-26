@@ -1,5 +1,5 @@
 {% extends 'atelier/base.html' %}
-{% block title %}Nouveau mot de passe — Cohen Haute Couture{% endblock %}
+{% block title %}Nouveau mot de passe — {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
 {# Cette page affiche déjà les messages dans sa carte : on neutralise l'affichage global. #}
 {% block messages %}{% endblock %}
 

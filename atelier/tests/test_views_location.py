@@ -1,21 +1,21 @@
 import datetime
 from decimal import Decimal
 
-from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.urls import reverse
 
 from atelier.forms import LocationForm, RetourLocationForm, RobeLocationForm
 from atelier.models import Client, Location, RobeLocation
+from atelier.tests.outils import atelier_test, utilisateur_test
 
 
 class LocationModelsTests(TestCase):
     """Vérification des règles métier sur les modèles RobeLocation et Location."""
 
     def setUp(self):
-        self.cliente = Client.objects.create(nom="Lefebvre", prenom="Camille", telephone="+33611223344")
-        self.robe_stock = RobeLocation.objects.create(
+        self.cliente = Client.objects.create(atelier=atelier_test(), nom="Lefebvre", prenom="Camille", telephone="+33611223344")
+        self.robe_stock = RobeLocation.objects.create(atelier=atelier_test(), 
             reference_stock="LOC-001",
             nom_modele="Aurore",
             taille="38",
@@ -142,8 +142,8 @@ class LocationFormsTests(TestCase):
     """Validation des formulaires d'inventaire et de contrats."""
 
     def setUp(self):
-        self.cliente = Client.objects.create(nom="Bernard", prenom="Lucie")
-        self.robe = RobeLocation.objects.create(
+        self.cliente = Client.objects.create(atelier=atelier_test(), nom="Bernard", prenom="Lucie")
+        self.robe = RobeLocation.objects.create(atelier=atelier_test(), 
             reference_stock="LOC-002",
             nom_modele="Sirène",
             taille="36",
@@ -153,7 +153,7 @@ class LocationFormsTests(TestCase):
         )
 
     def test_robe_location_form_valide(self):
-        form = RobeLocationForm(data={
+        form = RobeLocationForm(atelier=atelier_test(), data={
             'reference_stock': 'LOC-003',
             'nom_modele': 'Bohème Dentelle',
             'taille': '40',
@@ -167,7 +167,7 @@ class LocationFormsTests(TestCase):
         self.assertTrue(form.is_valid(), form.errors)
 
     def test_location_form_valide(self):
-        form = LocationForm(data={
+        form = LocationForm(atelier=atelier_test(), data={
             'client': self.cliente.id,
             'robe_location': self.robe.id,
             'date_debut': datetime.date.today().strftime('%d/%m/%Y'),
@@ -196,9 +196,9 @@ class LocationViewsTests(TestCase):
     """Tests fonctionnels des vues et du contrôle d'accès."""
 
     def setUp(self):
-        self.user = User.objects.create_user(username="couturiere", password="Password123!")
-        self.cliente = Client.objects.create(nom="Gautier", prenom="Chloé")
-        self.robe = RobeLocation.objects.create(
+        self.user = utilisateur_test(username="couturiere", password="Password123!")
+        self.cliente = Client.objects.create(atelier=atelier_test(), nom="Gautier", prenom="Chloé")
+        self.robe = RobeLocation.objects.create(atelier=atelier_test(), 
             reference_stock="LOC-004",
             nom_modele="Princesse",
             taille="38",
