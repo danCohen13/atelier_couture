@@ -1,6 +1,6 @@
-{% load static %}
+{% load static i18n %}
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ LANGUAGE_CODE }}" dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}">
 
 <head>
     <meta charset="UTF-8">
@@ -9,7 +9,7 @@
     <title>{% block title %}{{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&family=Frank+Ruhl+Libre:wght@500;700&family=Heebo:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'atelier/css/style.css' %}">
     {% block extra_css %}{% endblock %}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -29,32 +29,44 @@
                 </svg>
                 <span class="brand__text">
                     <span class="brand__name">{{ atelier_courant.nom|default:PRODUIT_NOM }}</span>
-                    <span class="brand__tagline">Maison &amp; atelier de confection</span>
+                    <span class="brand__tagline">{% trans "Maison &amp; atelier de confection" %}</span>
                 </span>
             </a>
 
             <!-- Zone d'actions avec affichage contextuel des liens -->
             <div class="header-actions">
+
+                {# Choix de la langue : visible aussi sur la page de connexion. #}
+                <form method="POST" action="{% url 'changer_langue' %}" class="inline-form lang-switch">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                    {% get_available_languages as LANGS %}
+                    {% for code, nom in LANGS %}
+                    <button type="submit" name="langue" value="{{ code }}" lang="{{ code }}"
+                            class="lang-switch__btn{% if code == LANGUAGE_CODE %} is-active{% endif %}"
+                            {% if code == LANGUAGE_CODE %}aria-current="true"{% endif %}>{{ nom }}</button>
+                    {% endfor %}
+                </form>
                 {% if user.is_authenticated and atelier_courant %}
 
                     <!-- S'affiche partout SAUF sur le tableau de bord -->
                     {% if request.resolver_match.url_name != 'dashboard' %}
-                        <a href="{% url 'dashboard' %}" class="header-link">Tableau de bord</a>
+                        <a href="{% url 'dashboard' %}" class="header-link">{% trans "Tableau de bord" %}</a>
                     {% endif %}
 
                     <!-- S'affiche partout SAUF sur la liste des clientes -->
                     {% if request.resolver_match.url_name != 'liste_clientes' %}
-                        <a href="{% url 'liste_clientes' %}" class="header-link">Répertoire</a>
+                        <a href="{% url 'liste_clientes' %}" class="header-link">{% trans "Répertoire" %}</a>
                     {% endif %}
 
                     {# La déconnexion modifie la session : elle se fait en POST (Django 5 refuse le GET). #}
                     <form method="POST" action="{% url 'logout' %}" class="inline-form">
                         {% csrf_token %}
-                        <button type="submit" class="header-link header-link--logout">Déconnexion</button>
+                        <button type="submit" class="header-link header-link--logout">{% trans "Déconnexion" %}</button>
                     </form>
 
                     {% if user.is_staff %}
-                        <a href="{% url 'admin:index' %}" class="header-link">Administration</a>
+                        <a href="{% url 'admin:index' %}" class="header-link">{% trans "Administration" %}</a>
                     {% endif %}
                 {% endif %}
             </div>
@@ -66,31 +78,31 @@
 
         {% if user.is_authenticated and atelier_courant %}
         <aside class="sidebar">
-            <div class="sidebar-title">Navigation</div>
+            <div class="sidebar-title">{% trans "Navigation" %}</div>
             <nav class="sidebar-menu">
                 <!-- Atelier & confections sur mesure -->
                 <a href="{% url 'dashboard' %}" class="sidebar-link {% if request.resolver_match.url_name != 'finances' and request.resolver_match.url_name != 'planning' and 'location' not in request.resolver_match.url_name and 'confidentialite' not in request.resolver_match.url_name and request.path|slice:':10' != '/finances/' %}is-active{% endif %}">
-                    Atelier &amp; modèles
+                    {% trans "Atelier &amp; modèles" %}
                 </a>
 
                 <!-- Calendrier : livraisons, retraits et retours -->
                 <a href="{% url 'planning' %}" class="sidebar-link {% if request.resolver_match.url_name == 'planning' %}is-active{% endif %}">
-                    Planning
+                    {% trans "Planning" %}
                 </a>
 
                 <!-- Module Location & Stock -->
                 <a href="{% url 'tableau_bord_locations' %}" class="sidebar-link {% if 'location' in request.resolver_match.url_name %}is-active{% endif %}">
-                    Locations &amp; stock
+                    {% trans "Locations &amp; stock" %}
                 </a>
 
                 <!-- Finances & bilans -->
                 <a href="{% url 'finances' %}" class="sidebar-link {% if request.path|slice:':10' == '/finances/' %}is-active{% endif %}">
-                    Finances &amp; bilans
+                    {% trans "Finances &amp; bilans" %}
                 </a>
 
                 <!-- Protection des données des clientes -->
                 <a href="{% url 'confidentialite' %}" class="sidebar-link {% if 'confidentialite' in request.resolver_match.url_name %}is-active{% endif %}">
-                    Confidentialité
+                    {% trans "Confidentialité" %}
                 </a>
             </nav>
         </aside>
@@ -116,14 +128,14 @@
     {% block scripts %}{% endblock %}
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
+    {% if LANGUAGE_CODE == 'he' %}<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/he.js"></script>{% else %}<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>{% endif %}
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             flatpickr(".datepicker", {
                 dateFormat: "d/m/Y",
                 allowInput: true,
                 disableMobile: true,   // même format jj/mm/aaaa sur téléphone
-                locale: "fr"
+                locale: "{{ LANGUAGE_CODE }}"
             });
 
             document.querySelectorAll('.datepicker').forEach(function (input) {

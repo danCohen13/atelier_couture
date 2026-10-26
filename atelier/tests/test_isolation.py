@@ -347,7 +347,7 @@ class FiletDeSecuriteTests(TestCase):
         """Une utilisatrice connectée sans atelier reçoit 403 partout, sauf sur les pages d'authentification."""
         User.objects.create_user('orpheline', password='motdepasse123')
         self.client.login(username='orpheline', password='motdepasse123')
-        exemptes = {'login', 'logout', 'demander_code_reset', 'verifier_code_reset', 'nouveau_mot_de_passe'}
+        exemptes = {'changer_langue', 'login', 'logout', 'demander_code_reset', 'verifier_code_reset', 'nouveau_mot_de_passe'}
         for motif in urls_atelier.urlpatterns:
             if motif.name in exemptes or 'views_auth' in getattr(motif.callback, '__module__', ''):
                 continue

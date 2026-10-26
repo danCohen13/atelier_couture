@@ -59,7 +59,7 @@
 
 {% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.15/locales/fr.global.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.15/locales/{{ LANGUAGE_CODE }}.global.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const URL_EVENEMENTS = "{{ url_evenements|escapejs }}";
@@ -144,8 +144,9 @@ document.addEventListener('DOMContentLoaded', function () {
     let etaitMobile = estMobile();
 
     const calendrier = new FullCalendar.Calendar(elCalendrier, {
-        locale: 'fr',
-        firstDay: 1,
+        locale: '{{ LANGUAGE_CODE }}',
+        direction: '{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}',
+        firstDay: {% if LANGUAGE_CODE == 'he' %}0{% else %}1{% endif %},
         height: 'auto',
         fixedWeekCount: false,
         initialView: etaitMobile ? 'listMonth' : 'dayGridMonth',

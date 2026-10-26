@@ -2,3 +2,4 @@
 ruff==0.17.0
 coverage==7.16.2
 pip-audit
+polib>=1.2

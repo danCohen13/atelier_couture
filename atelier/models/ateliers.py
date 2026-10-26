@@ -50,6 +50,9 @@ class Adhesion(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='adhesion')
     atelier = models.ForeignKey(Atelier, on_delete=models.CASCADE, related_name='adhesions')
     role = models.CharField(max_length=15, choices=ROLE_CHOICES, default='PROPRIETAIRE')
+    langue = models.CharField(
+        max_length=5, choices=[('he', 'עברית'), ('fr', 'Français')], default='he',
+        help_text="Langue de l'interface de cette utilisatrice.")
 
     class Meta:
         verbose_name = "Adhésion"

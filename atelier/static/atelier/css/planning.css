@@ -95,8 +95,8 @@
 .planning .fc .fc-button-primary:not(:disabled).fc-button-active,
 .planning .fc .fc-button-primary:not(:disabled):active { color: var(--paper-light); }
 .planning .fc .fc-button:disabled { opacity: 0.4; }
-.planning .fc .fc-button-group > .fc-button { border-radius: 0; margin-left: -1px; }
-.planning .fc .fc-button-group > .fc-button:first-child { border-radius: 2px 0 0 2px; margin-left: 0; }
+.planning .fc .fc-button-group > .fc-button { border-radius: 0; margin-inline-start: -1px; }
+.planning .fc .fc-button-group > .fc-button:first-child { border-radius: 2px 0 0 2px; margin-inline-start: 0; }
 .planning .fc .fc-button-group > .fc-button:last-child { border-radius: 0 2px 2px 0; }
 
 /* --- Grille --- */
@@ -139,7 +139,7 @@
 .planning .fc .fc-event.ev {
   background: var(--paper);
   border: none;
-  border-left: 3px solid var(--kind);
+  border-inline-start: 3px solid var(--kind);
   border-radius: 2px;
   margin: 1px 4px;
   padding: 2px 6px;
@@ -160,7 +160,7 @@
 
 .planning .ev__texte { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .planning .ev__kind {
-  margin-right: 6px;
+  margin-inline-end: 6px;
   font-family: var(--font-mono);
   font-size: 9.5px;
   letter-spacing: 0.06em;
@@ -184,7 +184,7 @@
 .planning .fc .fc-list-event td { padding: 12px 14px; }
 .planning .fc .fc-list-event-time { display: none; }
 .planning .fc .fc-list-event .ev__texte { white-space: normal; }
-.planning .fc .fc-list-event.ev { background: transparent; border-left: none; margin: 0; padding: 0; }
+.planning .fc .fc-list-event.ev { background: transparent; border-inline-start: none; margin: 0; padding: 0; }
 .planning .fc .fc-list-event.ev--fait { opacity: 0.55; }
 .planning .fc .fc-list-event.ev--retard .ev__titre { color: var(--wine); }
 .planning .fc .fc-list-empty { background: var(--paper); font-size: 13.5px; color: var(--ink-soft); }
@@ -213,7 +213,7 @@
   color: var(--ink-soft);
   cursor: pointer;
   padding: 4px 8px;
-  margin-right: -8px;
+  margin-inline-end: -8px;
 }
 .event-dialog__close:hover { color: var(--ink); }
 .event-dialog h2 {
@@ -226,7 +226,7 @@
 .event-dialog .finance-line { gap: 18px; border-bottom: 1px dashed var(--line); padding: 8px 0; }
 .event-dialog .finance-line:last-child { border-bottom: none; }
 .event-dialog .finance-line span { flex-shrink: 0; }
-.event-dialog .finance-line strong { text-align: right; overflow-wrap: anywhere; font-size: 12.5px; }
+.event-dialog .finance-line strong { text-align: end; overflow-wrap: anywhere; font-size: 12.5px; }
 .event-dialog .card-link { font-size: 12.5px; }
 .event-dialog__actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; margin-top: 22px; }
 

@@ -12,5 +12,6 @@ def atelier_test(nom='Atelier test'):
 def utilisateur_test(*args, atelier=None, **kwargs):
     """Comme `User.objects.create_user`, mais rattaché à un atelier (celui des tests par défaut)."""
     user = User.objects.create_user(*args, **kwargs)
-    Adhesion.objects.create(user=user, atelier=atelier or atelier_test())
+    # Les tests existants vérifient des textes et formats français ; la langue par défaut du produit est l'hébreu.
+    Adhesion.objects.create(user=user, atelier=atelier or atelier_test(), langue='fr')
     return user

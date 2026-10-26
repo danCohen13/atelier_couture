@@ -158,7 +158,7 @@ a { color: inherit; text-decoration: none; }
 .header-link--logout {
   color: var(--wine) !important;
   font-weight: 600;
-  margin-right: 4px;
+  margin-inline-end: 4px;
 }
 .header-link--logout:hover { color: var(--wine) !important; opacity: 0.75; }
 
@@ -313,7 +313,7 @@ table.swatch-table {
 }
 
 .swatch-table thead th {
-  text-align: left;
+  text-align: start;
   font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 0.1em;
@@ -333,12 +333,12 @@ table.swatch-table {
 .swatch-row:hover { background: var(--paper); }
 
 /* encoches de patron sur le bord gauche de chaque ligne */
-.swatch-row td:first-child { position: relative; padding-left: 28px; }
+.swatch-row td:first-child { position: relative; padding-inline-start: 28px; }
 .swatch-row td:first-child::before,
 .swatch-row td:first-child::after {
   content: "";
   position: absolute;
-  left: 8px;
+  inset-inline-start: 8px;
   width: 0;
   height: 0;
   border-style: solid;
@@ -413,7 +413,7 @@ table.swatch-table {
   font-weight: 600;
   color: var(--ink-soft);
   min-width: 32px;
-  text-align: right;
+  text-align: end;
 }
 
 /* ---------------------------------------------------------------------
@@ -421,7 +421,7 @@ table.swatch-table {
    --------------------------------------------------------------------- */
 .drawer-row { background: var(--paper); }
 .drawer-row.is-hidden { display: none; }
-.drawer-cell { padding: 26px 32px !important; border-left: 3px solid var(--gold); }
+.drawer-cell { padding: 26px 32px !important; border-inline-start: 3px solid var(--gold); }
 
 .drawer-grid {
   display: grid;
@@ -565,11 +565,11 @@ table.swatch-table {
   position: absolute;
   top: 26px;
   bottom: 26px;
-  left: 0;
+  inset-inline-start: 0;
   width: 1px;
-  border-left: 1px dashed var(--ink-faint);
+  border-inline-start: 1px dashed var(--ink-faint);
 }
-.form-card__inner { padding-left: 20px; }
+.form-card__inner { padding-inline-start: 20px; }
 
 .form-card h2 {
   font-family: var(--font-display);
@@ -639,7 +639,7 @@ textarea.field-input:focus { border-color: var(--blueprint); }
   gap: 18px;
 }
 .hero-card h1 { font-family: var(--font-display); font-size: 34px; margin: 4px 0 0; }
-.hero-card__meta { text-align: right; }
+.hero-card__meta { text-align: end; }
 .hero-card__meta .eyebrow { margin-bottom: 4px; }
 .hero-card__meta strong { font-family: var(--font-mono); font-size: 14px; color: var(--ink); }
 
@@ -668,7 +668,7 @@ select.field-input {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%236B6355' stroke-width='1.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 4px center;
-  padding-right: 22px;
+  padding-inline-end: 22px;
   cursor: pointer;
 }
 
@@ -830,7 +830,7 @@ button.header-link { background: none; }
 
 /* Colonnes verticales simples (fiche cliente) */
 .column-stack { display: flex; flex-direction: column; gap: 12px; }
-.column-stack__label { margin-left: 2px; }
+.column-stack__label { margin-inline-start: 2px; }
 .notes-block { margin-top: 15px; padding-top: 15px; border-top: 1px dashed var(--line); }
 .notes-block p { font-size: 13px; color: var(--ink-soft); margin-top: 5px; }
 
@@ -841,7 +841,7 @@ button.header-link { background: none; }
    --------------------------------------------------------------------- */
 .login-page { max-width: 440px; margin: 64px auto; }
 .login-page .form-card__inner { text-align: center; }
-.login-page form p { text-align: left; }
+.login-page form p { text-align: start; }
 
 .auth-subtitle {
   color: var(--ink-soft);
@@ -861,7 +861,7 @@ button.header-link { background: none; }
   margin-bottom: 20px;
   font-family: var(--font-mono);
   letter-spacing: 0.02em;
-  text-align: left;
+  text-align: start;
 }
 
 /* Message de succès (même gabarit que .form-alert, en vert mousse) */
@@ -885,8 +885,8 @@ button.header-link { background: none; }
   font-size: 24px;
   letter-spacing: 0.35em;
   font-weight: 600;
-  padding-left: 0;
-  padding-right: 0;
+  padding-inline-start: 0;
+  padding-inline-end: 0;
 }
 
 .auth-footer {
@@ -906,7 +906,7 @@ button.header-link { background: none; }
 
 .login-page form .form-actions--inline {
   margin-top: 15px;
-  text-align: right;
+  text-align: end;
   border-top: none;
   padding-top: 0;
 }
@@ -1015,7 +1015,7 @@ button.header-link { background: none; }
   width: 220px;
   flex-shrink: 0;
   background: var(--paper-light);
-  border-right: 1px solid var(--line);
+  border-inline-end: 1px solid var(--line);
   padding: 40px 18px;
   min-height: calc(100vh - 76px);
   position: sticky;
@@ -1092,7 +1092,7 @@ button.header-link { background: none; }
 .ledger-date { font-family: var(--font-mono); font-size: 12px; color: var(--ink-soft); white-space: nowrap; }
 .ledger-desc { color: var(--ink); font-weight: 500; }
 .ledger-model { color: var(--ink-soft); font-size: 12.5px; }
-.ledger-amount { font-family: var(--font-mono); font-weight: 600; text-align: right; white-space: nowrap; }
+.ledger-amount { font-family: var(--font-mono); font-weight: 600; text-align: end; white-space: nowrap; }
 .ledger-amount--in { color: var(--moss); }
 .ledger-amount--out { color: var(--wine); }
 
@@ -1247,7 +1247,7 @@ body.pdf-body {
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 1px;
-  text-align: left;
+  text-align: start;
 }
 
 .pdf-items-table td {
@@ -1256,7 +1256,7 @@ body.pdf-body {
   font-size: 11px;
 }
 
-.pdf-text-right { text-align: right; }
+.pdf-text-right { text-align: end; }
 .pdf-text-center { text-align: center; }
 
 .pdf-total-table {
@@ -1279,7 +1279,7 @@ body.pdf-body {
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 1px;
-  text-align: right;
+  text-align: end;
   color: #211d1a;
 }
 
@@ -1287,7 +1287,7 @@ body.pdf-body {
   font-size: 13px;
   font-weight: bold;
   color: #211d1a;
-  text-align: right;
+  text-align: end;
   width: 100px;
 }
 
@@ -1367,7 +1367,7 @@ body.pdf-body {
 .alert-strip {
   background: var(--wine-bg);
   border: 1px solid var(--wine);
-  border-left-width: 4px;
+  border-inline-start-width: 4px;
   box-shadow: var(--shadow);
   margin-bottom: 32px;
 }
@@ -1400,7 +1400,7 @@ body.pdf-body {
 }
 .cell-date { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-soft); white-space: nowrap; }
 .cell-date--late { color: var(--wine); font-weight: 600; }
-.cell-actions { text-align: right; white-space: nowrap; }
+.cell-actions { text-align: end; white-space: nowrap; }
 .btn--sm { padding: 8px 14px; }
 .btn--danger { background: var(--wine); color: var(--paper-light); border-color: var(--wine); }
 .btn--danger:hover { background: #6f2431; border-color: #6f2431; }
@@ -1416,7 +1416,7 @@ body.pdf-body {
   border: 1px solid var(--line);
   border-radius: 2px;
   padding: 2px 7px;
-  margin-left: 6px;
+  margin-inline-start: 6px;
   white-space: nowrap;
 }
 
@@ -1439,7 +1439,7 @@ body.pdf-body {
 .dress-card::after {
   content: "";
   position: absolute;
-  left: 0;
+  inset-inline-start: 0;
   width: 0;
   height: 0;
   border-style: solid;
@@ -1526,7 +1526,7 @@ body.pdf-body {
 .catalogue-search input.field-input { width: 220px; }
 
 /* étiquettes d'état longues : elles passent à la ligne au lieu de déborder */
-.dress-card__top .tag { white-space: normal; text-align: right; line-height: 1.3; min-width: 0; }
+.dress-card__top .tag { white-space: normal; text-align: end; line-height: 1.3; min-width: 0; }
 .dress-card__top .ref-tag { flex-shrink: 0; }
 
 /* ======================================================================
@@ -1557,7 +1557,7 @@ body.pdf-body {
     min-height: 0;
     position: static;
     padding: 0;
-    border-right: none;
+    border-inline-end: none;
     border-bottom: 1px solid var(--line);
   }
   .sidebar-title { display: none; }
@@ -1604,7 +1604,7 @@ body.pdf-body {
 
   /* cartes & formulaires */
   .form-card { padding: 26px 18px; }
-  .form-card__inner { padding-left: 10px; }
+  .form-card__inner { padding-inline-start: 10px; }
   .form-card h2 { font-size: 26px; }
   .form-row { gap: 14px; }
   .form-row > div { flex: 1 1 100%; }
@@ -1614,7 +1614,7 @@ body.pdf-body {
 
   .hero-card { padding: 22px 18px; }
   .hero-card h1 { font-size: 28px; }
-  .hero-card__meta { text-align: left; width: 100%; }
+  .hero-card__meta { text-align: start; width: 100%; }
   .hero-card__meta .btn { flex: 1 1 100%; justify-content: center; }
 
   .score-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
@@ -1642,7 +1642,7 @@ body.pdf-body {
   .swatch-table tbody tr:last-child { border-bottom: none; }
   .swatch-row { padding: 12px 0; }
   .swatch-table td { padding: 5px 20px 5px 28px; font-size: 14px; }
-  .swatch-row td:first-child { padding-left: 28px; }
+  .swatch-row td:first-child { padding-inline-start: 28px; }
   .swatch-table td:not(:first-child)[data-label]::before {
     content: attr(data-label);
     display: block;
@@ -1653,7 +1653,7 @@ body.pdf-body {
     color: var(--ink-faint);
     margin-bottom: 2px;
   }
-  .swatch-table td.cell-actions { text-align: left; padding-top: 10px; }
+  .swatch-table td.cell-actions { text-align: start; padding-top: 10px; }
   .swatch-table td.cell-actions .btn { width: 100%; justify-content: center; }
   .swatch-table td.empty-state { padding: 40px 20px; text-align: center; }
   .client-link { margin: 0; padding: 4px 0; }
@@ -1686,7 +1686,7 @@ body.pdf-body {
   .ledger-table td:nth-child(6) { grid-column: 3; grid-row: 1; }
   .ledger-table td:nth-child(4) { grid-column: 1 / -1; grid-row: 2; }
   .ledger-table td:nth-child(3) { grid-column: 1 / 3; grid-row: 3; }
-  .ledger-table td:nth-child(5) { grid-column: 3; grid-row: 3; text-align: right; }
+  .ledger-table td:nth-child(5) { grid-column: 3; grid-row: 3; text-align: end; }
 }
 
 /* Saisie rapide par IA + micro (page « Enregistrer une opération ») */
@@ -1743,14 +1743,14 @@ body.pdf-body {
 
 /* --- Finances : navigation, objectif, mises en page --- */
 .finance-nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; }
-.finance-alertes { border-left: 4px solid var(--wine); }
+.finance-alertes { border-inline-start: 4px solid var(--wine); }
 .finance-alertes ul { margin: 6px 0 8px 18px; }
 .progress-bar { width: 100%; height: 12px; background: #e6dfcb; border-radius: 6px; overflow: hidden; }
 .progress-bar__fill { height: 100%; background: var(--blueprint-dark); }
 .progress-bar__fill--ok { background: var(--moss); }
 .two-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
-.ledger-actions { white-space: nowrap; text-align: right; }
-.ledger-actions a { margin-right: 8px; }
+.ledger-actions { white-space: nowrap; text-align: end; }
+.ledger-actions a { margin-inline-end: 8px; }
 
 /* =====================================================================
    FINANCES — présentation moderne et lisible
@@ -1763,11 +1763,11 @@ body.pdf-body {
 .fin-page .score-card { border-radius: var(--radius); box-shadow: var(--shadow); }
 .fin-page .score-card .value { font-family: var(--font-body); font-variant-numeric: tabular-nums; }
 .fin-page .ledger-table th {
-  text-align: left; font-family: var(--font-mono); font-size: 10.5px; font-weight: 500;
+  text-align: start; font-family: var(--font-mono); font-size: 10.5px; font-weight: 500;
   letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft);
   padding: 8px 20px; border-bottom: 1px solid var(--line);
 }
-.fin-page .ledger-table th.ledger-amount { text-align: right; }
+.fin-page .ledger-table th.ledger-amount { text-align: end; }
 .fin-page .ledger-amount { font-family: var(--font-body); font-variant-numeric: tabular-nums; }
 .fin-page .ledger-table small { color: var(--ink-faint); }
 
@@ -1781,7 +1781,7 @@ body.pdf-body {
 .fin-menu summary { list-style: none; cursor: pointer; }
 .fin-menu summary::-webkit-details-marker { display: none; }
 .fin-menu__list {
-  position: absolute; right: 0; top: calc(100% + 6px); z-index: 20; min-width: 220px;
+  position: absolute; inset-inline-end: 0; top: calc(100% + 6px); z-index: 20; min-width: 220px;
   background: var(--paper-light); border: 1px solid var(--line); border-radius: 10px; box-shadow: var(--shadow); padding: 6px;
 }
 .fin-menu__list a { display: block; padding: 10px 12px; border-radius: 8px; font-size: 14px; }
@@ -1809,7 +1809,7 @@ body.pdf-body {
 }
 .fin-alert__icon { width: 26px; height: 26px; border-radius: 50%; background: var(--amber); color: #fff; font-weight: 700; display: grid; place-items: center; flex: none; }
 .fin-alert ul { margin: 4px 0 0 18px; padding: 0; }
-.fin-alert__link { margin-left: auto; font-weight: 600; color: var(--amber); }
+.fin-alert__link { margin-inline-start: auto; font-weight: 600; color: var(--amber); }
 
 /* chiffres clés */
 .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; margin-bottom: 16px; }
@@ -1878,7 +1878,7 @@ body.pdf-body {
 .tx__title { font-weight: 500; overflow-wrap: anywhere; }
 .tx__sub { font-size: 12.5px; color: var(--ink-soft); display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 .tx__sub a { color: var(--blueprint); }
-.tx__side { text-align: right; display: flex; flex-direction: column; gap: 2px; align-items: flex-end; flex: none; }
+.tx__side { text-align: end; display: flex; flex-direction: column; gap: 2px; align-items: flex-end; flex: none; }
 .tx__amount { font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .tx__amount--in { color: var(--moss); }
 .tx__amount--out { color: var(--wine); }
@@ -1893,8 +1893,36 @@ body.pdf-body {
   .kpi__value { font-size: 26px; }
   .tx { align-items: flex-start; padding: 12px 14px; }
   .tx__icon { width: 30px; height: 30px; font-size: 14px; }
-  .fin-alert__link { margin-left: 0; }
+  .fin-alert__link { margin-inline-start: 0; }
 }
 
 .pager { display: flex; justify-content: center; align-items: center; gap: 16px; flex-wrap: wrap; margin: 20px 0 0; }
 .pager__info { color: var(--ink-soft); font-size: 13.5px; }
+
+
+/* =====================================================================
+   Hébreu / droite-à-gauche
+   Le CSS utilise des propriétés logiques (inline-start/end) : la mise en page se retourne seule.
+   Ici : polices hébraïques, éléments qui ne se retournent pas automatiquement, sélecteur de langue.
+   ===================================================================== */
+:root[dir="rtl"] {
+  --font-display: 'Frank Ruhl Libre', 'Times New Roman', serif;
+  --font-body: 'Heebo', 'Arial Hebrew', Arial, sans-serif;
+}
+/* Les montants, références et dates restent lus de gauche à droite au milieu d'un texte hébreu. */
+:root[dir="rtl"] .ledger-amount,
+:root[dir="rtl"] .num,
+:root[dir="rtl"] input[type="tel"],
+:root[dir="rtl"] input[type="email"],
+:root[dir="rtl"] .datepicker { direction: ltr; unicode-bidi: plaintext; }
+:root[dir="rtl"] select.field-input { background-position: left 4px center; }
+:root[dir="rtl"] .fin-alert__link,
+:root[dir="rtl"] .brand__mark { transform: none; }
+:root[dir="rtl"] * { letter-spacing: 0 !important; text-transform: none !important; }  /* déforme l'hébreu */
+
+.lang-switch { display: inline-flex; gap: 2px; margin-inline-end: 8px; }
+.lang-switch__btn {
+  background: none; border: 0; padding: 2px 8px; cursor: pointer; font: inherit; font-size: 13px;
+  color: var(--ink-soft, #6B6355); border-bottom: 1px solid transparent;
+}
+.lang-switch__btn.is-active { color: var(--ink, #211D1A); border-bottom-color: var(--gold, #A17F2D); }

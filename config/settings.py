@@ -105,6 +105,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'atelier.langue.LangueMiddleware',  # Hébreu par défaut ; choix mémorisé (cookie + compte)
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'axes.middleware.AxesMiddleware',  # Doit rester en dernier
@@ -121,6 +122,7 @@ TEMPLATES = [
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
+                'django.template.context_processors.i18n',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'atelier.contexte.atelier_courant',
@@ -175,7 +177,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # --- INTERNATIONALISATION ---
 
-LANGUAGE_CODE = 'fr-fr'
+LANGUAGE_CODE = 'he'  # langue par défaut : l'hébreu (le français reste au choix)
+LANGUAGES = [('he', 'עברית'), ('fr', 'Français')]
 TIME_ZONE = 'Asia/Jerusalem'
 USE_I18N = True
 USE_TZ = True

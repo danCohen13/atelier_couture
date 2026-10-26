@@ -4,6 +4,7 @@ from functools import wraps
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
+from .langue import adopter_langue_du_compte
 from .models import Adhesion
 
 
@@ -22,6 +23,7 @@ def atelier_requis(vue):
             return render(request, 'atelier/acces_refuse.html', {'motif': 'sans_atelier'}, status=403)
         if adhesion.atelier.est_suspendu:
             return render(request, 'atelier/acces_refuse.html', {'motif': 'suspendu'}, status=403)
+        adopter_langue_du_compte(request, adhesion)
         request.atelier = adhesion.atelier
         request.adhesion = adhesion
         return vue(request, *args, **kwargs)

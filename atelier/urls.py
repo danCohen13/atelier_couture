@@ -2,6 +2,7 @@ from django.contrib.auth import views as auth_views
 from django.urls import path
 
 from . import (
+    langue,
     views_atelier,
     views_auth,
     views_confidentialite,
@@ -16,6 +17,7 @@ from . import (
 urlpatterns = [
     # --- RACINE & ATELIER (views_atelier) ---
     path('', views_atelier.dashboard, name='dashboard'),
+    path('langue/', langue.changer_langue, name='changer_langue'),
     path('client/ajouter/', views_atelier.ajouter_client, name='ajouter_client'),
     path('robe/ajouter/', views_atelier.ajouter_robe, name='ajouter_robe'),
     path('robe/<int:robe_id>/tache-rapide/<str:type_tache>/', views_atelier.ajouter_tache_rapide, name='ajouter_tache_rapide'),
