@@ -6,6 +6,7 @@ from . import langue, views_auth, views_invitation, views_publiques
 
 urlpatterns = [
     path('', views_publiques.accueil, name='accueil'),
+    path('demande-invitation/', views_publiques.demander_invitation, name='demander_invitation'),
     path('connexion/', auth_views.LoginView.as_view(template_name='atelier/login.html', redirect_authenticated_user=True), name='login'),
     path('deconnexion/', auth_views.LogoutView.as_view(next_page='accueil'), name='logout'),
     path('invitation/<str:jeton>/', views_invitation.accepter_invitation, name='accepter_invitation'),

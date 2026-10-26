@@ -21,16 +21,21 @@ class Command(BaseCommand):
         os.chdir(racine)
         try:
             call_command('makemessages', locale=['he', 'fr'], no_location=True, no_obsolete=True, verbosity=0)
+            # msgmerge « devine » parfois une traduction voisine (marquée fuzzy) : jamais fiable, on la vide.
+            for langue in ('he', 'fr'):
+                chemin = os.path.join('locale', langue, 'LC_MESSAGES', 'django.po')
+                catalogue = polib.pofile(chemin)
+                for entree in catalogue:
+                    if 'fuzzy' in entree.flags:
+                        entree.flags.remove('fuzzy')
+                        entree.msgstr = ''
+                catalogue.save()
             chemin_fr = os.path.join('locale', 'fr', 'LC_MESSAGES', 'django.po')
             catalogue = polib.pofile(chemin_fr)
             for entree in catalogue:
                 entree.msgstr = entree.msgid
             catalogue.metadata['Language'] = 'fr'
             catalogue.save()
-            for chemin in (chemin_fr, os.path.join('locale', 'he', 'LC_MESSAGES', 'django.po')):
-                po = polib.pofile(chemin)
-                if 'fuzzy' in po.header or any('fuzzy' in e.flags for e in po):
-                    self.stdout.write(self.style.WARNING(f"{chemin} contient des entrées « fuzzy »"))
             call_command('compilemessages', verbosity=0)
         finally:
             os.chdir(os.path.dirname(racine))

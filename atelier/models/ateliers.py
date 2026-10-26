@@ -96,6 +96,22 @@ class Invitation(models.Model):
         return f"{self.email} ({'utilisée' if self.utilisee_le else 'en attente'})"
 
 
+class DemandeInvitation(models.Model):
+    """Demande faite depuis la page d'accueil. Elle ne crée aucun compte : l'exploitante invite ensuite."""
+    email = models.EmailField(verbose_name="Adresse e-mail")
+    nom_atelier = models.CharField(max_length=150, blank=True, verbose_name="Nom de l'atelier")
+    cree_le = models.DateTimeField(default=timezone.now, editable=False)
+    traitee = models.BooleanField(default=False, verbose_name="Invitation envoyée")
+
+    class Meta:
+        ordering = ['traitee', '-cree_le']
+        verbose_name = "Demande d'invitation"
+        verbose_name_plural = "Demandes d'invitation"
+
+    def __str__(self):
+        return f"{self.email} — {self.nom_atelier}" if self.nom_atelier else self.email
+
+
 class Adhesion(models.Model):
     """Rattache un identifiant à UN atelier. Pour l'instant : une propriétaire par atelier."""
     ROLE_CHOICES = [

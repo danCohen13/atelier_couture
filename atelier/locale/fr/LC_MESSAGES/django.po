@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-26 19:55+0200\n"
+"POT-Creation-Date: 2026-10-26 20:16+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -35,6 +35,9 @@ msgstr "Cet identifiant est déjà pris."
 msgid "Les deux mots de passe ne sont pas identiques."
 msgstr "Les deux mots de passe ne sont pas identiques."
 
+msgid "Votre adresse e-mail"
+msgstr "Votre adresse e-mail"
+
 #, python-format
 msgid "Votre invitation à %(produit)s"
 msgstr "Votre invitation à %(produit)s"
@@ -58,36 +61,66 @@ msgstr ""
 msgid "Gestion d'atelier de couture et de location de robes"
 msgstr "Gestion d'atelier de couture et de location de robes"
 
-msgid "Pour les ateliers de couture et de location de robes"
-msgstr "Pour les ateliers de couture et de location de robes"
+msgid "Chaque robe, de la première mesure à la livraison."
+msgstr "Chaque robe, de la première mesure à la livraison."
 
-msgid "Votre atelier, enfin bien tenu."
-msgstr "Votre atelier, enfin bien tenu."
-
+#| msgid ""
+#| "Chaque robe, chaque essayage, chaque paiement : suivis au même endroit, en "
+#| "hébreu ou en français."
 msgid ""
-"Suivez chaque confection, vos locations, vos paiements et vos livraisons au "
-"même endroit, en hébreu ou en français."
+"Confections, locations, acomptes et livraisons : tout votre atelier au même "
+"endroit, en hébreu ou en français."
 msgstr ""
-"Suivez chaque confection, vos locations, vos paiements et vos livraisons au "
-"même endroit, en hébreu ou en français."
+"Confections, locations, acomptes et livraisons : tout votre atelier au même "
+"endroit, en hébreu ou en français."
 
 msgid "Ouvrir mon atelier"
 msgstr "Ouvrir mon atelier"
 
+msgid "Demander une invitation"
+msgstr "Demander une invitation"
+
 msgid "Se connecter"
 msgstr "Se connecter"
 
-msgid "Inscription sur invitation. Gratuit pendant le lancement."
-msgstr "Inscription sur invitation. Gratuit pendant le lancement."
+msgid "Gratuit pendant le lancement. Aucune carte bancaire demandée."
+msgstr "Gratuit pendant le lancement. Aucune carte bancaire demandée."
 
-msgid "Tout ce qu'il faut à un atelier"
-msgstr "Tout ce qu'il faut à un atelier"
+msgid "Robe sur mannequin de couture, mesurée au mètre ruban"
+msgstr "Robe sur mannequin de couture, mesurée au mètre ruban"
+
+msgid "Robe de mariée"
+msgstr "Robe de mariée"
+
+#| msgid "Livraison dans 9 jours"
+msgid "Livraison dans 5 jours"
+msgstr "Livraison dans 5 jours"
+
+#| msgid "L'acompte arrive"
+msgid "Acompte reçu"
+msgstr "Acompte reçu"
+
+msgid "Retour prévu demain"
+msgstr "Retour prévu demain"
+
+msgid "Robe Aurore, pressing ensuite"
+msgstr "Robe Aurore, pressing ensuite"
+
+msgid "Tout ce qu'un atelier fait chaque jour"
+msgstr "Tout ce qu'un atelier fait chaque jour"
 
 msgid "Suivi des confections"
 msgstr "Suivi des confections"
 
 msgid "Chaque robe, sa cliente, ses étapes et sa date de livraison."
 msgstr "Chaque robe, sa cliente, ses étapes et sa date de livraison."
+
+#| msgid "Robe de soirée « Aurore »"
+msgid "Robe de soirée"
+msgstr "Robe de soirée"
+
+msgid "Retouches"
+msgstr "Retouches"
 
 #| msgid "Locations &amp; stock"
 msgid "Location et stock"
@@ -98,12 +131,21 @@ msgid ""
 msgstr ""
 "Catalogue, contrats, cautions, retours et pressing, sans double réservation."
 
+msgid "Louée"
+msgstr "Louée"
+
+msgid "Pressing"
+msgstr "Pressing"
+
+msgid "Libre"
+msgstr "Libre"
+
 #| msgid "Finances &amp; bilans"
 msgid "Finances claires"
 msgstr "Finances claires"
 
-msgid "Paiements, impayés, dépenses, rentabilité par robe et récapitulatifs."
-msgstr "Paiements, impayés, dépenses, rentabilité par robe et récapitulatifs."
+msgid "Paiements, impayés, dépenses et rentabilité par robe."
+msgstr "Paiements, impayés, dépenses et rentabilité par robe."
 
 msgid "Planning"
 msgstr "Planning"
@@ -111,9 +153,21 @@ msgstr "Planning"
 msgid "Un seul calendrier pour les livraisons, les retraits et les retours."
 msgstr "Un seul calendrier pour les livraisons, les retraits et les retours."
 
+msgid "Livraison"
+msgstr "Livraison"
+
+msgid "Retrait"
+msgstr "Retrait"
+
+msgid "Retour"
+msgstr "Retour"
+
 msgid "Des données bien protégées"
 msgstr "Des données bien protégées"
 
+#| msgid ""
+#| "Chaque atelier ne voit que ses propres clientes. Aucun autre atelier ne peut"
+#| " les lire ni les modifier."
 msgid ""
 "Chaque atelier ne voit que ses propres clientes, avec des outils de "
 "protection de la vie privée."
@@ -121,20 +175,137 @@ msgstr ""
 "Chaque atelier ne voit que ses propres clientes, avec des outils de "
 "protection de la vie privée."
 
-msgid "Comment ça marche"
-msgstr "Comment ça marche"
+#| msgid "Votre langue, dans le bon sens"
+msgid "Dans votre langue, dans votre sens de lecture"
+msgstr "Dans votre langue, dans votre sens de lecture"
 
-msgid "Vous recevez une invitation par e-mail."
-msgstr "Vous recevez une invitation par e-mail."
+msgid ""
+"L'interface s'affiche en hébreu, de droite à gauche, ou en français. Chaque "
+"personne choisit sa langue d'un clic, et elle la retrouve à chaque "
+"connexion."
+msgstr ""
+"L'interface s'affiche en hébreu, de droite à gauche, ou en français. Chaque "
+"personne choisit sa langue d'un clic, et elle la retrouve à chaque "
+"connexion."
 
-msgid "Vous créez votre compte et donnez un nom à votre atelier."
-msgstr "Vous créez votre compte et donnez un nom à votre atelier."
+msgid "Vos clientes restent les vôtres"
+msgstr "Vos clientes restent les vôtres"
 
-msgid "Vous saisissez vos premières clientes et robes."
-msgstr "Vous saisissez vos premières clientes et robes."
+msgid ""
+"Mesures, photos, coordonnées : ce sont des données personnelles. L'outil est"
+" construit pour que vous les protégiez sans y penser."
+msgstr ""
+"Mesures, photos, coordonnées : ce sont des données personnelles. L'outil est"
+" construit pour que vous les protégiez sans y penser."
 
-msgid "Gratuit pendant le lancement"
-msgstr "Gratuit pendant le lancement"
+msgid "Un atelier, un espace"
+msgstr "Un atelier, un espace"
+
+msgid ""
+"Chaque atelier ne voit que ses propres clientes. Aucun autre atelier ne peut"
+" les lire ni les modifier."
+msgstr ""
+"Chaque atelier ne voit que ses propres clientes. Aucun autre atelier ne peut"
+" les lire ni les modifier."
+
+msgid "Fiche d'information et effacement"
+msgstr "Fiche d'information et effacement"
+
+msgid ""
+"Remettez la fiche d'information à chaque cliente, et effacez ses données "
+"quand elle le demande."
+msgstr ""
+"Remettez la fiche d'information à chaque cliente, et effacez ses données "
+"quand elle le demande."
+
+msgid "Dossiers inactifs"
+msgstr "Dossiers inactifs"
+
+msgid ""
+"Les clientes sans activité depuis des années vous sont signalées, pour les "
+"anonymiser en un geste."
+msgstr ""
+"Les clientes sans activité depuis des années vous sont signalées, pour les "
+"anonymiser en un geste."
+
+msgid "Registre des incidents"
+msgstr "Registre des incidents"
+
+msgid ""
+"Un journal prêt à remplir, comme la loi sur la protection de la vie privée "
+"l'attend."
+msgstr ""
+"Un journal prêt à remplir, comme la loi sur la protection de la vie privée "
+"l'attend."
+
+msgid "Questions fréquentes"
+msgstr "Questions fréquentes"
+
+msgid "Combien ça coûte ?"
+msgstr "Combien ça coûte ?"
+
+msgid ""
+"C'est gratuit pendant le lancement, et nous ne demandons aucune carte "
+"bancaire."
+msgstr ""
+"C'est gratuit pendant le lancement, et nous ne demandons aucune carte "
+"bancaire."
+
+msgid "Pourquoi faut-il une invitation ?"
+msgstr "Pourquoi faut-il une invitation ?"
+
+msgid ""
+"Nous ouvrons les ateliers un par un pour bien accompagner chacun au "
+"démarrage. Demandez votre invitation ci-dessous : elle arrive par e-mail."
+msgstr ""
+"Nous ouvrons les ateliers un par un pour bien accompagner chacun au "
+"démarrage. Demandez votre invitation ci-dessous : elle arrive par e-mail."
+
+msgid "Ça marche sur téléphone ?"
+msgstr "Ça marche sur téléphone ?"
+
+msgid ""
+"Oui. Le site s'adapte à l'écran du téléphone, de la tablette et de "
+"l'ordinateur, sans rien installer."
+msgstr ""
+"Oui. Le site s'adapte à l'écran du téléphone, de la tablette et de "
+"l'ordinateur, sans rien installer."
+
+msgid "Mes équipes peuvent-elles s'en servir ?"
+msgstr "Mes équipes peuvent-elles s'en servir ?"
+
+msgid ""
+"Pour l'instant, chaque atelier a un compte propriétaire. Les comptes pour "
+"les employées sont prévus."
+msgstr ""
+"Pour l'instant, chaque atelier a un compte propriétaire. Les comptes pour "
+"les employées sont prévus."
+
+msgid "Et si je veux arrêter ?"
+msgstr "Et si je veux arrêter ?"
+
+msgid ""
+"Vos données restent les vôtres : vous pouvez exporter vos finances et "
+"effacer vos clientes à tout moment."
+msgstr ""
+"Vos données restent les vôtres : vous pouvez exporter vos finances et "
+"effacer vos clientes à tout moment."
+
+msgid "Ouvrez votre atelier"
+msgstr "Ouvrez votre atelier"
+
+msgid ""
+"Laissez votre adresse. Vous recevez votre lien d'invitation par e-mail, puis"
+" vous créez votre compte en deux minutes."
+msgstr ""
+"Laissez votre adresse. Vous recevez votre lien d'invitation par e-mail, puis"
+" vous créez votre compte en deux minutes."
+
+msgid "facultatif"
+msgstr "facultatif"
+
+msgid "Demander mon invitation"
+msgstr "Demander mon invitation"
 
 msgid "Maison &amp; atelier de confection"
 msgstr "Maison &amp; atelier de confection"
@@ -151,7 +322,6 @@ msgstr "Déconnexion"
 msgid "Administration"
 msgstr "Administration"
 
-#| msgid "Déconnexion"
 msgid "Connexion"
 msgstr "Connexion"
 
@@ -173,7 +343,6 @@ msgstr "Confidentialité"
 msgid "Créer mon atelier"
 msgstr "Créer mon atelier"
 
-#| msgid "Navigation"
 msgid "Invitation"
 msgstr "Invitation"
 
@@ -203,3 +372,12 @@ msgstr ""
 
 msgid "Retour à l'accueil"
 msgstr "Retour à l'accueil"
+
+msgid "Merci ! Nous vous écrivons très vite avec votre invitation."
+msgstr "Merci ! Nous vous écrivons très vite avec votre invitation."
+
+msgid "Vérifiez votre adresse e-mail."
+msgstr "Vérifiez votre adresse e-mail."
+
+msgid "Trop de demandes depuis cette connexion. Réessayez plus tard."
+msgstr "Trop de demandes depuis cette connexion. Réessayez plus tard."

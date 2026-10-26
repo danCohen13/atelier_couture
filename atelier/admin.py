@@ -9,6 +9,7 @@ from .models import (
     Adhesion,
     Atelier,
     Client,
+    DemandeInvitation,
     DepenseRecurrente,
     IncidentSecurite,
     Invitation,
@@ -43,7 +44,7 @@ class InvitationAdminForm(forms.ModelForm):
 
 @admin.register(Invitation)
 class InvitationAdmin(admin.ModelAdmin):
-    """Inviter une nouvelle atelier : le lien s'affiche UNE fois à la création (et part par e-mail)."""
+    """Inviter un nouvel atelier : le lien s'affiche UNE fois à la création (et part par e-mail)."""
     list_display = ('email', 'nom_atelier', 'etat', 'cree_le', 'expire_le', 'atelier')
     search_fields = ('email', 'nom_atelier')
     readonly_fields = ('cree_le', 'expire_le', 'utilisee_le', 'atelier')
@@ -75,6 +76,32 @@ class InvitationAdmin(admin.ModelAdmin):
             self.message_user(
                 request, f"L'e-mail n'a pas pu partir. Transmettez ce lien vous-même (affiché une seule fois) : {lien}",
                 messages.WARNING)
+
+
+@admin.register(DemandeInvitation)
+class DemandeInvitationAdmin(admin.ModelAdmin):
+    """Demandes reçues depuis la page d'accueil. L'action envoie une invitation à chaque adresse choisie."""
+    list_display = ('email', 'nom_atelier', 'cree_le', 'traitee')
+    list_filter = ('traitee',)
+    search_fields = ('email', 'nom_atelier')
+    actions = ['inviter']
+
+    @admin.action(description="Envoyer une invitation aux demandes sélectionnées")
+    def inviter(self, request, queryset):
+        for demande in queryset.filter(traitee=False):
+            try:
+                invitation, jeton = Invitation.creer(demande.email, demande.nom_atelier)
+            except ValidationError as erreur:
+                self.message_user(request, f"{demande.email} : {' '.join(erreur.messages)}", messages.ERROR)
+                continue
+            if envoyer_invitation(invitation, jeton):
+                self.message_user(request, f"Invitation envoyée à {demande.email}.")
+            else:
+                self.message_user(
+                    request, f"{demande.email} : l'e-mail n'a pas pu partir. Transmettez ce lien (affiché une seule fois) : "
+                             f"{lien_invitation(jeton)}", messages.WARNING)
+            demande.traitee = True
+            demande.save(update_fields=['traitee'])
 
 
 @admin.register(Adhesion)

@@ -13,7 +13,7 @@ from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.utils import timezone
 
-from atelier.models import Adhesion, Atelier, Invitation
+from atelier.models import Adhesion, Atelier, DemandeInvitation, Invitation
 
 User = get_user_model()
 MDP = 'Tr0mbone-Violette-92'
@@ -37,7 +37,7 @@ class AccueilTests(TestCase):
         self.client.post(reverse('changer_langue'), {'langue': 'fr'})
         reponse = self.client.get(reverse('accueil'))
         self.assertContains(reponse, 'lang="fr"')
-        self.assertContains(reponse, 'Votre atelier, enfin bien tenu.')
+        self.assertContains(reponse, 'Chaque robe, de la première mesure à la livraison.')
 
     def test_en_tete_du_visiteur_propose_la_connexion(self):
         reponse = self.client.get(reverse('accueil'))
@@ -238,7 +238,7 @@ class EnvoiEtAdministrationTests(TestCase):
         self.client.post(f'/{settings.ADMIN_URL}atelier/invitation/add/', {'email': 'lea@example.com'})
         self.assertFalse(Invitation.objects.exists())
 
-    def test_une_atelier_ne_peut_pas_creer_d_invitation(self):
+    def test_un_atelier_ne_peut_pas_creer_d_invitation(self):
         atelier = Atelier.objects.create(nom='A')
         user = User.objects.create_user('a', password=MDP)
         Adhesion.objects.create(user=user, atelier=atelier)
@@ -246,3 +246,71 @@ class EnvoiEtAdministrationTests(TestCase):
         from django.conf import settings
         reponse = self.client.get(f'/{settings.ADMIN_URL}atelier/invitation/add/')
         self.assertEqual(reponse.status_code, 302)  # vers la connexion de l'administration
+
+
+class DemandeInvitationTests(TestCase):
+    def setUp(self):
+        from django.core.cache import cache
+        cache.clear()
+        self.url = reverse('demander_invitation')
+
+    def test_la_page_contient_le_formulaire_et_les_sections(self):
+        page = self.client.get(reverse('accueil'))
+        self.assertContains(page, 'id="demande"')
+        self.assertContains(page, self.url)
+        self.assertContains(page, 'name="site_web"')
+
+    def test_demande_enregistree(self):
+        reponse = self.client.post(self.url, {'email': 'lea@example.com', 'nom_atelier': 'Atelier Léa'}, follow=True)
+        demande = DemandeInvitation.objects.get()
+        self.assertEqual((demande.email, demande.nom_atelier, demande.traitee), ('lea@example.com', 'Atelier Léa', False))
+        self.assertContains(reponse, 'lp-form-demande__msg--success')
+
+    def test_pas_de_doublon_et_meme_reponse(self):
+        self.client.post(self.url, {'email': 'lea@example.com'})
+        reponse = self.client.post(self.url, {'email': 'LEA@example.com'}, follow=True)
+        self.assertEqual(DemandeInvitation.objects.count(), 1)
+        self.assertContains(reponse, 'lp-form-demande__msg--success')
+
+    def test_adresse_deja_inscrite_recoit_la_meme_reponse(self):
+        """On ne révèle pas si une adresse a déjà un compte."""
+        User.objects.create_user('x', email='lea@example.com', password=MDP)
+        reponse = self.client.post(self.url, {'email': 'lea@example.com'}, follow=True)
+        self.assertContains(reponse, 'lp-form-demande__msg--success')
+
+    def test_adresse_invalide(self):
+        reponse = self.client.post(self.url, {'email': 'pas-une-adresse'}, follow=True)
+        self.assertFalse(DemandeInvitation.objects.exists())
+        self.assertContains(reponse, 'lp-form-demande__msg--error')
+
+    def test_piege_a_robots(self):
+        reponse = self.client.post(self.url, {'email': 'bot@example.com', 'site_web': 'http://spam'}, follow=True)
+        self.assertFalse(DemandeInvitation.objects.exists())
+        self.assertContains(reponse, 'lp-form-demande__msg--success')  # le robot ne sait pas qu'il a été écarté
+
+    def test_limite_par_connexion(self):
+        for i in range(6):
+            self.client.post(self.url, {'email': f'a{i}@example.com'})
+        self.assertEqual(DemandeInvitation.objects.count(), 5)
+
+    def test_get_refuse(self):
+        self.assertEqual(self.client.get(self.url).status_code, 405)
+
+    @override_settings(NOTIFIER_DEMANDES_A='moi@example.com')
+    def test_notification_a_l_exploitante(self):
+        self.client.post(self.url, {'email': 'lea@example.com', 'nom_atelier': 'Atelier Léa'})
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].to, ['moi@example.com'])
+        self.assertIn('lea@example.com', mail.outbox[0].body)
+
+    def test_action_admin_invite_et_marque_traitee(self):
+        from django.conf import settings
+        demande = DemandeInvitation.objects.create(email='lea@example.com', nom_atelier='Atelier Léa')
+        User.objects.create_superuser('root', 'root@example.com', MDP)
+        self.client.login(username='root', password=MDP)
+        self.client.post(f'/{settings.ADMIN_URL}atelier/demandeinvitation/', {
+            'action': 'inviter', '_selected_action': [demande.pk]}, follow=True)
+        demande.refresh_from_db()
+        self.assertTrue(demande.traitee)
+        self.assertEqual(Invitation.objects.filter(email='lea@example.com').count(), 1)
+        self.assertEqual(len(mail.outbox), 1)

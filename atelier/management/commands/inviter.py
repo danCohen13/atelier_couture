@@ -1,4 +1,4 @@
-"""Invite une nouvelle atelier : affiche le lien d'inscription (valable 7 jours, usage unique).
+"""Invite un nouvel atelier : affiche le lien d'inscription (valable 7 jours, usage unique).
 
     python manage.py inviter lea@example.com "Atelier Léa" [--envoyer] [--langue he|fr] [--jours 7]
 """

@@ -70,6 +70,9 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SITE_URL = (os.environ.get('SITE_URL')
             or (f'https://{RENDER_EXTERNAL_HOSTNAME}' if RENDER_EXTERNAL_HOSTNAME else 'http://127.0.0.1:8000')).rstrip('/')
 
+# Adresse qui reçoit un e-mail à chaque demande d'invitation (facultatif).
+NOTIFIER_DEMANDES_A = os.environ.get('NOTIFIER_DEMANDES_A', '')
+
 # URL de l'interface d'administration. En production, définir ADMIN_URL avec une
 # valeur non devinable (ex. « gestion-x7k2p/ ») pour ne pas exposer /admin/.
 ADMIN_URL = (os.environ.get('ADMIN_URL') or 'admin').strip('/') + '/'

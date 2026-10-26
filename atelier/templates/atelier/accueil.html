@@ -1,64 +1,224 @@
 {% extends 'atelier/base.html' %}
-{% load i18n %}
+{% load i18n static %}
 {% block robots %}<meta name="robots" content="index, follow">{% endblock %}
 {% block title %}{{ PRODUIT_NOM }} — {% trans "Gestion d'atelier de couture et de location de robes" %}{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'atelier/css/landing.css' %}">{% endblock %}
 
 {% block content %}
-<main class="landing">
-    <section class="landing-hero">
-        <span class="eyebrow">{% trans "Pour les ateliers de couture et de location de robes" %}</span>
-        <h1 class="landing-hero__title">{% trans "Votre atelier, enfin bien tenu." %}</h1>
-        <p class="landing-hero__lead">
-            {% trans "Suivez chaque confection, vos locations, vos paiements et vos livraisons au même endroit, en hébreu ou en français." %}
-        </p>
-        <div class="landing-hero__actions">
-            {% if user.is_authenticated and atelier_courant %}
-                <a href="{% url 'dashboard' %}" class="btn btn--primary">{% trans "Ouvrir mon atelier" %}</a>
-            {% else %}
-                <a href="{% url 'login' %}" class="btn btn--primary">{% trans "Se connecter" %}</a>
-            {% endif %}
+<main class="lp">
+
+    {# ------------------------------------------------------------------ Hero #}
+    <section class="lp-hero">
+        <div class="lp-swatches" aria-hidden="true">
+            <i class="lp-swatch lp-swatch--1"></i><i class="lp-swatch lp-swatch--2"></i>
+            <i class="lp-swatch lp-swatch--3"></i><i class="lp-swatch lp-swatch--4"></i>
+            <i class="lp-swatch lp-swatch--5"></i><i class="lp-swatch lp-swatch--6"></i>
         </div>
-        <p class="landing-hero__note">{% trans "Inscription sur invitation. Gratuit pendant le lancement." %}</p>
+
+        <div class="lp-hero__text">
+            <h1 class="lp-hero__title">{% trans "Chaque robe, de la première mesure à la livraison." %}</h1>
+            <p class="lp-hero__lead">{% trans "Confections, locations, acomptes et livraisons : tout votre atelier au même endroit, en hébreu ou en français." %}</p>
+            <div class="lp-hero__actions">
+                {% if user.is_authenticated and atelier_courant %}
+                    <a href="{% url 'dashboard' %}" class="btn btn--primary btn--lg">{% trans "Ouvrir mon atelier" %}</a>
+                {% else %}
+                    <a href="#demande" class="btn btn--primary btn--lg">{% trans "Demander une invitation" %}</a>
+                    <a href="{% url 'login' %}" class="btn btn--outline btn--lg">{% trans "Se connecter" %}</a>
+                {% endif %}
+            </div>
+            <p class="lp-hero__note">{% trans "Gratuit pendant le lancement. Aucune carte bancaire demandée." %}</p>
+        </div>
+
+        <div class="lp-hero__visual">
+            <div class="lp-stage">
+                {# Mannequin de couture : dessin original. Le mètre ruban se dessine à l'arrivée sur la page. #}
+                <svg class="lp-form" viewBox="0 0 400 520" role="img" aria-label="{% trans 'Robe sur mannequin de couture, mesurée au mètre ruban' %}">
+                    <defs>
+                        <pattern id="lp-grille" width="20" height="20" patternUnits="userSpaceOnUse">
+                            <path d="M20 0H0V20" fill="none" stroke="#33526e" stroke-opacity=".12" stroke-width="1"/>
+                        </pattern>
+                    </defs>
+                    <rect width="400" height="520" fill="url(#lp-grille)"/>
+                    <ellipse cx="200" cy="478" rx="140" ry="14" fill="#211d1a" opacity=".10"/>
+                    {# col et pointe du mannequin #}
+                    <path d="M188 100 L190 74 Q200 66 210 74 L212 100 Z" fill="#e2dbc8" stroke="#211d1a" stroke-width="1.6" stroke-linejoin="round"/>
+                    <circle cx="200" cy="60" r="6" fill="#a17f2d"/>
+                    {# robe #}
+                    <path class="lp-dress" d="M155 112 C175 104 190 122 200 134 C210 122 225 104 245 112 L250 160 C248 185 240 200 238 218 C252 300 296 400 332 462 L68 462 C104 400 148 300 162 218 C160 200 152 185 150 160 Z"
+                          fill="#f8f5ee" stroke="#211d1a" stroke-width="1.8" stroke-linejoin="round"/>
+                    {# ceinture #}
+                    <path d="M161 206 L239 206 L237 226 L163 226 Z" fill="#8a2e3d"/>
+                    {# coutures (points de bâti) #}
+                    <path class="lp-stitch" d="M185 150 Q181 190 177 206 M215 150 Q219 190 223 206 M176 232 Q150 350 112 452 M224 232 Q250 350 288 452 M200 232 L200 458"
+                          fill="none" stroke="#a17f2d" stroke-width="1.6" stroke-dasharray="5 5" stroke-linecap="round"/>
+                    {# épingles #}
+                    <circle cx="160" cy="114" r="3.2" fill="#c9a24f"/><circle cx="240" cy="114" r="3.2" fill="#c9a24f"/>
+                    {# mètre ruban autour de la taille #}
+                    <path class="lp-tape" d="M104 250 C150 282 250 282 296 250" fill="none" stroke="#33526e" stroke-width="11" stroke-linecap="round" pathLength="1"/>
+                    <path class="lp-tape-ticks" d="M104 250 C150 282 250 282 296 250" fill="none" stroke="#f8f5ee" stroke-width="7" stroke-dasharray="1.5 7" pathLength="60" opacity=".85"/>
+                </svg>
+
+                {# Aperçus de l'application #}
+                <div class="lp-chip lp-chip--progress">
+                    <span class="lp-chip__title">{% trans "Robe de mariée" %}</span>
+                    <span class="lp-chip__meta">{% trans "Livraison dans 5 jours" %}</span>
+                    <span class="lp-bar"><span class="lp-bar__fill" style="--p: 72%"></span></span>
+                </div>
+                <div class="lp-chip lp-chip--paid">
+                    <span class="lp-chip__title">{% trans "Acompte reçu" %}</span>
+                    <span class="lp-chip__amount" dir="ltr">₪1,200</span>
+                </div>
+                <div class="lp-chip lp-chip--return">
+                    <span class="lp-chip__dot"></span>
+                    <span>
+                        <span class="lp-chip__title">{% trans "Retour prévu demain" %}</span>
+                        <span class="lp-chip__meta">{% trans "Robe Aurore, pressing ensuite" %}</span>
+                    </span>
+                </div>
+            </div>
+        </div>
     </section>
 
-    <section class="landing-section" aria-labelledby="titre-fonctions">
-        <h2 id="titre-fonctions" class="landing-section__title">{% trans "Tout ce qu'il faut à un atelier" %}</h2>
-        <div class="landing-grid">
-            <article class="landing-card">
+    {# --------------------------------------------------------------- Fonctions #}
+    <section class="lp-section" id="fonctions" aria-labelledby="lp-t-fonctions">
+        <h2 id="lp-t-fonctions" class="lp-section__title">{% trans "Tout ce qu'un atelier fait chaque jour" %}</h2>
+
+        <div class="lp-bento">
+            <article class="lp-tile lp-tile--wide reveal">
                 <h3>{% trans "Suivi des confections" %}</h3>
                 <p>{% trans "Chaque robe, sa cliente, ses étapes et sa date de livraison." %}</p>
+                <ul class="lp-rows">
+                    <li><span>{% trans "Robe de mariée" %}</span><span class="lp-bar"><span class="lp-bar__fill" style="--p: 72%"></span></span></li>
+                    <li><span>{% trans "Robe de soirée" %}</span><span class="lp-bar"><span class="lp-bar__fill lp-bar__fill--gold" style="--p: 40%"></span></span></li>
+                    <li><span>{% trans "Retouches" %}</span><span class="lp-bar"><span class="lp-bar__fill lp-bar__fill--moss" style="--p: 90%"></span></span></li>
+                </ul>
             </article>
-            <article class="landing-card">
+
+            <article class="lp-tile lp-tile--wide reveal">
                 <h3>{% trans "Location et stock" %}</h3>
                 <p>{% trans "Catalogue, contrats, cautions, retours et pressing, sans double réservation." %}</p>
+                <div class="lp-days" aria-hidden="true">
+                    <i></i><i></i><i class="is-booked"></i><i class="is-booked"></i><i class="is-booked"></i><i class="is-press"></i><i class="is-press"></i>
+                    <i></i><i></i><i></i><i class="is-booked"></i><i class="is-booked"></i><i class="is-press"></i><i></i>
+                </div>
+                <ul class="lp-legend">
+                    <li><i class="is-booked"></i>{% trans "Louée" %}</li>
+                    <li><i class="is-press"></i>{% trans "Pressing" %}</li>
+                    <li><i></i>{% trans "Libre" %}</li>
+                </ul>
             </article>
-            <article class="landing-card">
+
+            <article class="lp-tile reveal">
                 <h3>{% trans "Finances claires" %}</h3>
-                <p>{% trans "Paiements, impayés, dépenses, rentabilité par robe et récapitulatifs." %}</p>
+                <p>{% trans "Paiements, impayés, dépenses et rentabilité par robe." %}</p>
+                <div class="lp-bars" aria-hidden="true">
+                    <i style="--h: 38%"></i><i style="--h: 55%"></i><i style="--h: 46%"></i><i style="--h: 72%"></i><i style="--h: 64%"></i><i style="--h: 90%"></i>
+                </div>
             </article>
-            <article class="landing-card">
+
+            <article class="lp-tile reveal">
                 <h3>{% trans "Planning" %}</h3>
                 <p>{% trans "Un seul calendrier pour les livraisons, les retraits et les retours." %}</p>
+                <ul class="lp-events">
+                    <li><i class="is-gold"></i>{% trans "Livraison" %}</li>
+                    <li><i class="is-blue"></i>{% trans "Retrait" %}</li>
+                    <li><i class="is-wine"></i>{% trans "Retour" %}</li>
+                </ul>
             </article>
-            <article class="landing-card">
+
+            <article class="lp-tile reveal">
                 <h3>{% trans "Des données bien protégées" %}</h3>
                 <p>{% trans "Chaque atelier ne voit que ses propres clientes, avec des outils de protection de la vie privée." %}</p>
+                <svg class="lp-shield" viewBox="0 0 64 72" aria-hidden="true">
+                    <path d="M32 4 L56 13 V34 C56 50 45 62 32 68 C19 62 8 50 8 34 V13 Z" fill="none" stroke="#33526e" stroke-width="2.4" stroke-linejoin="round"/>
+                    <path class="lp-shield__check" d="M21 36 L29 44 L44 27" fill="none" stroke="#a17f2d" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" pathLength="1"/>
+                </svg>
             </article>
         </div>
     </section>
 
-    <section class="landing-section" aria-labelledby="titre-etapes">
-        <h2 id="titre-etapes" class="landing-section__title">{% trans "Comment ça marche" %}</h2>
-        <ol class="landing-steps">
-            <li>{% trans "Vous recevez une invitation par e-mail." %}</li>
-            <li>{% trans "Vous créez votre compte et donnez un nom à votre atelier." %}</li>
-            <li>{% trans "Vous saisissez vos premières clientes et robes." %}</li>
-        </ol>
+    {# ------------------------------------------------------------------ Langues #}
+    <section class="lp-section lp-langs reveal" aria-labelledby="lp-t-langues">
+        <div class="lp-langs__text">
+            <h2 id="lp-t-langues" class="lp-section__title lp-section__title--start">{% trans "Dans votre langue, dans votre sens de lecture" %}</h2>
+            <p>{% trans "L'interface s'affiche en hébreu, de droite à gauche, ou en français. Chaque personne choisit sa langue d'un clic, et elle la retrouve à chaque connexion." %}</p>
+        </div>
+        <div class="lp-langs__demo" aria-hidden="true">
+            <div class="lp-pane lp-pane--he" lang="he" dir="rtl">
+                <strong>שמלת כלה</strong>
+                <span>מסירה בעוד 5 ימים</span>
+                <em>התשלום הבא: 1,800 ₪</em>
+            </div>
+            <div class="lp-pane lp-pane--fr" lang="fr" dir="ltr">
+                <strong>Robe de mariée</strong>
+                <span>Livraison dans 5 jours</span>
+                <em>Prochain paiement : 1 800 ₪</em>
+            </div>
+        </div>
     </section>
 
-    <footer class="landing-footer">
+    {# ------------------------------------------------------------------ Données #}
+    <section class="lp-section lp-trust" aria-labelledby="lp-t-donnees">
+        <div>
+            <h2 id="lp-t-donnees" class="lp-section__title lp-section__title--start">{% trans "Vos clientes restent les vôtres" %}</h2>
+            <p class="lp-trust__lead">{% trans "Mesures, photos, coordonnées : ce sont des données personnelles. L'outil est construit pour que vous les protégiez sans y penser." %}</p>
+        </div>
+        <ul class="lp-trust__list">
+            <li><h3>{% trans "Un atelier, un espace" %}</h3><p>{% trans "Chaque atelier ne voit que ses propres clientes. Aucun autre atelier ne peut les lire ni les modifier." %}</p></li>
+            <li><h3>{% trans "Fiche d'information et effacement" %}</h3><p>{% trans "Remettez la fiche d'information à chaque cliente, et effacez ses données quand elle le demande." %}</p></li>
+            <li><h3>{% trans "Dossiers inactifs" %}</h3><p>{% trans "Les clientes sans activité depuis des années vous sont signalées, pour les anonymiser en un geste." %}</p></li>
+            <li><h3>{% trans "Registre des incidents" %}</h3><p>{% trans "Un journal prêt à remplir, comme la loi sur la protection de la vie privée l'attend." %}</p></li>
+        </ul>
+    </section>
+
+    {# ---------------------------------------------------------------------- FAQ #}
+    <section class="lp-section lp-faq" aria-labelledby="lp-t-faq">
+        <h2 id="lp-t-faq" class="lp-section__title">{% trans "Questions fréquentes" %}</h2>
+        <div class="lp-faq__list">
+            <details><summary>{% trans "Combien ça coûte ?" %}</summary><p>{% trans "C'est gratuit pendant le lancement, et nous ne demandons aucune carte bancaire." %}</p></details>
+            <details><summary>{% trans "Pourquoi faut-il une invitation ?" %}</summary><p>{% trans "Nous ouvrons les ateliers un par un pour bien accompagner chacun au démarrage. Demandez votre invitation ci-dessous : elle arrive par e-mail." %}</p></details>
+            <details><summary>{% trans "Ça marche sur téléphone ?" %}</summary><p>{% trans "Oui. Le site s'adapte à l'écran du téléphone, de la tablette et de l'ordinateur, sans rien installer." %}</p></details>
+            <details><summary>{% trans "Mes équipes peuvent-elles s'en servir ?" %}</summary><p>{% trans "Pour l'instant, chaque atelier a un compte propriétaire. Les comptes pour les employées sont prévus." %}</p></details>
+            <details><summary>{% trans "Et si je veux arrêter ?" %}</summary><p>{% trans "Vos données restent les vôtres : vous pouvez exporter vos finances et effacer vos clientes à tout moment." %}</p></details>
+        </div>
+    </section>
+
+    {# ------------------------------------------------------ Demande d'invitation #}
+    <section class="lp-final" id="demande" aria-labelledby="lp-t-demande">
+        <div class="lp-final__text">
+            <h2 id="lp-t-demande">{% trans "Ouvrez votre atelier" %}</h2>
+            <p>{% trans "Laissez votre adresse. Vous recevez votre lien d'invitation par e-mail, puis vous créez votre compte en deux minutes." %}</p>
+        </div>
+        <form method="post" action="{% url 'demander_invitation' %}" class="lp-form-demande">
+            {% csrf_token %}
+            {% for m in messages %}<p class="lp-form-demande__msg lp-form-demande__msg--{{ m.level_tag }}" role="status">{{ m }}</p>{% endfor %}
+            <label for="id_email">{% trans "Votre adresse e-mail" %}</label>
+            <input type="email" name="email" id="id_email" required autocomplete="email" dir="ltr">
+            <label for="id_nom_atelier">{% trans "Nom de votre atelier" %} <span>({% trans "facultatif" %})</span></label>
+            <input type="text" name="nom_atelier" id="id_nom_atelier" maxlength="150">
+            <div class="lp-form-demande__piege" aria-hidden="true"><label>Site web <input type="text" name="site_web" tabindex="-1" autocomplete="off"></label></div>
+            <button type="submit" class="btn btn--gold btn--lg">{% trans "Demander mon invitation" %}</button>
+        </form>
+    </section>
+
+    <footer class="lp-footer">
         <span>{{ PRODUIT_NOM }}</span>
-        <span>{% trans "Gratuit pendant le lancement" %}</span>
+        <a href="{% url 'login' %}">{% trans "Se connecter" %}</a>
     </footer>
 </main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Les blocs ".reveal" n'attendent l'apparition que si le script tourne : sans lui, tout reste visible.
+    (function () {
+        document.documentElement.classList.add('js');
+        var blocs = document.querySelectorAll('.reveal');
+        if (!('IntersectionObserver' in window)) { blocs.forEach(function (b) { b.classList.add('is-visible'); }); return; }
+        var obs = new IntersectionObserver(function (entrees) {
+            entrees.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('is-visible'); obs.unobserve(e.target); } });
+        }, { threshold: 0.2 });
+        blocs.forEach(function (b) { obs.observe(b); });
+    })();
+</script>
 {% endblock %}

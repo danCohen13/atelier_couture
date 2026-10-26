@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Atelier Pro\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-26 19:55+0200\n"
+"POT-Creation-Date: 2026-10-26 20:16+0200\n"
 "PO-Revision-Date: 2026-10-26 19:00+0200\n"
 "Last-Translator: \n"
 "Language-Team: he\n"
@@ -35,6 +35,9 @@ msgstr "שם המשתמש הזה כבר תפוס."
 msgid "Les deux mots de passe ne sont pas identiques."
 msgstr "שתי הסיסמאות אינן זהות."
 
+msgid "Votre adresse e-mail"
+msgstr "כתובת הדוא\"ל שלך"
+
 #, python-format
 msgid "Votre invitation à %(produit)s"
 msgstr "ההזמנה שלך ל-%(produit)s"
@@ -58,36 +61,65 @@ msgstr ""
 msgid "Gestion d'atelier de couture et de location de robes"
 msgstr "ניהול סדנת תפירה והשכרת שמלות"
 
-msgid "Pour les ateliers de couture et de location de robes"
-msgstr "לסדנאות תפירה והשכרת שמלות"
+msgid "Chaque robe, de la première mesure à la livraison."
+msgstr "כל שמלה, מהמדידה הראשונה ועד המסירה."
 
-msgid "Votre atelier, enfin bien tenu."
-msgstr "הסדנה שלך, סוף סוף מסודרת."
-
+#| msgid ""
+#| "Chaque robe, chaque essayage, chaque paiement : suivis au même endroit, en "
+#| "hébreu ou en français."
 msgid ""
-"Suivez chaque confection, vos locations, vos paiements et vos livraisons au "
-"même endroit, en hébreu ou en français."
+"Confections, locations, acomptes et livraisons : tout votre atelier au même "
+"endroit, en hébreu ou en français."
 msgstr ""
-"עקבי אחרי כל תפירה, ההשכרות, התשלומים והמסירות שלך במקום אחד, בעברית או "
-"בצרפתית."
+"תפירות, השכרות, מקדמות ומסירות: כל הסדנה שלך במקום אחד, בעברית או בצרפתית."
 
 msgid "Ouvrir mon atelier"
 msgstr "לפתיחת הסדנה שלי"
 
+msgid "Demander une invitation"
+msgstr "לבקשת הזמנה"
+
 msgid "Se connecter"
 msgstr "התחברות"
 
-msgid "Inscription sur invitation. Gratuit pendant le lancement."
-msgstr "הרשמה בהזמנה בלבד. חינם בתקופת ההשקה."
+msgid "Gratuit pendant le lancement. Aucune carte bancaire demandée."
+msgstr "חינם בתקופת ההשקה. לא מבקשים כרטיס אשראי."
 
-msgid "Tout ce qu'il faut à un atelier"
-msgstr "כל מה שסדנה צריכה"
+msgid "Robe sur mannequin de couture, mesurée au mètre ruban"
+msgstr "שמלה על בובת תפירה, נמדדת בסרט מדידה"
+
+msgid "Robe de mariée"
+msgstr "שמלת כלה"
+
+#| msgid "Livraison dans 9 jours"
+msgid "Livraison dans 5 jours"
+msgstr "מסירה בעוד 5 ימים"
+
+#| msgid "L'acompte arrive"
+msgid "Acompte reçu"
+msgstr "התקבלה מקדמה"
+
+msgid "Retour prévu demain"
+msgstr "החזרה צפויה מחר"
+
+msgid "Robe Aurore, pressing ensuite"
+msgstr "שמלת \"אורורה\", גיהוץ לאחר מכן"
+
+msgid "Tout ce qu'un atelier fait chaque jour"
+msgstr "כל מה שסדנה עושה מדי יום"
 
 msgid "Suivi des confections"
 msgstr "מעקב אחר תפירות"
 
 msgid "Chaque robe, sa cliente, ses étapes et sa date de livraison."
 msgstr "כל שמלה, הלקוחה שלה, השלבים ותאריך המסירה."
+
+#| msgid "Robe de soirée « Aurore »"
+msgid "Robe de soirée"
+msgstr "שמלת ערב"
+
+msgid "Retouches"
+msgstr "תיקונים"
 
 #| msgid "Locations &amp; stock"
 msgid "Location et stock"
@@ -97,12 +129,21 @@ msgid ""
 "Catalogue, contrats, cautions, retours et pressing, sans double réservation."
 msgstr "קטלוג, חוזים, פיקדונות, החזרות וגיהוץ, בלי הזמנות כפולות."
 
+msgid "Louée"
+msgstr "מושכרת"
+
+msgid "Pressing"
+msgstr "גיהוץ"
+
+msgid "Libre"
+msgstr "פנויה"
+
 #| msgid "Finances &amp; bilans"
 msgid "Finances claires"
-msgstr "כספים ודוחות"
+msgstr "כספים ברורים"
 
-msgid "Paiements, impayés, dépenses, rentabilité par robe et récapitulatifs."
-msgstr "תשלומים, חובות פתוחים, הוצאות, רווחיות לכל שמלה וסיכומים."
+msgid "Paiements, impayés, dépenses et rentabilité par robe."
+msgstr "תשלומים, חובות פתוחים, הוצאות ורווחיות לכל שמלה."
 
 msgid "Planning"
 msgstr "לוח זמנים"
@@ -110,28 +151,143 @@ msgstr "לוח זמנים"
 msgid "Un seul calendrier pour les livraisons, les retraits et les retours."
 msgstr "לוח שנה אחד למסירות, לאיסופים ולהחזרות."
 
+msgid "Livraison"
+msgstr "מסירה"
+
+msgid "Retrait"
+msgstr "איסוף"
+
+msgid "Retour"
+msgstr "החזרה"
+
 msgid "Des données bien protégées"
 msgstr "נתונים מוגנים היטב"
 
+#| msgid ""
+#| "Chaque atelier ne voit que ses propres clientes. Aucun autre atelier ne peut"
+#| " les lire ni les modifier."
 msgid ""
 "Chaque atelier ne voit que ses propres clientes, avec des outils de "
 "protection de la vie privée."
 msgstr "כל סדנה רואה רק את הלקוחות שלה, עם כלים להגנת הפרטיות."
 
-msgid "Comment ça marche"
-msgstr "איך זה עובד"
+#| msgid "Votre langue, dans le bon sens"
+msgid "Dans votre langue, dans votre sens de lecture"
+msgstr "בשפה שלך, בכיוון הקריאה שלך"
 
-msgid "Vous recevez une invitation par e-mail."
-msgstr "את מקבלת הזמנה בדוא\"ל."
+msgid ""
+"L'interface s'affiche en hébreu, de droite à gauche, ou en français. Chaque "
+"personne choisit sa langue d'un clic, et elle la retrouve à chaque "
+"connexion."
+msgstr ""
+"הממשק מוצג בעברית, מימין לשמאל, או בצרפתית. כל אחת בוחרת שפה בלחיצה, והבחירה"
+" נשמרת בכל התחברות."
 
-msgid "Vous créez votre compte et donnez un nom à votre atelier."
-msgstr "את יוצרת חשבון ונותנת שם לסדנה שלך."
+msgid "Vos clientes restent les vôtres"
+msgstr "הלקוחות שלך נשארות שלך"
 
-msgid "Vous saisissez vos premières clientes et robes."
-msgstr "את מזינה את הלקוחות והשמלות הראשונות שלך."
+msgid ""
+"Mesures, photos, coordonnées : ce sont des données personnelles. L'outil est"
+" construit pour que vous les protégiez sans y penser."
+msgstr ""
+"מידות, תמונות, פרטי קשר: אלה נתונים אישיים. הכלי בנוי כך שתגני עליהם בלי "
+"לחשוב על זה."
 
-msgid "Gratuit pendant le lancement"
-msgstr "חינם בתקופת ההשקה"
+msgid "Un atelier, un espace"
+msgstr "סדנה אחת, מרחב אחד"
+
+msgid ""
+"Chaque atelier ne voit que ses propres clientes. Aucun autre atelier ne peut"
+" les lire ni les modifier."
+msgstr ""
+"כל סדנה רואה רק את הלקוחות שלה. שום סדנה אחרת לא יכולה לקרוא אותן או לשנות "
+"אותן."
+
+msgid "Fiche d'information et effacement"
+msgstr "דף מידע ומחיקה"
+
+msgid ""
+"Remettez la fiche d'information à chaque cliente, et effacez ses données "
+"quand elle le demande."
+msgstr "מוסרות לכל לקוחה דף מידע, ומוחקות את הנתונים שלה כשהיא מבקשת."
+
+msgid "Dossiers inactifs"
+msgstr "תיקים לא פעילים"
+
+msgid ""
+"Les clientes sans activité depuis des années vous sont signalées, pour les "
+"anonymiser en un geste."
+msgstr ""
+"לקוחות שלא היו פעילות שנים מסומנות עבורך, כדי להפוך אותן לאנונימיות בלחיצה."
+
+msgid "Registre des incidents"
+msgstr "יומן אירועי אבטחה"
+
+msgid ""
+"Un journal prêt à remplir, comme la loi sur la protection de la vie privée "
+"l'attend."
+msgstr "יומן מוכן למילוי, כפי שחוק הגנת הפרטיות מצפה."
+
+msgid "Questions fréquentes"
+msgstr "שאלות נפוצות"
+
+msgid "Combien ça coûte ?"
+msgstr "כמה זה עולה?"
+
+msgid ""
+"C'est gratuit pendant le lancement, et nous ne demandons aucune carte "
+"bancaire."
+msgstr "זה חינם בתקופת ההשקה, ואנחנו לא מבקשים כרטיס אשראי."
+
+msgid "Pourquoi faut-il une invitation ?"
+msgstr "למה צריך הזמנה?"
+
+msgid ""
+"Nous ouvrons les ateliers un par un pour bien accompagner chacun au "
+"démarrage. Demandez votre invitation ci-dessous : elle arrive par e-mail."
+msgstr ""
+"אנחנו פותחים את הסדנאות אחת אחת כדי ללוות כל אחת בתחילת הדרך. מבקשות הזמנה "
+"למטה והיא מגיעה בדוא\"ל."
+
+msgid "Ça marche sur téléphone ?"
+msgstr "זה עובד בטלפון?"
+
+msgid ""
+"Oui. Le site s'adapte à l'écran du téléphone, de la tablette et de "
+"l'ordinateur, sans rien installer."
+msgstr ""
+"כן. האתר מתאים את עצמו למסך של הטלפון, הטאבלט והמחשב, בלי להתקין כלום."
+
+msgid "Mes équipes peuvent-elles s'en servir ?"
+msgstr "העובדות שלי יכולות להשתמש בו?"
+
+msgid ""
+"Pour l'instant, chaque atelier a un compte propriétaire. Les comptes pour "
+"les employées sont prévus."
+msgstr "כרגע לכל סדנה יש חשבון בעלת סדנה אחד. חשבונות לעובדות מתוכננים."
+
+msgid "Et si je veux arrêter ?"
+msgstr "ומה אם ארצה להפסיק?"
+
+msgid ""
+"Vos données restent les vôtres : vous pouvez exporter vos finances et "
+"effacer vos clientes à tout moment."
+msgstr "הנתונים נשארים שלך: אפשר לייצא את הכספים ולמחוק לקוחות בכל רגע."
+
+msgid "Ouvrez votre atelier"
+msgstr "פותחות את הסדנה שלך"
+
+msgid ""
+"Laissez votre adresse. Vous recevez votre lien d'invitation par e-mail, puis"
+" vous créez votre compte en deux minutes."
+msgstr ""
+"משאירות כתובת דוא\"ל. הקישור להזמנה מגיע במייל, ותוך שתי דקות יש לך חשבון."
+
+msgid "facultatif"
+msgstr "לא חובה"
+
+msgid "Demander mon invitation"
+msgstr "לבקשת ההזמנה שלי"
 
 msgid "Maison &amp; atelier de confection"
 msgstr "בית אופנה וסדנת תפירה"
@@ -148,7 +304,6 @@ msgstr "התנתקות"
 msgid "Administration"
 msgstr "ניהול"
 
-#| msgid "Déconnexion"
 msgid "Connexion"
 msgstr "התחברות"
 
@@ -170,7 +325,6 @@ msgstr "פרטיות"
 msgid "Créer mon atelier"
 msgstr "יצירת הסדנה שלי"
 
-#| msgid "Navigation"
 msgid "Invitation"
 msgstr "הזמנה"
 
@@ -196,3 +350,12 @@ msgstr "פג תוקפו, כבר נעשה בו שימוש או שהוא שגוי.
 
 msgid "Retour à l'accueil"
 msgstr "חזרה לדף הבית"
+
+msgid "Merci ! Nous vous écrivons très vite avec votre invitation."
+msgstr "תודה! נכתוב לך בקרוב עם ההזמנה שלך."
+
+msgid "Vérifiez votre adresse e-mail."
+msgstr "בדקי את כתובת הדוא\"ל."
+
+msgid "Trop de demandes depuis cette connexion. Réessayez plus tard."
+msgstr "יותר מדי בקשות מהחיבור הזה. נסי שוב מאוחר יותר."

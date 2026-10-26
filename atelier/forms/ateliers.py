@@ -55,3 +55,17 @@ class InscriptionForm(forms.Form):
             except forms.ValidationError as erreur:
                 self.add_error('mot_de_passe', erreur)
         return donnees
+
+
+class DemandeInvitationForm(forms.Form):
+    """Formulaire de la page d'accueil. Le champ `site_web` est un piège à robots : invisible, il reste vide."""
+    email = forms.EmailField(label=_("Votre adresse e-mail"), widget=forms.EmailInput(attrs={
+        'autocomplete': 'email', 'dir': 'ltr'}))
+    nom_atelier = forms.CharField(label=_("Nom de votre atelier"), max_length=150, required=False)
+    site_web = forms.CharField(required=False, widget=forms.TextInput(attrs={
+        'tabindex': '-1', 'autocomplete': 'off', 'aria-hidden': 'true'}))
+
+    def clean_site_web(self):
+        if self.cleaned_data['site_web']:
+            raise forms.ValidationError("")
+        return ''
