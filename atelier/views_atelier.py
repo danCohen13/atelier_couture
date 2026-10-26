@@ -3,6 +3,7 @@ import json
 from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.views.decorators.http import require_POST
 
 from .acces import atelier_requis
@@ -131,7 +132,7 @@ def modifier_robe(request, robe_id):
             form.save()
             referer = request.META.get('HTTP_REFERER', '')
             if 'clientes' in referer:
-                return redirect(f'/clientes/{robe.client.id}/#tiroir-{robe.id}')
+                return redirect(f"{reverse('fiche_cliente', args=[robe.client.id])}#tiroir-{robe.id}")
             return redirect('dashboard')
     else:
         form = RobeForm(instance=robe, atelier=request.atelier)
@@ -152,8 +153,8 @@ def ajouter_tache_rapide(request, robe_id, type_tache):
     
     referer = request.META.get('HTTP_REFERER', '')
     if 'clientes' in referer:
-        return redirect(f'/clientes/{robe.client.id}/#tiroir-{robe.id}')
-    return redirect(f'/#tiroir-{robe.id}')
+        return redirect(f"{reverse('fiche_cliente', args=[robe.client.id])}#tiroir-{robe.id}")
+    return redirect(f"{reverse('dashboard')}#tiroir-{robe.id}")
 
 @atelier_requis
 def ajouter_tache_personnalisee(request, robe_id):
@@ -165,8 +166,8 @@ def ajouter_tache_personnalisee(request, robe_id):
             
     referer = request.META.get('HTTP_REFERER', '')
     if 'clientes' in referer:
-        return redirect(f'/clientes/{robe.client.id}/#tiroir-{robe.id}')
-    return redirect(f'/#tiroir-{robe.id}')
+        return redirect(f"{reverse('fiche_cliente', args=[robe.client.id])}#tiroir-{robe.id}")
+    return redirect(f"{reverse('dashboard')}#tiroir-{robe.id}")
 
 @atelier_requis
 @require_POST
@@ -177,8 +178,8 @@ def toggle_tache(request, tache_id):
     
     referer = request.META.get('HTTP_REFERER', '')
     if 'clientes' in referer:
-        return redirect(f'/clientes/{tache.robe.client.id}/#tiroir-{tache.robe.id}')
-    return redirect(f'/#tiroir-{tache.robe.id}')
+        return redirect(f"{reverse('fiche_cliente', args=[tache.robe.client.id])}#tiroir-{tache.robe.id}")
+    return redirect(f"{reverse('dashboard')}#tiroir-{tache.robe.id}")
 
 @atelier_requis
 @require_POST
@@ -190,8 +191,8 @@ def supprimer_tache(request, tache_id):
     
     referer = request.META.get('HTTP_REFERER', '')
     if 'clientes' in referer:
-        return redirect(f'/clientes/{client_id}/#tiroir-{robe_id}')
-    return redirect(f'/#tiroir-{robe_id}')
+        return redirect(f"{reverse('fiche_cliente', args=[client_id])}#tiroir-{robe_id}")
+    return redirect(f"{reverse('dashboard')}#tiroir-{robe_id}")
 
 @atelier_requis
 @require_POST

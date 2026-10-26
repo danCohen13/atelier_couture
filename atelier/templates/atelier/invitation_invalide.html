@@ -1,0 +1,16 @@
+{% extends 'atelier/base.html' %}
+{% load i18n %}
+{% block title %}{% trans "Invitation invalide" %} — {{ PRODUIT_NOM }}{% endblock %}
+
+{% block content %}
+<main class="page login-page">
+    <div class="form-card">
+        <div class="form-card__inner">
+            <span class="eyebrow">{% trans "Invitation" %}</span>
+            <h2>{% trans "Ce lien n'est plus valable" %}</h2>
+            <p class="auth-subtitle">{% trans "Il a expiré, a déjà été utilisé ou est incorrect. Demandez une nouvelle invitation." %}</p>
+            <a href="{% url 'accueil' %}" class="btn btn--outline btn--block">{% trans "Retour à l'accueil" %}</a>
+        </div>
+    </div>
+</main>
+{% endblock %}

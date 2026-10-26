@@ -1,12 +1,17 @@
 """Administration de la plateforme (réservée à l'exploitante du service, pas aux ateliers)."""
-from django.contrib import admin
+from django import forms
+from django.contrib import admin, messages
+from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 
+from .invitations import envoyer_invitation, lien_invitation
 from .models import (
     Adhesion,
     Atelier,
     Client,
     DepenseRecurrente,
     IncidentSecurite,
+    Invitation,
     Location,
     Paiement,
     ParametresFinance,
@@ -22,6 +27,54 @@ class AtelierAdmin(admin.ModelAdmin):
     list_display = ('nom', 'statut', 'offre', 'cree_le')
     list_filter = ('statut', 'offre')
     search_fields = ('nom',)
+
+
+class InvitationAdminForm(forms.ModelForm):
+    class Meta:
+        model = Invitation
+        fields = ('email', 'nom_atelier')
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if User.objects.filter(email__iexact=email).exists():
+            raise ValidationError("Un compte existe déjà avec cette adresse e-mail.")
+        return email
+
+
+@admin.register(Invitation)
+class InvitationAdmin(admin.ModelAdmin):
+    """Inviter une nouvelle atelier : le lien s'affiche UNE fois à la création (et part par e-mail)."""
+    list_display = ('email', 'nom_atelier', 'etat', 'cree_le', 'expire_le', 'atelier')
+    search_fields = ('email', 'nom_atelier')
+    readonly_fields = ('cree_le', 'expire_le', 'utilisee_le', 'atelier')
+    form = InvitationAdminForm
+
+    def get_fields(self, request, obj=None):
+        if obj is None:
+            return ('email', 'nom_atelier')
+        return ('email', 'nom_atelier', 'cree_le', 'expire_le', 'utilisee_le', 'atelier')
+
+    def get_readonly_fields(self, request, obj=None):
+        return (*self.readonly_fields, 'email', 'nom_atelier') if obj else ()
+
+    @admin.display(description="État")
+    def etat(self, obj):
+        if obj.utilisee_le:
+            return "Utilisée"
+        return "En attente" if obj.est_utilisable else "Expirée"
+
+    def save_model(self, request, obj, form, change):
+        if change:
+            return
+        invitation, jeton = Invitation.creer(obj.email, obj.nom_atelier)
+        obj.__dict__.update(invitation.__dict__)  # l'objet affiché ensuite est celui qui vient d'être créé
+        lien = lien_invitation(jeton)
+        if envoyer_invitation(invitation, jeton):
+            self.message_user(request, f"Invitation envoyée à {invitation.email}. Lien (affiché une seule fois) : {lien}")
+        else:
+            self.message_user(
+                request, f"L'e-mail n'a pas pu partir. Transmettez ce lien vous-même (affiché une seule fois) : {lien}",
+                messages.WARNING)
 
 
 @admin.register(Adhesion)

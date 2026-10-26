@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="noindex, nofollow">
+    {% block robots %}<meta name="robots" content="noindex, nofollow">{% endblock %}
     <title>{% block title %}{{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,7 +19,7 @@
 
     <header class="site-header">
         <div class="site-header__inner">
-            <a href="{% url 'dashboard' %}" class="brand">
+            <a href="{% if user.is_authenticated and atelier_courant %}{% url 'dashboard' %}{% else %}{% url 'accueil' %}{% endif %}" class="brand">
                 <svg class="brand__mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="20" cy="20" r="18.5" stroke="#211D1A" stroke-width="1" />
                     <path d="M12 24C15 16 25 16 28 24" stroke="#A17F2D" stroke-width="1.4" stroke-linecap="round" />
@@ -68,6 +68,8 @@
                     {% if user.is_staff %}
                         <a href="{% url 'admin:index' %}" class="header-link">{% trans "Administration" %}</a>
                     {% endif %}
+                {% elif request.resolver_match.url_name != 'login' %}
+                    <a href="{% url 'login' %}" class="header-link header-link--cta">{% trans "Connexion" %}</a>
                 {% endif %}
             </div>
         </div>
@@ -81,7 +83,7 @@
             <div class="sidebar-title">{% trans "Navigation" %}</div>
             <nav class="sidebar-menu">
                 <!-- Atelier & confections sur mesure -->
-                <a href="{% url 'dashboard' %}" class="sidebar-link {% if request.resolver_match.url_name != 'finances' and request.resolver_match.url_name != 'planning' and 'location' not in request.resolver_match.url_name and 'confidentialite' not in request.resolver_match.url_name and request.path|slice:':10' != '/finances/' %}is-active{% endif %}">
+                <a href="{% url 'dashboard' %}" class="sidebar-link {% if request.resolver_match.url_name != 'finances' and request.resolver_match.url_name != 'planning' and 'location' not in request.resolver_match.url_name and 'confidentialite' not in request.resolver_match.url_name and not section_finances %}is-active{% endif %}">
                     {% trans "Atelier &amp; modèles" %}
                 </a>
 
@@ -96,7 +98,7 @@
                 </a>
 
                 <!-- Finances & bilans -->
-                <a href="{% url 'finances' %}" class="sidebar-link {% if request.path|slice:':10' == '/finances/' %}is-active{% endif %}">
+                <a href="{% url 'finances' %}" class="sidebar-link {% if section_finances %}is-active{% endif %}">
                     {% trans "Finances &amp; bilans" %}
                 </a>
 

@@ -1,0 +1,64 @@
+{% extends 'atelier/base.html' %}
+{% load i18n %}
+{% block robots %}<meta name="robots" content="index, follow">{% endblock %}
+{% block title %}{{ PRODUIT_NOM }} — {% trans "Gestion d'atelier de couture et de location de robes" %}{% endblock %}
+
+{% block content %}
+<main class="landing">
+    <section class="landing-hero">
+        <span class="eyebrow">{% trans "Pour les ateliers de couture et de location de robes" %}</span>
+        <h1 class="landing-hero__title">{% trans "Votre atelier, enfin bien tenu." %}</h1>
+        <p class="landing-hero__lead">
+            {% trans "Suivez chaque confection, vos locations, vos paiements et vos livraisons au même endroit, en hébreu ou en français." %}
+        </p>
+        <div class="landing-hero__actions">
+            {% if user.is_authenticated and atelier_courant %}
+                <a href="{% url 'dashboard' %}" class="btn btn--primary">{% trans "Ouvrir mon atelier" %}</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn--primary">{% trans "Se connecter" %}</a>
+            {% endif %}
+        </div>
+        <p class="landing-hero__note">{% trans "Inscription sur invitation. Gratuit pendant le lancement." %}</p>
+    </section>
+
+    <section class="landing-section" aria-labelledby="titre-fonctions">
+        <h2 id="titre-fonctions" class="landing-section__title">{% trans "Tout ce qu'il faut à un atelier" %}</h2>
+        <div class="landing-grid">
+            <article class="landing-card">
+                <h3>{% trans "Suivi des confections" %}</h3>
+                <p>{% trans "Chaque robe, sa cliente, ses étapes et sa date de livraison." %}</p>
+            </article>
+            <article class="landing-card">
+                <h3>{% trans "Location et stock" %}</h3>
+                <p>{% trans "Catalogue, contrats, cautions, retours et pressing, sans double réservation." %}</p>
+            </article>
+            <article class="landing-card">
+                <h3>{% trans "Finances claires" %}</h3>
+                <p>{% trans "Paiements, impayés, dépenses, rentabilité par robe et récapitulatifs." %}</p>
+            </article>
+            <article class="landing-card">
+                <h3>{% trans "Planning" %}</h3>
+                <p>{% trans "Un seul calendrier pour les livraisons, les retraits et les retours." %}</p>
+            </article>
+            <article class="landing-card">
+                <h3>{% trans "Des données bien protégées" %}</h3>
+                <p>{% trans "Chaque atelier ne voit que ses propres clientes, avec des outils de protection de la vie privée." %}</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="landing-section" aria-labelledby="titre-etapes">
+        <h2 id="titre-etapes" class="landing-section__title">{% trans "Comment ça marche" %}</h2>
+        <ol class="landing-steps">
+            <li>{% trans "Vous recevez une invitation par e-mail." %}</li>
+            <li>{% trans "Vous créez votre compte et donnez un nom à votre atelier." %}</li>
+            <li>{% trans "Vous saisissez vos premières clientes et robes." %}</li>
+        </ol>
+    </section>
+
+    <footer class="landing-footer">
+        <span>{{ PRODUIT_NOM }}</span>
+        <span>{% trans "Gratuit pendant le lancement" %}</span>
+    </footer>
+</main>
+{% endblock %}

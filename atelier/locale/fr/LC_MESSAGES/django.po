@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-26 19:13+0200\n"
+"POT-Creation-Date: 2026-10-26 19:55+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,125 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Nom de votre atelier"
+msgstr "Nom de votre atelier"
+
+msgid "Identifiant de connexion"
+msgstr "Identifiant de connexion"
+
+msgid "Mot de passe"
+msgstr "Mot de passe"
+
+msgid "Confirmez le mot de passe"
+msgstr "Confirmez le mot de passe"
+
+msgid "Cet identifiant est déjà pris."
+msgstr "Cet identifiant est déjà pris."
+
+msgid "Les deux mots de passe ne sont pas identiques."
+msgstr "Les deux mots de passe ne sont pas identiques."
+
+#, python-format
+msgid "Votre invitation à %(produit)s"
+msgstr "Votre invitation à %(produit)s"
+
+#, python-format
+msgid ""
+"Bonjour,\n"
+"\n"
+"Vous êtes invitée à ouvrir votre atelier sur %(produit)s.\n"
+"Créez votre compte avec ce lien personnel (valable %(jours)s jours, à usage unique) :\n"
+"\n"
+"%(lien)s\n"
+msgstr ""
+"Bonjour,\n"
+"\n"
+"Vous êtes invitée à ouvrir votre atelier sur %(produit)s.\n"
+"Créez votre compte avec ce lien personnel (valable %(jours)s jours, à usage unique) :\n"
+"\n"
+"%(lien)s\n"
+
+msgid "Gestion d'atelier de couture et de location de robes"
+msgstr "Gestion d'atelier de couture et de location de robes"
+
+msgid "Pour les ateliers de couture et de location de robes"
+msgstr "Pour les ateliers de couture et de location de robes"
+
+msgid "Votre atelier, enfin bien tenu."
+msgstr "Votre atelier, enfin bien tenu."
+
+msgid ""
+"Suivez chaque confection, vos locations, vos paiements et vos livraisons au "
+"même endroit, en hébreu ou en français."
+msgstr ""
+"Suivez chaque confection, vos locations, vos paiements et vos livraisons au "
+"même endroit, en hébreu ou en français."
+
+msgid "Ouvrir mon atelier"
+msgstr "Ouvrir mon atelier"
+
+msgid "Se connecter"
+msgstr "Se connecter"
+
+msgid "Inscription sur invitation. Gratuit pendant le lancement."
+msgstr "Inscription sur invitation. Gratuit pendant le lancement."
+
+msgid "Tout ce qu'il faut à un atelier"
+msgstr "Tout ce qu'il faut à un atelier"
+
+msgid "Suivi des confections"
+msgstr "Suivi des confections"
+
+msgid "Chaque robe, sa cliente, ses étapes et sa date de livraison."
+msgstr "Chaque robe, sa cliente, ses étapes et sa date de livraison."
+
+#| msgid "Locations &amp; stock"
+msgid "Location et stock"
+msgstr "Location et stock"
+
+msgid ""
+"Catalogue, contrats, cautions, retours et pressing, sans double réservation."
+msgstr ""
+"Catalogue, contrats, cautions, retours et pressing, sans double réservation."
+
+#| msgid "Finances &amp; bilans"
+msgid "Finances claires"
+msgstr "Finances claires"
+
+msgid "Paiements, impayés, dépenses, rentabilité par robe et récapitulatifs."
+msgstr "Paiements, impayés, dépenses, rentabilité par robe et récapitulatifs."
+
+msgid "Planning"
+msgstr "Planning"
+
+msgid "Un seul calendrier pour les livraisons, les retraits et les retours."
+msgstr "Un seul calendrier pour les livraisons, les retraits et les retours."
+
+msgid "Des données bien protégées"
+msgstr "Des données bien protégées"
+
+msgid ""
+"Chaque atelier ne voit que ses propres clientes, avec des outils de "
+"protection de la vie privée."
+msgstr ""
+"Chaque atelier ne voit que ses propres clientes, avec des outils de "
+"protection de la vie privée."
+
+msgid "Comment ça marche"
+msgstr "Comment ça marche"
+
+msgid "Vous recevez une invitation par e-mail."
+msgstr "Vous recevez une invitation par e-mail."
+
+msgid "Vous créez votre compte et donnez un nom à votre atelier."
+msgstr "Vous créez votre compte et donnez un nom à votre atelier."
+
+msgid "Vous saisissez vos premières clientes et robes."
+msgstr "Vous saisissez vos premières clientes et robes."
+
+msgid "Gratuit pendant le lancement"
+msgstr "Gratuit pendant le lancement"
 
 msgid "Maison &amp; atelier de confection"
 msgstr "Maison &amp; atelier de confection"
@@ -32,14 +151,15 @@ msgstr "Déconnexion"
 msgid "Administration"
 msgstr "Administration"
 
+#| msgid "Déconnexion"
+msgid "Connexion"
+msgstr "Connexion"
+
 msgid "Navigation"
 msgstr "Navigation"
 
 msgid "Atelier &amp; modèles"
 msgstr "Atelier &amp; modèles"
-
-msgid "Planning"
-msgstr "Planning"
 
 msgid "Locations &amp; stock"
 msgstr "Locations &amp; stock"
@@ -49,3 +169,37 @@ msgstr "Finances &amp; bilans"
 
 msgid "Confidentialité"
 msgstr "Confidentialité"
+
+msgid "Créer mon atelier"
+msgstr "Créer mon atelier"
+
+#| msgid "Navigation"
+msgid "Invitation"
+msgstr "Invitation"
+
+#, python-format
+msgid ""
+"Invitation pour %(email)s. Choisissez le nom de votre atelier et vos "
+"identifiants."
+msgstr ""
+"Invitation pour %(email)s. Choisissez le nom de votre atelier et vos "
+"identifiants."
+
+msgid "Créer mon compte"
+msgstr "Créer mon compte"
+
+msgid "Invitation invalide"
+msgstr "Invitation invalide"
+
+msgid "Ce lien n'est plus valable"
+msgstr "Ce lien n'est plus valable"
+
+msgid ""
+"Il a expiré, a déjà été utilisé ou est incorrect. Demandez une nouvelle "
+"invitation."
+msgstr ""
+"Il a expiré, a déjà été utilisé ou est incorrect. Demandez une nouvelle "
+"invitation."
+
+msgid "Retour à l'accueil"
+msgstr "Retour à l'accueil"

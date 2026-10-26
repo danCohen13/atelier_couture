@@ -27,7 +27,7 @@ class DeconnexionTests(TestCase):
 
     def test_la_deconnexion_en_post_fonctionne(self):
         r = self.client.post(reverse('logout'))
-        self.assertRedirects(r, reverse('login'))
+        self.assertRedirects(r, reverse('accueil'))  # la déconnexion ramène à la page d'accueil publique
         self.assertEqual(self.client.get(reverse('dashboard')).status_code, 302)
 
     def test_le_bouton_de_deconnexion_est_un_formulaire_post(self):

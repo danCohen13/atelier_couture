@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Atelier Pro\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-26 19:12+0200\n"
+"POT-Creation-Date: 2026-10-26 19:55+0200\n"
 "PO-Revision-Date: 2026-10-26 19:00+0200\n"
 "Last-Translator: \n"
 "Language-Team: he\n"
@@ -16,6 +16,122 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Nom de votre atelier"
+msgstr "שם הסדנה שלך"
+
+msgid "Identifiant de connexion"
+msgstr "שם משתמש להתחברות"
+
+msgid "Mot de passe"
+msgstr "סיסמה"
+
+msgid "Confirmez le mot de passe"
+msgstr "אימות הסיסמה"
+
+msgid "Cet identifiant est déjà pris."
+msgstr "שם המשתמש הזה כבר תפוס."
+
+msgid "Les deux mots de passe ne sont pas identiques."
+msgstr "שתי הסיסמאות אינן זהות."
+
+#, python-format
+msgid "Votre invitation à %(produit)s"
+msgstr "ההזמנה שלך ל-%(produit)s"
+
+#, python-format
+msgid ""
+"Bonjour,\n"
+"\n"
+"Vous êtes invitée à ouvrir votre atelier sur %(produit)s.\n"
+"Créez votre compte avec ce lien personnel (valable %(jours)s jours, à usage unique) :\n"
+"\n"
+"%(lien)s\n"
+msgstr ""
+"שלום,\n"
+"\n"
+"הוזמנת לפתוח את הסדנה שלך ב-%(produit)s.\n"
+"צרי את החשבון שלך באמצעות הקישור האישי הזה (תקף ל-%(jours)s ימים, לשימוש חד-פעמי):\n"
+"\n"
+"%(lien)s\n"
+
+msgid "Gestion d'atelier de couture et de location de robes"
+msgstr "ניהול סדנת תפירה והשכרת שמלות"
+
+msgid "Pour les ateliers de couture et de location de robes"
+msgstr "לסדנאות תפירה והשכרת שמלות"
+
+msgid "Votre atelier, enfin bien tenu."
+msgstr "הסדנה שלך, סוף סוף מסודרת."
+
+msgid ""
+"Suivez chaque confection, vos locations, vos paiements et vos livraisons au "
+"même endroit, en hébreu ou en français."
+msgstr ""
+"עקבי אחרי כל תפירה, ההשכרות, התשלומים והמסירות שלך במקום אחד, בעברית או "
+"בצרפתית."
+
+msgid "Ouvrir mon atelier"
+msgstr "לפתיחת הסדנה שלי"
+
+msgid "Se connecter"
+msgstr "התחברות"
+
+msgid "Inscription sur invitation. Gratuit pendant le lancement."
+msgstr "הרשמה בהזמנה בלבד. חינם בתקופת ההשקה."
+
+msgid "Tout ce qu'il faut à un atelier"
+msgstr "כל מה שסדנה צריכה"
+
+msgid "Suivi des confections"
+msgstr "מעקב אחר תפירות"
+
+msgid "Chaque robe, sa cliente, ses étapes et sa date de livraison."
+msgstr "כל שמלה, הלקוחה שלה, השלבים ותאריך המסירה."
+
+#| msgid "Locations &amp; stock"
+msgid "Location et stock"
+msgstr "השכרות ומלאי"
+
+msgid ""
+"Catalogue, contrats, cautions, retours et pressing, sans double réservation."
+msgstr "קטלוג, חוזים, פיקדונות, החזרות וגיהוץ, בלי הזמנות כפולות."
+
+#| msgid "Finances &amp; bilans"
+msgid "Finances claires"
+msgstr "כספים ודוחות"
+
+msgid "Paiements, impayés, dépenses, rentabilité par robe et récapitulatifs."
+msgstr "תשלומים, חובות פתוחים, הוצאות, רווחיות לכל שמלה וסיכומים."
+
+msgid "Planning"
+msgstr "לוח זמנים"
+
+msgid "Un seul calendrier pour les livraisons, les retraits et les retours."
+msgstr "לוח שנה אחד למסירות, לאיסופים ולהחזרות."
+
+msgid "Des données bien protégées"
+msgstr "נתונים מוגנים היטב"
+
+msgid ""
+"Chaque atelier ne voit que ses propres clientes, avec des outils de "
+"protection de la vie privée."
+msgstr "כל סדנה רואה רק את הלקוחות שלה, עם כלים להגנת הפרטיות."
+
+msgid "Comment ça marche"
+msgstr "איך זה עובד"
+
+msgid "Vous recevez une invitation par e-mail."
+msgstr "את מקבלת הזמנה בדוא\"ל."
+
+msgid "Vous créez votre compte et donnez un nom à votre atelier."
+msgstr "את יוצרת חשבון ונותנת שם לסדנה שלך."
+
+msgid "Vous saisissez vos premières clientes et robes."
+msgstr "את מזינה את הלקוחות והשמלות הראשונות שלך."
+
+msgid "Gratuit pendant le lancement"
+msgstr "חינם בתקופת ההשקה"
 
 msgid "Maison &amp; atelier de confection"
 msgstr "בית אופנה וסדנת תפירה"
@@ -32,14 +148,15 @@ msgstr "התנתקות"
 msgid "Administration"
 msgstr "ניהול"
 
+#| msgid "Déconnexion"
+msgid "Connexion"
+msgstr "התחברות"
+
 msgid "Navigation"
 msgstr "ניווט"
 
 msgid "Atelier &amp; modèles"
 msgstr "סדנה ושמלות"
-
-msgid "Planning"
-msgstr "לוח זמנים"
 
 msgid "Locations &amp; stock"
 msgstr "השכרות ומלאי"
@@ -49,3 +166,33 @@ msgstr "כספים ודוחות"
 
 msgid "Confidentialité"
 msgstr "פרטיות"
+
+msgid "Créer mon atelier"
+msgstr "יצירת הסדנה שלי"
+
+#| msgid "Navigation"
+msgid "Invitation"
+msgstr "הזמנה"
+
+#, python-format
+msgid ""
+"Invitation pour %(email)s. Choisissez le nom de votre atelier et vos "
+"identifiants."
+msgstr "הזמנה עבור %(email)s. בחרי את שם הסדנה ואת פרטי ההתחברות שלך."
+
+msgid "Créer mon compte"
+msgstr "יצירת החשבון"
+
+msgid "Invitation invalide"
+msgstr "הזמנה לא תקפה"
+
+msgid "Ce lien n'est plus valable"
+msgstr "הקישור כבר אינו תקף"
+
+msgid ""
+"Il a expiré, a déjà été utilisé ou est incorrect. Demandez une nouvelle "
+"invitation."
+msgstr "פג תוקפו, כבר נעשה בו שימוש או שהוא שגוי. בקשי הזמנה חדשה."
+
+msgid "Retour à l'accueil"
+msgstr "חזרה לדף הבית"

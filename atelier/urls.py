@@ -1,10 +1,7 @@
-from django.contrib.auth import views as auth_views
 from django.urls import path
 
 from . import (
-    langue,
     views_atelier,
-    views_auth,
     views_confidentialite,
     views_documents,
     views_finances,
@@ -17,7 +14,6 @@ from . import (
 urlpatterns = [
     # --- RACINE & ATELIER (views_atelier) ---
     path('', views_atelier.dashboard, name='dashboard'),
-    path('langue/', langue.changer_langue, name='changer_langue'),
     path('client/ajouter/', views_atelier.ajouter_client, name='ajouter_client'),
     path('robe/ajouter/', views_atelier.ajouter_robe, name='ajouter_robe'),
     path('robe/<int:robe_id>/tache-rapide/<str:type_tache>/', views_atelier.ajouter_tache_rapide, name='ajouter_tache_rapide'),
@@ -53,27 +49,8 @@ urlpatterns = [
     path('finances/paiement/<int:paiement_id>/recu/', views_documents.recu_paiement, name='recu_paiement'),
     path('finances/document/<str:type_>/<int:pk>/<str:genre>.pdf', views_documents.document_pdf, name='document_pdf'),
     
-    # --- ÉCRANS DE SÉCURITÉ ---
-    path('login/', auth_views.LoginView.as_view(template_name='atelier/login.html'), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
     path('client/analyser-mesures/', views_atelier.analyser_mesures_ia, name='analyser_mesures_ia'),
-
-    # 1. Demande de code par email
-    path('mot-de-passe-oublie/', 
-         views_auth.demander_code_reset, 
-         name='demander_code_reset'),
-
-    # 2. Saisie du code à 6 chiffres
-    path('mot-de-passe-oublie/verification/', 
-         views_auth.verifier_code_reset, 
-         name='verifier_code_reset'),
-
-    # 3. Création du nouveau mot de passe
-    path('mot-de-passe-oublie/nouveau/', 
-         views_auth.nouveau_mot_de_passe, 
-         name='nouveau_mot_de_passe'),
-
-     path('clientes/<int:client_id>/pdf/', views_atelier.exporter_pdf_cliente, name='exporter_pdf_cliente'),
+    path('clientes/<int:client_id>/pdf/', views_atelier.exporter_pdf_cliente, name='exporter_pdf_cliente'),
 ]
 
 urlpatterns += [

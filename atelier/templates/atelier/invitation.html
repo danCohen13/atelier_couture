@@ -1,0 +1,27 @@
+{% extends 'atelier/base.html' %}
+{% load i18n %}
+{% block title %}{% trans "Créer mon atelier" %} — {{ PRODUIT_NOM }}{% endblock %}
+
+{% block content %}
+<main class="page login-page">
+    <div class="form-card">
+        <div class="form-card__inner">
+            <span class="eyebrow">{% trans "Invitation" %}</span>
+            <h2>{% trans "Créer mon atelier" %}</h2>
+            <p class="auth-subtitle">{% blocktrans with email=invitation.email %}Invitation pour {{ email }}. Choisissez le nom de votre atelier et vos identifiants.{% endblocktrans %}</p>
+
+            <form method="POST">
+                {% csrf_token %}
+                {% for champ in form %}
+                <p>
+                    <label for="{{ champ.id_for_label }}">{{ champ.label }}</label>
+                    {{ champ }}
+                    {% for erreur in champ.errors %}<span class="form-error">{{ erreur }}</span>{% endfor %}
+                </p>
+                {% endfor %}
+                <button type="submit" class="btn btn--primary btn--block">{% trans "Créer mon compte" %}</button>
+            </form>
+        </div>
+    </div>
+</main>
+{% endblock %}

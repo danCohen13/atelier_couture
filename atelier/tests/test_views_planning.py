@@ -47,7 +47,7 @@ class PlanningAccesTests(PlanningBase):
         for nom in ("planning", "api_planning_evenements"):
             reponse = self.client.get(reverse(nom))
             self.assertEqual(reponse.status_code, 302, nom)
-            self.assertIn("/login/", reponse["Location"])
+            self.assertIn("/connexion/", reponse["Location"])
 
     def test_page_planning(self):
         reponse = self.client.get(reverse("planning"))

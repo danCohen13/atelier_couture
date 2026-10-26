@@ -66,6 +66,10 @@ CSRF_TRUSTED_ORIGINS += [f'https://{h.lstrip(".")}' for h in _liste_env('ALLOWED
 # Indique à Django que Render termine le chiffrement SSL (HTTPS)
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
+# Adresse publique du site, utilisée dans les liens d'invitation envoyés par e-mail.
+SITE_URL = (os.environ.get('SITE_URL')
+            or (f'https://{RENDER_EXTERNAL_HOSTNAME}' if RENDER_EXTERNAL_HOSTNAME else 'http://127.0.0.1:8000')).rstrip('/')
+
 # URL de l'interface d'administration. En production, définir ADMIN_URL avec une
 # valeur non devinable (ex. « gestion-x7k2p/ ») pour ne pas exposer /admin/.
 ADMIN_URL = (os.environ.get('ADMIN_URL') or 'admin').strip('/') + '/'

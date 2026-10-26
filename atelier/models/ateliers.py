@@ -3,6 +3,10 @@
 Chaque atelier est un « locataire » : toutes ses données portent la clé `atelier`, et une
 utilisatrice ne voit que celles de son atelier. Les modèles métier héritent de `ModeleAtelier`.
 """
+import hashlib
+import secrets
+from datetime import timedelta
+
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -38,6 +42,58 @@ class Atelier(models.Model):
 
     def __str__(self):
         return self.nom
+
+
+class Invitation(models.Model):
+    """Invitation à ouvrir un atelier. L'inscription est sur invitation uniquement.
+
+    Le lien contient un jeton aléatoire ; seule son empreinte (SHA-256) est conservée en base : une fuite
+    de la base ne permet donc pas d'utiliser les invitations en attente. Un lien ne sert qu'une fois.
+    """
+    DUREE_JOURS = 7
+
+    email = models.EmailField(verbose_name="Adresse e-mail de la personne invitée")
+    nom_atelier = models.CharField(max_length=150, blank=True, verbose_name="Nom d'atelier proposé")
+    jeton_hash = models.CharField(max_length=64, unique=True, editable=False)
+    cree_le = models.DateTimeField(default=timezone.now, editable=False)
+    expire_le = models.DateTimeField(editable=False)
+    utilisee_le = models.DateTimeField(null=True, blank=True, editable=False)
+    atelier = models.ForeignKey(Atelier, null=True, blank=True, on_delete=models.SET_NULL,
+                                related_name='+', editable=False)
+
+    class Meta:
+        ordering = ['-cree_le']
+        verbose_name = "Invitation"
+        verbose_name_plural = "Invitations"
+
+    @staticmethod
+    def empreinte(jeton):
+        return hashlib.sha256(jeton.encode('utf-8')).hexdigest()
+
+    @classmethod
+    def creer(cls, email, nom_atelier='', jours=DUREE_JOURS):
+        """Crée l'invitation et renvoie `(invitation, jeton)` : le jeton n'est connu qu'à cet instant."""
+        email = email.strip()
+        if User.objects.filter(email__iexact=email).exists():
+            raise ValidationError("Un compte existe déjà avec cette adresse e-mail.")
+        jeton = secrets.token_urlsafe(32)
+        invitation = cls.objects.create(
+            email=email, nom_atelier=nom_atelier.strip(), jeton_hash=cls.empreinte(jeton),
+            expire_le=timezone.now() + timedelta(days=jours))
+        return invitation, jeton
+
+    @classmethod
+    def trouver(cls, jeton, pour_modifier=False):
+        """L'invitation correspondant au jeton, ou None. Ne dit pas si elle est utilisable."""
+        requete = cls.objects.select_for_update() if pour_modifier else cls.objects
+        return requete.filter(jeton_hash=cls.empreinte(jeton or '')).first()
+
+    @property
+    def est_utilisable(self):
+        return self.utilisee_le is None and self.expire_le > timezone.now()
+
+    def __str__(self):
+        return f"{self.email} ({'utilisée' if self.utilisee_le else 'en attente'})"
 
 
 class Adhesion(models.Model):
