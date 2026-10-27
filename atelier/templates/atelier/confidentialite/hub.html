@@ -102,5 +102,19 @@
             <p class="fin-hint">{% trans "Le document « PROTECTION_DES_DONNEES.md » du dépôt décrit la base de données, les prestataires et la marche à suivre ; relis-le une fois par an." %}</p>
         </div>
     </section>
+
+    <section class="fin-section">
+        <div class="fin-section__head"><div>
+            <h2>{% trans "4. Exporter mes données" %}</h2>
+            <p>{% trans "Télécharge toutes les données de ton atelier (clientes, commandes, paiements, locations, finances) en fichiers Excel, pour les garder de ton côté." %}</p>
+        </div></div>
+        <div class="card">
+            {% if request.adhesion.role == 'PROPRIETAIRE' %}
+            <a class="btn btn--outline" href="{% url 'exporter_donnees' %}">{% trans "Télécharger l'export (ZIP)" %}</a>
+            {% else %}
+            <p class="fin-hint">{% trans "Seule la propriétaire de l'atelier peut exporter les données." %}</p>
+            {% endif %}
+        </div>
+    </section>
 </main>
 {% endblock %}

@@ -6,6 +6,8 @@
     <h1>{% trans "Accès impossible" %}</h1>
     {% if motif == 'suspendu' %}
         <p>{% trans "Cet atelier est suspendu. Contactez le support pour le réactiver." %}</p>
+    {% elif motif == 'proprietaire' %}
+        <p>{% trans "Cette action est réservée à la propriétaire de l'atelier." %}</p>
     {% else %}
         <p>{% trans "Ce compte n'est rattaché à aucun atelier. Utilisez le lien d'invitation que vous avez reçu, ou contactez le support." %}</p>
     {% endif %}

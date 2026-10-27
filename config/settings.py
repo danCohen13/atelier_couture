@@ -296,3 +296,13 @@ ATELIER_NOM = os.environ.get('ATELIER_NOM', 'Cohen Haute Couture')
 CONTACT_CONFIDENTIALITE = os.environ.get('CONTACT_CONFIDENTIALITE', '').strip()
 # Durée sans activité après laquelle un dossier cliente est proposé à l'anonymisation.
 CONSERVATION_ANNEES_INACTIVITE = int(os.environ.get('CONSERVATION_ANNEES_INACTIVITE', '3') or 3)
+
+
+# --- SAUVEGARDES (voir docs/SAUVEGARDES.md) ---
+BACKUP_ENCRYPTION_KEY = os.environ.get('BACKUP_ENCRYPTION_KEY', '').strip()
+BACKUP_S3_BUCKET = os.environ.get('BACKUP_S3_BUCKET', '').strip()
+BACKUP_S3_ENDPOINT = os.environ.get('BACKUP_S3_ENDPOINT', '').strip()
+BACKUP_S3_ACCESS_KEY = os.environ.get('BACKUP_S3_ACCESS_KEY', '').strip()
+BACKUP_S3_SECRET_KEY = os.environ.get('BACKUP_S3_SECRET_KEY', '').strip()
+BACKUP_S3_REGION = os.environ.get('BACKUP_S3_REGION', '').strip()
+BACKUP_PREFIX = os.environ.get('BACKUP_PREFIX', 'sauvegardes/').strip() or 'sauvegardes/'

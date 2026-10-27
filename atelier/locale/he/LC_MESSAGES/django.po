@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Atelier Pro\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-27 11:43+0200\n"
+"POT-Creation-Date: 2026-10-27 11:52+0200\n"
 "PO-Revision-Date: 2026-10-26 19:00+0200\n"
 "Last-Translator: \n"
 "Language-Team: he\n"
@@ -522,6 +522,9 @@ msgstr "אין גישה"
 
 msgid "Cet atelier est suspendu. Contactez le support pour le réactiver."
 msgstr "הסדנה הזאת מושעית. פני לתמיכה כדי להפעיל אותה מחדש."
+
+msgid "Cette action est réservée à la propriétaire de l'atelier."
+msgstr "פעולה זו שמורה לבעלת הסדנה."
 
 msgid ""
 "Ce compte n'est rattaché à aucun atelier. Utilisez le lien d'invitation que "
@@ -1272,6 +1275,23 @@ msgid ""
 msgstr ""
 "המסמך ״PROTECTION_DES_DONNEES.md״ במאגר מתאר את מסד הנתונים, ספקי השירות "
 "ונוהל הפעולה; קראי אותו מחדש אחת לשנה."
+
+msgid "4. Exporter mes données"
+msgstr "4. ייצוא הנתונים שלי"
+
+msgid ""
+"Télécharge toutes les données de ton atelier (clientes, commandes, "
+"paiements, locations, finances) en fichiers Excel, pour les garder de ton "
+"côté."
+msgstr ""
+"הורידי את כל נתוני הסדנה שלך (לקוחות, הזמנות, תשלומים, השכרות, כספים) כקובצי"
+" Excel, כדי לשמור אותם אצלך."
+
+msgid "Télécharger l'export (ZIP)"
+msgstr "הורדת הייצוא (ZIP)"
+
+msgid "Seule la propriétaire de l'atelier peut exporter les données."
+msgstr "רק בעלת הסדנה יכולה לייצא את הנתונים."
 
 msgid "Sections des finances"
 msgstr "מדורי הכספים"

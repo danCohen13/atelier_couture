@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib import messages
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.utils.translation import gettext as _
@@ -9,6 +10,7 @@ from .acces import atelier_requis
 from .forms import AtelierReglagesForm
 from .models import Client
 from .services import confidentialite as vie_privee
+from .services.export_atelier import zip_atelier
 from .services.pdf import reponse_pdf
 
 
@@ -80,3 +82,13 @@ def supprimer_cliente(request, client_id):
             request, _("Données personnelles effacées. Les commandes et paiements sont conservés "
                        "sans lien avec son identité (obligations comptables)."))
     return redirect('liste_clientes')
+
+
+@atelier_requis
+def exporter_donnees(request):
+    """Toutes les données de l'atelier en ZIP de CSV. Réservé à la propriétaire."""
+    if request.adhesion.role != 'PROPRIETAIRE':
+        return render(request, 'atelier/acces_refuse.html', {'motif': 'proprietaire'}, status=403)
+    reponse = HttpResponse(zip_atelier(request.atelier), content_type='application/zip')
+    reponse['Content-Disposition'] = f'attachment; filename="atelier-donnees-{timezone.localdate():%Y%m%d}.zip"'
+    return reponse

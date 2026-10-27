@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-27 11:43+0200\n"
+"POT-Creation-Date: 2026-10-27 11:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -530,6 +530,9 @@ msgstr "Accès impossible"
 
 msgid "Cet atelier est suspendu. Contactez le support pour le réactiver."
 msgstr "Cet atelier est suspendu. Contactez le support pour le réactiver."
+
+msgid "Cette action est réservée à la propriétaire de l'atelier."
+msgstr "Cette action est réservée à la propriétaire de l'atelier."
 
 msgid ""
 "Ce compte n'est rattaché à aucun atelier. Utilisez le lien d'invitation que "
@@ -1313,6 +1316,24 @@ msgid ""
 msgstr ""
 "Le document « PROTECTION_DES_DONNEES.md » du dépôt décrit la base de "
 "données, les prestataires et la marche à suivre ; relis-le une fois par an."
+
+msgid "4. Exporter mes données"
+msgstr "4. Exporter mes données"
+
+msgid ""
+"Télécharge toutes les données de ton atelier (clientes, commandes, "
+"paiements, locations, finances) en fichiers Excel, pour les garder de ton "
+"côté."
+msgstr ""
+"Télécharge toutes les données de ton atelier (clientes, commandes, "
+"paiements, locations, finances) en fichiers Excel, pour les garder de ton "
+"côté."
+
+msgid "Télécharger l'export (ZIP)"
+msgstr "Télécharger l'export (ZIP)"
+
+msgid "Seule la propriétaire de l'atelier peut exporter les données."
+msgstr "Seule la propriétaire de l'atelier peut exporter les données."
 
 msgid "Sections des finances"
 msgstr "Sections des finances"
