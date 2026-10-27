@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
+from django.utils.translation import get_language
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
 
@@ -51,7 +52,7 @@ def ajouter_transaction_view(request):
             contexte['erreur_ia'] = _("Écris ou dicte d'abord l'opération à analyser.")
         else:
             try:
-                initial.update(extraire_operation(phrase, timezone.localdate()))
+                initial.update(extraire_operation(phrase, timezone.localdate(), get_language()))
             except ErreurIA as erreur:
                 contexte['erreur_ia'] = erreur.message
         form = TransactionForm(initial=initial)
@@ -107,7 +108,7 @@ def analyser_texte_ia(request):
         return JsonResponse({'error': _('Aucun texte fourni')}, status=400)
 
     try:
-        champs = extraire_operation(phrase, timezone.localdate())
+        champs = extraire_operation(phrase, timezone.localdate(), get_language())
     except ErreurIA as erreur:
         return JsonResponse({'error': erreur.message}, status=erreur.status)
 

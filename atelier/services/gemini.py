@@ -9,6 +9,7 @@ import re
 
 import requests
 from django.conf import settings
+from django.utils.translation import gettext as _
 
 API_URL = "https://generativelanguage.googleapis.com/v1beta/models/{modele}:generateContent"
 
@@ -38,7 +39,7 @@ def generer_json(consigne, texte, *, timeout=15):
     """
     cle = settings.GEMINI_API_KEY
     if not cle:
-        raise ErreurIA("Clé API Gemini manquante (GEMINI_API_KEY non configurée)", status=500)
+        raise ErreurIA(_("Clé API Gemini manquante (GEMINI_API_KEY non configurée)"), status=500)
 
     charge = {"contents": [{"parts": [{"text": consigne}, {"text": texte}]}]}
     try:
@@ -51,10 +52,10 @@ def generer_json(consigne, texte, *, timeout=15):
         )
         reponse.raise_for_status()
     except requests.exceptions.RequestException as exc:
-        raise ErreurIA(f"Erreur de communication avec l'API : {exc}", status=502) from exc
+        raise ErreurIA(_("Erreur de communication avec l'API : %(erreur)s") % {"erreur": exc}, status=502) from exc
 
     try:
         brut = reponse.json()["candidates"][0]["content"]["parts"][0]["text"]
         return json.loads(_nettoyer_json(brut))
     except (ValueError, KeyError, IndexError, TypeError) as exc:
-        raise ErreurIA(f"Impossible de décoder la réponse de l'IA : {exc}", status=500) from exc
+        raise ErreurIA(_("Impossible de décoder la réponse de l'IA : %(erreur)s") % {"erreur": exc}, status=500) from exc

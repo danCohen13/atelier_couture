@@ -3,6 +3,7 @@ from unittest import mock
 
 import requests
 from django.test import SimpleTestCase, TestCase, override_settings
+from django.utils import translation
 
 from atelier.services import extraction
 from atelier.services.gemini import ErreurIA, generer_json
@@ -91,3 +92,44 @@ class ExtractionOperationTests(TestCase):
         consigne = extraction._consigne_operation("2026-10-07")
         for code, _ in Transaction.CATEGORIE_CHOICES:
             self.assertIn(code, consigne)
+
+
+class ConsignesIAHebreuTests(TestCase):
+    """Les consignes Gemini comprennent l'hébreu ; la reconnaissance vocale suit la langue de l'interface."""
+
+    def test_consigne_mesures_connait_le_vocabulaire_hebreu(self):
+        from atelier.services import extraction
+        with mock.patch.object(extraction, 'generer_json', return_value={}) as faux:
+            extraction.extraire_mesures('היקף חזה תשעים ושתיים')
+        consigne = faux.call_args.args[0]
+        for mot in ('היקף חזה', 'מותניים', 'ירכיים', 'HÉBREU'):
+            self.assertIn(mot, consigne)
+
+    def test_consigne_operation_hebreu(self):
+        import datetime
+
+        from atelier.services import extraction
+        with mock.patch.object(extraction, 'generer_json', return_value={'type': 'DEPENSE', 'montant': 45, 'date': '2026-10-26'}) as faux:
+            resultat = extraction.extraire_operation('קניתי חוט משי ב-45 שקלים אתמול', datetime.date(2026, 10, 27), 'he')
+        consigne = faux.call_args.args[0]
+        self.assertIn('hébreu', consigne)      # désignation rédigée en hébreu
+        self.assertIn('אתמול', consigne)
+        self.assertIn('mardi', consigne)       # 27/10/2026 est un mardi
+        self.assertIn('Achat de tissu', consigne)      # libellés des catégories restent en français, quelle que soit la langue active
+        self.assertEqual(resultat['montant'], 45.0)
+        self.assertEqual(resultat['date'], datetime.date(2026, 10, 26))
+
+    def test_reconnaissance_vocale_suit_la_langue(self):
+        from django.template.loader import render_to_string
+        for langue, attendu in (('he', 'he-IL'), ('fr', 'fr-FR')):
+            with translation.override(langue):
+                html = render_to_string('atelier/includes/_microphone_generic.html',
+                                        {'btn_id': 'b', 'target_id': 't', 'LANGUAGE_CODE': langue})
+            self.assertIn(f'recognition.lang = "{attendu}"', html)
+
+    def test_erreur_ia_traduite_en_hebreu(self):
+        with translation.override('he'), override_settings(GEMINI_API_KEY=''):
+            with self.assertRaises(ErreurIA) as ctx:
+                generer_json('c', 't')
+        self.assertIn('Gemini', ctx.exception.message)
+        self.assertNotIn('manquante', ctx.exception.message)

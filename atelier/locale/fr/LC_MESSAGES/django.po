@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-27 11:27+0200\n"
+"POT-Creation-Date: 2026-10-27 11:43+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -474,6 +474,17 @@ msgstr ""
 
 msgid "Signalé à l'Autorité le"
 msgstr "Signalé à l'Autorité le"
+
+msgid "Clé API Gemini manquante (GEMINI_API_KEY non configurée)"
+msgstr "Clé API Gemini manquante (GEMINI_API_KEY non configurée)"
+
+#, python-format
+msgid "Erreur de communication avec l'API : %(erreur)s"
+msgstr "Erreur de communication avec l'API : %(erreur)s"
+
+#, python-format
+msgid "Impossible de décoder la réponse de l'IA : %(erreur)s"
+msgstr "Impossible de décoder la réponse de l'IA : %(erreur)s"
 
 msgid "Jan"
 msgstr "Jan"

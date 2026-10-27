@@ -17,8 +17,8 @@
         recognition = new SpeechRecognition();
         recognition.continuous = false;
         recognition.interimResults = false;
-        // Permet de surcharger la langue si besoin (fr-FR par défaut, he-IL pour l'hébreu)
-        recognition.lang = "{{ lang|default:'fr-FR' }}"; 
+        // Langue de la reconnaissance vocale = langue de l'interface (he-IL ou fr-FR), surchargeable avec `lang`.
+        recognition.lang = "{% if lang %}{{ lang }}{% elif LANGUAGE_CODE == 'he' %}he-IL{% else %}fr-FR{% endif %}";
 
         recognition.onstart = function() {
             isRecording = true;
