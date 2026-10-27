@@ -22,3 +22,5 @@ staticfiles/
 .DS_Store
 Thumbs.db
 .vscode/
+db.sqlite3.sauvegarde
+sauvegarde.json
