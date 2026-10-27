@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Atelier Pro\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-26 20:16+0200\n"
+"POT-Creation-Date: 2026-10-27 11:27+0200\n"
 "PO-Revision-Date: 2026-10-26 19:00+0200\n"
 "Last-Translator: \n"
 "Language-Team: he\n"
@@ -16,6 +16,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "contact@exemple.com ou +972…"
+msgstr "contact@example.com או ‎+972…"
 
 msgid "Nom de votre atelier"
 msgstr "שם הסדנה שלך"
@@ -36,7 +39,107 @@ msgid "Les deux mots de passe ne sont pas identiques."
 msgstr "שתי הסיסמאות אינן זהות."
 
 msgid "Votre adresse e-mail"
-msgstr "כתובת הדוא\"ל שלך"
+msgstr "כתובת הדוא״ל שלך"
+
+msgid "Date de naissance"
+msgstr "תאריך לידה"
+
+msgid "Fiche d'information remise le"
+msgstr "דף המידע נמסר בתאריך"
+
+msgid "+972... ou +336..."
+msgstr "‎+972... או ‎+336..."
+
+msgid "Morphologie uniquement — pas d'information médicale"
+msgstr "מבנה גוף בלבד, ללא מידע רפואי"
+
+msgid "jj/mm/aaaa"
+msgstr "יי/חח/שששש"
+
+msgid "Date de commencement"
+msgstr "תאריך התחלה"
+
+msgid "Date de livraison"
+msgstr "תאריך מסירה"
+
+msgid "Date"
+msgstr "תאריך"
+
+msgid "Ex : Achat fils dorés, acompte…"
+msgstr "לדוגמה: קניית חוטי זהב, מקדמה…"
+
+msgid "Photo du ticket (facultatif)"
+msgstr "תמונת הקבלה (לא חובה)"
+
+msgid "Le montant doit être positif."
+msgstr "הסכום חייב להיות חיובי."
+
+msgid "Date du paiement"
+msgstr "תאריך התשלום"
+
+msgid "Acompte, solde…"
+msgstr "מקדמה, יתרה…"
+
+msgid "À partir du"
+msgstr "החל מתאריך"
+
+msgid "Loyer atelier, abonnement…"
+msgstr "שכר דירה לסדנה, מנוי…"
+
+msgid "Choisis un jour entre 1 et 28."
+msgstr "בחרי יום בין 1 ל-28."
+
+msgid "ex : 4.0000"
+msgstr "לדוגמה: 4.0000"
+
+msgid "ex : 3.7000"
+msgstr "לדוגמה: 3.7000"
+
+msgid "ex : 15000"
+msgstr "לדוגמה: 15000"
+
+msgid "La valeur doit être positive."
+msgstr "הערך חייב להיות חיובי."
+
+msgid "Une robe du stock porte déjà cette référence."
+msgstr "שמלה במלאי כבר נושאת את המספר הזה."
+
+msgid "ex: LOC-042"
+msgstr "לדוגמה: LOC-042"
+
+msgid "ex: Modèle Aurore"
+msgstr "לדוגמה: דגם אורורה"
+
+msgid "ex: 38"
+msgstr "לדוגמה: 38"
+
+msgid "ex: Ivoire"
+msgstr "לדוגמה: שנהב"
+
+msgid "Notes sur l'usure, petits accrocs passés..."
+msgstr "הערות על בלאי, קרעים קטנים בעבר..."
+
+msgid "Date de retrait prévue"
+msgstr "תאריך איסוף מתוכנן"
+
+msgid "Date de retour prévue"
+msgstr "תאריך החזרה מתוכנן"
+
+msgid "Constat de départ et retouches éphémères convenues..."
+msgstr "מצב השמלה ביציאה ותיקונים זמניים שהוסכמו..."
+
+msgid "Date de retour effective"
+msgstr "תאריך החזרה בפועל"
+
+msgid "Taches, réparations à prévoir, départ pressing..."
+msgstr "כתמים, תיקונים נדרשים, שליחה לניקוי וגיהוץ..."
+
+#, python-format
+msgid "La somme retenue doit être comprise entre 0 et %(max)s."
+msgstr "הסכום שנשמר חייב להיות בין 0 ל-%(max)s."
+
+msgid "Indique la somme retenue sur la caution."
+msgstr "ציני את הסכום שנשמר מהפיקדון."
 
 #, python-format
 msgid "Votre invitation à %(produit)s"
@@ -58,15 +161,372 @@ msgstr ""
 "\n"
 "%(lien)s\n"
 
+msgid "Actif"
+msgstr "פעיל"
+
+msgid "En essai"
+msgstr "בתקופת ניסיון"
+
+msgid "Suspendu"
+msgstr "מושעה"
+
+msgid "Gratuit (lancement)"
+msgstr "חינם (תקופת השקה)"
+
+msgid "Nom de l'atelier"
+msgstr "שם הסדנה"
+
+msgid "Contact pour la protection des données"
+msgstr "איש קשר להגנת הפרטיות"
+
+msgid ""
+"E-mail ou téléphone où une cliente peut exercer ses droits (fiche "
+"d'information)."
+msgstr "דוא״ל או טלפון שבהם לקוחה יכולה לממש את זכויותיה (דף המידע)."
+
+msgid "Adresse e-mail de la personne invitée"
+msgstr "כתובת הדוא״ל של המוזמנת"
+
+msgid "Nom d'atelier proposé"
+msgstr "שם סדנה מוצע"
+
+msgid "Un compte existe déjà avec cette adresse e-mail."
+msgstr "כבר קיים חשבון עם כתובת הדוא״ל הזאת."
+
+msgid "Adresse e-mail"
+msgstr "כתובת דוא״ל"
+
+msgid "Invitation envoyée"
+msgstr "ההזמנה נשלחה"
+
+msgid "Propriétaire"
+msgstr "בעלים"
+
+msgid "Employée"
+msgstr "עובדת"
+
+msgid "Langue de l'interface de cette utilisatrice."
+msgstr "שפת הממשק של המשתמשת."
+
+msgid "Cet élément ne peut pas être lié à un élément d'un autre atelier."
+msgstr "לא ניתן לקשר פריט זה לפריט של סדנה אחרת."
+
+msgid "Le numéro doit être au format international, ex: '+33612345678'."
+msgstr "המספר חייב להיות בפורמט בינלאומי, לדוגמה: ‎+972501234567"
+
+msgid ""
+"Morphologie uniquement (épaules, posture…). N'écris aucune information "
+"médicale."
+msgstr "מבנה גוף בלבד (כתפיים, יציבה…). אל תכתבי מידע רפואי."
+
+msgid "Devise"
+msgstr "מטבע"
+
+msgid "Heures de travail"
+msgstr "שעות עבודה"
+
+msgid "Sert à calculer le gain horaire réel de la robe (facultatif)"
+msgstr "משמש לחישוב הרווח האמיתי לשעה על השמלה (לא חובה)"
+
+msgid "₪ (Shekel)"
+msgstr "₪ (שקל)"
+
+msgid "€ (Euro)"
+msgstr "€ (אירו)"
+
+msgid "$ (Dollar)"
+msgstr "$ (דולר)"
+
+msgid "🟢 Recette (Entrée d'argent)"
+msgstr "🟢 הכנסה (כסף שנכנס)"
+
+msgid "🔴 Dépense (Sortie d'argent)"
+msgstr "🔴 הוצאה (כסף שיצא)"
+
+msgid "Paiement de cliente"
+msgstr "תשלום מלקוחה"
+
+msgid "Location de robe"
+msgstr "השכרת שמלה"
+
+msgid "Achat de tissu"
+msgstr "קניית בדים"
+
+msgid "Fournitures (Fils, fermetures, boutons...)"
+msgstr "חומרי עזר (חוטים, רוכסנים, כפתורים...)"
+
+msgid "Matériel & Machines (Entretien, achat...)"
+msgstr "ציוד ומכונות (תחזוקה, רכישה...)"
+
+msgid "Autre frais / Divers"
+msgstr "הוצאות אחרות / שונות"
+
+msgid "Ex: Acompte robe Salome, Achat fils noirs..."
+msgstr "לדוגמה: מקדמה לשמלה של שלומית, קניית חוטים שחורים..."
+
+msgid "Location associée"
+msgstr "השכרה קשורה"
+
+msgid "Photo du justificatif"
+msgstr "תמונת האסמכתא"
+
+msgid "Photo du ticket ou de la facture (facultatif)"
+msgstr "תמונת קבלה או חשבונית (לא חובה)"
+
+msgid "Dépense récurrente d'origine"
+msgstr "הוצאה קבועה שממנה נוצרה"
+
+msgid "Espèces"
+msgstr "מזומן"
+
+msgid "Virement"
+msgstr "העברה בנקאית"
+
+msgid "Carte bancaire"
+msgstr "כרטיס אשראי"
+
+msgid "Chèque"
+msgstr "צ׳ק"
+
+msgid "Autre"
+msgstr "אחר"
+
+msgid "Mode de paiement"
+msgstr "אמצעי תשלום"
+
+msgid "Note"
+msgstr "הערה"
+
+msgid "Un paiement concerne soit une robe sur mesure, soit une location."
+msgstr "תשלום שייך לשמלה בהזמנה אישית או להשכרה."
+
+msgid "Jour du mois (1 à 28)"
+msgstr "יום בחודש (1 עד 28)"
+
+msgid "1 € vaut … ₪"
+msgstr "1 € שווה … ₪"
+
+msgid "1 $ vaut … ₪"
+msgstr "1 $ שווה … ₪"
+
+msgid "Objectif de chiffre d'affaires mensuel (₪)"
+msgstr "יעד מחזור חודשי (₪)"
+
+msgid "Disponible"
+msgstr "זמינה"
+
+msgid "Au pressing / Nettoyage"
+msgstr "בניקוי וגיהוץ"
+
+msgid "En réparation / Atelier"
+msgstr "בתיקון / בסדנה"
+
+msgid "Hors service / Retirée"
+msgstr "מחוץ לשימוש / הוצאה מהמלאי"
+
+msgid "Référence stock (ex: LOC-042)"
+msgstr "מספר מלאי (לדוגמה: LOC-042)"
+
+msgid "Identifiant unique étiqueté sur la robe"
+msgstr "מזהה ייחודי שמודבק על השמלה"
+
+msgid "Nom du modèle"
+msgstr "שם הדגם"
+
+msgid "Taille"
+msgstr "מידה"
+
+msgid "Couleur"
+msgstr "צבע"
+
+msgid "Description"
+msgstr "תיאור"
+
+msgid "Photo"
+msgstr "תמונה"
+
+msgid "Devise du prix et de la caution standard (₪ par défaut)"
+msgstr "מטבע המחיר והפיקדון הרגילים (₪ כברירת מחדל)"
+
+msgid "Prix standard"
+msgstr "מחיר רגיל"
+
+msgid "Caution standard"
+msgstr "פיקדון רגיל"
+
+msgid "Coût de revient"
+msgstr "עלות ייצור"
+
+msgid ""
+"Prix d'achat ou de confection de la robe, dans la devise ci-dessus (pour "
+"mesurer sa rentabilité)"
+msgstr "מחיר הקנייה או התפירה של השמלה, במטבע שלמעלה (למדידת הרווחיות שלה)"
+
+msgid "État de disponibilité atelier"
+msgstr "מצב זמינות בסדנה"
+
+msgid "État général / Notes d'usure"
+msgstr "מצב כללי / הערות על בלאי"
+
+msgid "Réservée"
+msgstr "שמורה"
+
+msgid "En cours (sortie atelier)"
+msgstr "בהשכרה (יצאה מהסדנה)"
+
+msgid "Terminée (restituée)"
+msgstr "הסתיימה (הוחזרה)"
+
+msgid "En retard de restitution"
+msgstr "באיחור בהחזרה"
+
+msgid "Annulée"
+msgstr "בוטלה"
+
+msgid "Non déposée"
+msgstr "לא הופקד"
+
+msgid "Enregistrée (Chèque / Empreinte)"
+msgstr "נרשם (צ׳ק / חתימת אשראי)"
+
+msgid "Restituée"
+msgstr "הוחזר"
+
+msgid "Retenue partielle"
+msgstr "נשמר חלקית"
+
+msgid "Encaissée (Perte / Dégâts)"
+msgstr "נגבה (אובדן / נזק)"
+
+msgid "Cliente"
+msgstr "לקוחה"
+
+msgid "Robe louée"
+msgstr "השמלה המושכרת"
+
+msgid "Jours de battement (pressing)"
+msgstr "ימי הפסקה (גיהוץ)"
+
+msgid "Nombre de jours de blocage après le retour pour l'entretien"
+msgstr "מספר הימים שבהם השמלה חסומה להשכרה אחרי ההחזרה לצורך תחזוקה"
+
+msgid "Devise du prix et de la caution de ce contrat (₪ par défaut)"
+msgstr "מטבע המחיר והפיקדון בחוזה זה (₪ כברירת מחדל)"
+
+msgid "Prix de la location"
+msgstr "מחיר ההשכרה"
+
+msgid "Montant de la caution"
+msgstr "סכום הפיקדון"
+
+msgid "Statut de la caution"
+msgstr "מצב הפיקדון"
+
+msgid "Montant de caution retenu"
+msgstr "סכום הפיקדון שנשמר"
+
+msgid ""
+"Partie de la caution gardée (dégâts, perte). Elle devient alors un revenu."
+msgstr "החלק מהפיקדון שנשמר (נזק, אובדן). הוא הופך להכנסה."
+
+msgid "Statut du contrat"
+msgstr "מצב החוזה"
+
+msgid "Constat d'état au départ"
+msgstr "מצב השמלה ביציאה"
+
+msgid "Constat d'état au retour"
+msgstr "מצב השמלה בחזרה"
+
+msgid "Notes / Ajustements temporaires"
+msgstr "הערות / התאמות זמניות"
+
+msgid "Date du constat"
+msgstr "תאריך האירוע"
+
+msgid "Ce qui s'est passé (perte d'un téléphone, accès suspect…)"
+msgstr "מה קרה (אובדן טלפון, גישה חשודה…)"
+
+msgid "Données concernées"
+msgstr "נתונים שנפגעו"
+
+msgid "Mesures prises"
+msgstr "צעדים שננקטו"
+
+msgid "Incident grave"
+msgstr "אירוע חמור"
+
+msgid ""
+"Accès non autorisé ou atteinte à l'intégrité d'une partie importante des "
+"données : à signaler immédiatement à l'Autorité israélienne de protection de"
+" la vie privée."
+msgstr ""
+"גישה לא מורשית או פגיעה בשלמות חלק משמעותי מהנתונים: יש לדווח מיד לרשות "
+"להגנת הפרטיות."
+
+msgid "Signalé à l'Autorité le"
+msgstr "דווח לרשות בתאריך"
+
+msgid "Jan"
+msgstr "ינו׳"
+
+msgid "Fév"
+msgstr "פבר׳"
+
+msgid "Mar"
+msgstr "מרץ"
+
+msgid "Avr"
+msgstr "אפר׳"
+
+msgid "Mai"
+msgstr "מאי"
+
+msgid "Juin"
+msgstr "יוני"
+
+msgid "Juil"
+msgstr "יולי"
+
+msgid "Août"
+msgstr "אוג׳"
+
+msgid "Sep"
+msgstr "ספט׳"
+
+msgid "Oct"
+msgstr "אוק׳"
+
+msgid "Nov"
+msgstr "נוב׳"
+
+msgid "Déc"
+msgstr "דצמ׳"
+
+msgid "Accès impossible —"
+msgstr "אין גישה —"
+
+msgid "Accès impossible"
+msgstr "אין גישה"
+
+msgid "Cet atelier est suspendu. Contactez le support pour le réactiver."
+msgstr "הסדנה הזאת מושעית. פני לתמיכה כדי להפעיל אותה מחדש."
+
+msgid ""
+"Ce compte n'est rattaché à aucun atelier. Utilisez le lien d'invitation que "
+"vous avez reçu, ou contactez le support."
+msgstr ""
+"החשבון הזה אינו משויך לאף סדנה. השתמשי בקישור ההזמנה שקיבלת או פני לתמיכה."
+
+msgid "Se déconnecter"
+msgstr "התנתקות"
+
 msgid "Gestion d'atelier de couture et de location de robes"
 msgstr "ניהול סדנת תפירה והשכרת שמלות"
 
 msgid "Chaque robe, de la première mesure à la livraison."
 msgstr "כל שמלה, מהמדידה הראשונה ועד המסירה."
 
-#| msgid ""
-#| "Chaque robe, chaque essayage, chaque paiement : suivis au même endroit, en "
-#| "hébreu ou en français."
 msgid ""
 "Confections, locations, acomptes et livraisons : tout votre atelier au même "
 "endroit, en hébreu ou en français."
@@ -91,11 +551,9 @@ msgstr "שמלה על בובת תפירה, נמדדת בסרט מדידה"
 msgid "Robe de mariée"
 msgstr "שמלת כלה"
 
-#| msgid "Livraison dans 9 jours"
 msgid "Livraison dans 5 jours"
 msgstr "מסירה בעוד 5 ימים"
 
-#| msgid "L'acompte arrive"
 msgid "Acompte reçu"
 msgstr "התקבלה מקדמה"
 
@@ -103,7 +561,7 @@ msgid "Retour prévu demain"
 msgstr "החזרה צפויה מחר"
 
 msgid "Robe Aurore, pressing ensuite"
-msgstr "שמלת \"אורורה\", גיהוץ לאחר מכן"
+msgstr "שמלת ״אורורה״, גיהוץ לאחר מכן"
 
 msgid "Tout ce qu'un atelier fait chaque jour"
 msgstr "כל מה שסדנה עושה מדי יום"
@@ -114,14 +572,12 @@ msgstr "מעקב אחר תפירות"
 msgid "Chaque robe, sa cliente, ses étapes et sa date de livraison."
 msgstr "כל שמלה, הלקוחה שלה, השלבים ותאריך המסירה."
 
-#| msgid "Robe de soirée « Aurore »"
 msgid "Robe de soirée"
 msgstr "שמלת ערב"
 
 msgid "Retouches"
 msgstr "תיקונים"
 
-#| msgid "Locations &amp; stock"
 msgid "Location et stock"
 msgstr "השכרות ומלאי"
 
@@ -138,7 +594,6 @@ msgstr "גיהוץ"
 msgid "Libre"
 msgstr "פנויה"
 
-#| msgid "Finances &amp; bilans"
 msgid "Finances claires"
 msgstr "כספים ברורים"
 
@@ -163,15 +618,11 @@ msgstr "החזרה"
 msgid "Des données bien protégées"
 msgstr "נתונים מוגנים היטב"
 
-#| msgid ""
-#| "Chaque atelier ne voit que ses propres clientes. Aucun autre atelier ne peut"
-#| " les lire ni les modifier."
 msgid ""
 "Chaque atelier ne voit que ses propres clientes, avec des outils de "
 "protection de la vie privée."
 msgstr "כל סדנה רואה רק את הלקוחות שלה, עם כלים להגנת הפרטיות."
 
-#| msgid "Votre langue, dans le bon sens"
 msgid "Dans votre langue, dans votre sens de lecture"
 msgstr "בשפה שלך, בכיוון הקריאה שלך"
 
@@ -247,7 +698,7 @@ msgid ""
 "démarrage. Demandez votre invitation ci-dessous : elle arrive par e-mail."
 msgstr ""
 "אנחנו פותחים את הסדנאות אחת אחת כדי ללוות כל אחת בתחילת הדרך. מבקשות הזמנה "
-"למטה והיא מגיעה בדוא\"ל."
+"למטה והיא מגיעה בדוא״ל."
 
 msgid "Ça marche sur téléphone ?"
 msgstr "זה עובד בטלפון?"
@@ -281,7 +732,7 @@ msgid ""
 "Laissez votre adresse. Vous recevez votre lien d'invitation par e-mail, puis"
 " vous créez votre compte en deux minutes."
 msgstr ""
-"משאירות כתובת דוא\"ל. הקישור להזמנה מגיע במייל, ותוך שתי דקות יש לך חשבון."
+"משאירות כתובת דוא״ל. הקישור להזמנה מגיע במייל, ותוך שתי דקות יש לך חשבון."
 
 msgid "facultatif"
 msgstr "לא חובה"
@@ -322,6 +773,1024 @@ msgstr "כספים ודוחות"
 msgid "Confidentialité"
 msgstr "פרטיות"
 
+msgid "Modifier la photo"
+msgstr "עריכת התמונה"
+
+msgid "Image enregistrée"
+msgstr "התמונה נשמרה"
+
+msgid "Aucun fichier choisi"
+msgstr "לא נבחר קובץ"
+
+msgid "Image prête"
+msgstr "התמונה מוכנה"
+
+msgid "Changer la photo"
+msgstr "החלפת התמונה"
+
+msgid "Choisir un croquis"
+msgstr "בחירת סקיצה"
+
+msgid "Choisir un tissu"
+msgstr "בחירת בד"
+
+msgid "Photographier le justificatif"
+msgstr "צילום האסמכתא"
+
+msgid "Croquis du modèle"
+msgstr "סקיצה של הדגם"
+
+msgid "Échantillon de tissu"
+msgstr "דוגמית בד"
+
+msgid "Coût tissu"
+msgstr "עלות הבד"
+
+msgid "Main d'œuvre"
+msgstr "עלות עבודה"
+
+msgid "Prix total"
+msgstr "מחיר כולל"
+
+msgid "Voir la fiche cliente"
+msgstr "לכרטיס הלקוחה"
+
+msgid "Livrée"
+msgstr "נמסרה"
+
+msgid "jours"
+msgstr "ימים"
+
+msgid "— Actions sur cette confection"
+msgstr "— פעולות על ההזמנה הזאת"
+
+msgid "Modifier"
+msgstr "עריכה"
+
+msgid "Paiements"
+msgstr "תשלומים"
+
+msgid "Supprimer définitivement cette confection ?"
+msgstr "למחוק את ההזמנה הזאת לצמיתות?"
+
+msgid "Supprimer"
+msgstr "מחיקה"
+
+msgid "Finances"
+msgstr "כספים"
+
+msgid "Tissu"
+msgstr "בד"
+
+msgid "Atelier"
+msgstr "סדנה"
+
+msgid "Total"
+msgstr "סה״כ"
+
+msgid "Carnet de style"
+msgstr "מחברת סגנון"
+
+msgid "Croquis"
+msgstr "סקיצות"
+
+msgid "Image indisponible"
+msgstr "התמונה אינה זמינה"
+
+msgid "+ Ajouter"
+msgstr "+ הוספה"
+
+msgid "Échantillon"
+msgstr "דוגמית"
+
+msgid "Étapes de fabrication"
+msgstr "שלבי הייצור"
+
+msgid "Ajouter"
+msgstr "הוספה"
+
+msgid "+ Toile"
+msgstr "+ בד ניסוי"
+
+msgid "+ Coupe"
+msgstr "+ גזירה"
+
+msgid "+ Assemblage"
+msgstr "+ הרכבה"
+
+msgid "+ Finitions"
+msgstr "+ גימורים"
+
+msgid "Étape sur mesure…"
+msgstr "שלב מותאם…"
+
+msgid "Terminé"
+msgstr "הושלם"
+
+msgid "À faire"
+msgstr "לביצוע"
+
+msgid "Supprimer l'étape"
+msgstr "מחיקת השלב"
+
+msgid "Aucune étape configurée."
+msgstr "לא הוגדרו שלבים."
+
+msgid "Nouvelle cliente —"
+msgstr "לקוחה חדשה —"
+
+msgid "Fiche cliente"
+msgstr "כרטיס לקוחה"
+
+msgid "Nouvelle cliente &amp; mensurations"
+msgstr "לקוחה חדשה ומידות"
+
+msgid ""
+"Ces informations serviront de base à chaque nouvelle confection pour cette "
+"cliente."
+msgstr "המידע הזה ישמש בסיס לכל הזמנה חדשה של הלקוחה."
+
+msgid "Annuler"
+msgstr "ביטול"
+
+msgid "Enregistrer la cliente"
+msgstr "שמירת הלקוחה"
+
+msgid "Nouvelle confection —"
+msgstr "הזמנה חדשה —"
+
+msgid "Nouvelle commande"
+msgstr "הזמנה חדשה"
+
+msgid "Lancer une confection"
+msgstr "פתיחת הזמנה לתפירה"
+
+msgid ""
+"Renseigne le modèle, les délais et les coûts pour ouvrir le suivi de "
+"production."
+msgstr "מלאי את הדגם, מועדי הסיום והעלויות כדי לפתוח מעקב ייצור."
+
+msgid "Créer la robe"
+msgstr "יצירת השמלה"
+
+msgid "Tableau de bord —"
+msgstr "לוח בקרה —"
+
+msgid "Suivi de production"
+msgstr "מעקב ייצור"
+
+msgid "Confections en atelier"
+msgstr "הזמנות בסדנה"
+
+msgid ""
+"Vue d'ensemble de chaque pièce, de sa cliente et de son avancement jusqu'à "
+"la livraison."
+msgstr "מבט כולל על כל פריט, על הלקוחה שלו ועל התקדמותו עד המסירה."
+
+msgid "+ Nouvelle cliente"
+msgstr "+ לקוחה חדשה"
+
+msgid "+ Créer une robe"
+msgstr "+ יצירת שמלה"
+
+msgid "Liste des clientes"
+msgstr "רשימת הלקוחות"
+
+msgid "Statut"
+msgstr "סטטוס"
+
+msgid "En cours"
+msgstr "בתהליך"
+
+msgid "Terminées"
+msgstr "הושלמו"
+
+msgid "Toutes les robes"
+msgstr "כל השמלות"
+
+msgid "Trier par"
+msgstr "מיון לפי"
+
+msgid "Délai"
+msgstr "מועד סיום"
+
+msgid "Prix"
+msgstr "מחיר"
+
+msgid "Modèle"
+msgstr "דגם"
+
+msgid "Avancement"
+msgstr "התקדמות"
+
+msgid "Aucune robe ne correspond aux critères de sélection."
+msgstr "אין שמלות התואמות את הסינון."
+
+msgid "Dossier"
+msgstr "תיק"
+
+msgid "Dossier cliente"
+msgstr "תיק לקוחה"
+
+msgid "Née le"
+msgstr "תאריך לידה"
+
+msgid "Dossier anonymisé le"
+msgstr "התיק הוסתר בתאריך"
+
+msgid "Fiche d'information non remise —"
+msgstr "דף המידע לא נמסר —"
+
+msgid "marquer comme remise aujourd'hui"
+msgstr "סימון כנמסר היום"
+
+msgid "imprimer la fiche"
+msgstr "הדפסת הדף"
+
+msgid "📄 Exporter PDF"
+msgstr "📄 ייצוא ל-PDF"
+
+msgid "👗 Louer une robe"
+msgstr "👗 השכרת שמלה"
+
+msgid "Effacer ses données"
+msgstr "מחיקת נתוניה"
+
+msgid "Mensurations"
+msgstr "מידות"
+
+msgid "Ajuster la fiche"
+msgstr "עדכון הכרטיס"
+
+msgid "Tour de poitrine"
+msgstr "היקף חזה"
+
+msgid "cm"
+msgstr "ס״מ"
+
+msgid "Tour de taille"
+msgstr "היקף מותניים"
+
+msgid "Tour de hanches"
+msgstr "היקף ירכיים"
+
+msgid "Hauteur buste"
+msgstr "גובה חזה"
+
+msgid "Notes spécifiques"
+msgstr "הערות מיוחדות"
+
+msgid "Confections &amp; suivi d'atelier"
+msgstr "הזמנות ומעקב סדנה"
+
+msgid "Aucune confection enregistrée pour cette cliente."
+msgstr "לא נרשמו הזמנות ללקוחה הזאת."
+
+msgid "Robes louées &amp; prêts de stock"
+msgstr "שמלות מושכרות והשאלות מהמלאי"
+
+msgid "+ Louer une robe"
+msgstr "+ השכרת שמלה"
+
+msgid "Réf. &amp; Modèle"
+msgstr "מס׳ ודגם"
+
+msgid "Période"
+msgstr "תקופה"
+
+msgid "Caution"
+msgstr "פיקדון"
+
+msgid "Tarif"
+msgstr "תעריף"
+
+msgid "Action"
+msgstr "פעולה"
+
+msgid "Réf."
+msgstr "מס׳"
+
+msgid "au"
+msgstr "עד"
+
+msgid "En retard"
+msgstr "באיחור"
+
+msgid "Restitution"
+msgstr "החזרה"
+
+msgid "Cette cliente n'a encore loué aucune robe de stock."
+msgstr "הלקוחה הזאת עוד לא שכרה שמלה מהמלאי."
+
+msgid "Répertoire des clientes —"
+msgstr "ספר הלקוחות —"
+
+msgid "Fichier clientes"
+msgstr "קובץ לקוחות"
+
+msgid "Rechercher"
+msgstr "חיפוש"
+
+msgid "Saisir un nom ou un prénom…"
+msgstr "הקלידי שם פרטי או שם משפחה…"
+
+msgid "Filtrer"
+msgstr "סינון"
+
+msgid "Effacer"
+msgstr "ניקוי"
+
+msgid "Voir le dossier complet →"
+msgstr "לתיק המלא ←"
+
+msgid "Aucune cliente ne correspond à «"
+msgstr "אין לקוחה התואמת ל־״"
+
+msgid "Modifier la fiche —"
+msgstr "עריכת הכרטיס —"
+
+msgid "Ajustement d'atelier"
+msgstr "התאמות סדנה"
+
+msgid "Modifier la fiche de"
+msgstr "עריכת הכרטיס של"
+
+msgid "Mets à jour ses coordonnées ou ses mensurations."
+msgstr "עדכני את פרטי הקשר או המידות שלה."
+
+msgid "Sauvegarder"
+msgstr "שמירה"
+
+msgid "Modifier commande —"
+msgstr "עריכת הזמנה —"
+
+msgid "Modifier la confection :"
+msgstr "עריכת ההזמנה:"
+
+msgid ""
+"Modifie le modèle, décalez les dates ou réajustez les coûts de production."
+msgstr "שני את הדגם, הזיזי תאריכים או עדכני את עלויות הייצור."
+
+msgid "Confidentialité —"
+msgstr "פרטיות —"
+
+msgid "Protection des données"
+msgstr "הגנת מידע"
+
+msgid "Confidentialité des clientes"
+msgstr "פרטיות הלקוחות"
+
+msgid ""
+"Tes clientes te confient leur identité, leurs coordonnées et leurs mesures. "
+"La loi israélienne sur la protection de la vie privée te demande de les "
+"informer, de protéger ces données et de ne pas les garder sans raison."
+msgstr ""
+"הלקוחות שלך מפקידות בידייך את זהותן, פרטי הקשר והמידות שלהן. חוק הגנת "
+"הפרטיות הישראלי מחייב אותך ליידע אותן, להגן על המידע ולא לשמור אותו ללא "
+"סיבה."
+
+msgid "Imprimer la fiche d'information"
+msgstr "הדפסת דף המידע"
+
+msgid "Coordonnées à renseigner"
+msgstr "יש להשלים פרטי קשר"
+
+msgid ""
+"La fiche d'information doit indiquer comment te joindre pour exercer ses "
+"droits. Renseigne ton e-mail ou ton téléphone dans le formulaire « Mon "
+"atelier » ci-dessous."
+msgstr ""
+"דף המידע חייב לכלול דרך ליצור איתך קשר למימוש זכויות. מלאי את הדוא״ל או "
+"הטלפון שלך בטופס ״הסדנה שלי״ שלמטה."
+
+msgid "Mon atelier"
+msgstr "הסדנה שלי"
+
+msgid ""
+"Ces informations figurent sur la fiche d'information remise aux clientes."
+msgstr "פרטים אלה מופיעים בדף המידע שנמסר ללקוחות."
+
+msgid "Contact pour exercer ses droits"
+msgstr "איש קשר למימוש זכויות"
+
+msgid "Enregistrer"
+msgstr "שמירה"
+
+msgid "1. Informer chaque cliente"
+msgstr "1. ליידע כל לקוחה"
+
+msgid ""
+"Remets la fiche d'information avant de prendre des mesures, puis enregistre "
+"la remise sur son dossier."
+msgstr "מסרי את דף המידע לפני לקיחת מידות, ואז רשמי את המסירה בתיק שלה."
+
+#, python-format
+msgid ""
+"<strong>%(n)s</strong> dossier sans remise de fiche enregistrée. Ouvre le "
+"dossier de la cliente et clique sur « marquer comme remise »."
+msgid_plural ""
+"<strong>%(n)s</strong> dossiers sans remise de fiche enregistrée. Ouvre le "
+"dossier de la cliente et clique sur « marquer comme remise »."
+msgstr[0] ""
+"<strong>%(n)s</strong> תיק ללא מסירת דף מידע רשומה. פתחי את תיק הלקוחה ולחצי"
+" על ״סימון כנמסר״."
+msgstr[1] ""
+"<strong>%(n)s</strong> תיקים ללא מסירת דף מידע רשומה. פתחי את תיק הלקוחה "
+"ולחצי על ״סימון כנמסר״."
+
+msgid "Toutes les clientes ont reçu la fiche d'information."
+msgstr "כל הלקוחות קיבלו את דף המידע."
+
+msgid "2. Dossiers inactifs"
+msgstr "2. תיקים לא פעילים"
+
+#, python-format
+msgid ""
+"Sans activité depuis plus de %(n)s an (ni commande, ni location, ni "
+"paiement). Efface leurs données personnelles : les montants et commandes "
+"restent pour la comptabilité."
+msgid_plural ""
+"Sans activité depuis plus de %(n)s ans (ni commande, ni location, ni "
+"paiement). Efface leurs données personnelles : les montants et commandes "
+"restent pour la comptabilité."
+msgstr[0] ""
+"ללא פעילות מזה יותר משנה (ללא הזמנה, השכרה או תשלום). מחקי את הנתונים "
+"האישיים שלהן: הסכומים וההזמנות נשמרים לצורכי הנהלת חשבונות."
+msgstr[1] ""
+"ללא פעילות מזה יותר מ-%(n)s שנים (ללא הזמנה, השכרה או תשלום). מחקי את "
+"הנתונים האישיים שלהן: הסכומים וההזמנות נשמרים לצורכי הנהלת חשבונות."
+
+msgid "Inactif depuis"
+msgstr "לא פעילה מזה"
+
+msgid "ans"
+msgstr "שנים"
+
+msgid "Afficher"
+msgstr "הצגה"
+
+msgid "Dernière activité :"
+msgstr "פעילות אחרונה:"
+
+msgid "Aucune activité enregistrée"
+msgstr "לא נרשמה פעילות"
+
+msgid "Aucun dossier inactif."
+msgstr "אין תיקים לא פעילים."
+
+msgid "3. Sécurité et incidents"
+msgstr "3. אבטחה ואירועים"
+
+msgid ""
+"Note tout incident (téléphone perdu, accès suspect…) dans le registre "
+"d'administration. Un incident grave doit être signalé immédiatement à "
+"l'Autorité israélienne de protection de la vie privée."
+msgstr ""
+"רשמי כל אירוע (טלפון שאבד, גישה חשודה…) ביומן הניהול. אירוע חמור יש לדווח "
+"מיד לרשות להגנת הפרטיות."
+
+msgid "Ouvrir le registre des incidents →"
+msgstr "לפתיחת יומן האירועים ←"
+
+msgid "Le registre des incidents se trouve dans l'espace d'administration."
+msgstr "יומן האירועים נמצא באזור הניהול."
+
+msgid ""
+"Le document « PROTECTION_DES_DONNEES.md » du dépôt décrit la base de "
+"données, les prestataires et la marche à suivre ; relis-le une fois par an."
+msgstr ""
+"המסמך ״PROTECTION_DES_DONNEES.md״ במאגר מתאר את מסד הנתונים, ספקי השירות "
+"ונוהל הפעולה; קראי אותו מחדש אחת לשנה."
+
+msgid "Sections des finances"
+msgstr "מדורי הכספים"
+
+msgid "Bilan"
+msgstr "מאזן"
+
+msgid "Impayés &amp; prévisions"
+msgstr "חובות ותחזית"
+
+msgid "Rentabilité"
+msgstr "רווחיות"
+
+msgid "Dépenses récurrentes"
+msgstr "הוצאות קבועות"
+
+msgid "Paramètres"
+msgstr "הגדרות"
+
+msgid "Enregistrer une opération —"
+msgstr "רישום פעולה —"
+
+msgid "← Retour aux finances"
+msgstr "→ חזרה לכספים"
+
+msgid "Enregistrer une opération"
+msgstr "רישום פעולה"
+
+msgid "Saisie rapide par IA"
+msgstr "הזנה מהירה באמצעות AI"
+
+msgid ""
+"Tape ou dicte ton opération librement ; l'IA remplit les champs ci-dessous."
+msgstr "הקלידי או הכתיבי את הפעולה בחופשיות; ה-AI ימלא את השדות שלמטה."
+
+msgid "Ex : acheté du fil de soie 45 shekels hier"
+msgstr "לדוגמה: קניתי חוט משי ב-45 שקלים אתמול"
+
+msgid "Analyser"
+msgstr "ניתוח"
+
+msgid "Enregistrer l'opération"
+msgstr "שמירת הפעולה"
+
+msgid "Finances —"
+msgstr "כספים —"
+
+msgid "Comptabilité"
+msgstr "הנהלת חשבונות"
+
+msgid "Ce que l'atelier gagne, ce qu'il dépense, et ce qu'on lui doit encore."
+msgstr "מה הסדנה מרוויחה, מה היא מוציאה, ומה עוד חייבים לה."
+
+msgid "+ Ajouter une opération"
+msgstr "+ הוספת פעולה"
+
+msgid "Exporter"
+msgstr "ייצוא"
+
+msgid "Tableau Excel (CSV)"
+msgstr "טבלת Excel‏ (CSV)"
+
+msgid "Récapitulatif PDF"
+msgstr "סיכום PDF"
+
+msgid "Aujourd'hui"
+msgstr "היום"
+
+msgid "Ce mois"
+msgstr "החודש"
+
+msgid "Cette année"
+msgstr "השנה"
+
+msgid "Tout"
+msgstr "הכול"
+
+msgid "Compter"
+msgstr "לספור"
+
+msgid "Le facturé"
+msgstr "מה שחויב"
+
+msgid "L'argent reçu"
+msgstr "הכסף שהתקבל"
+
+msgid ""
+"Seuls les paiements réellement reçus sont comptés, à leur date de réception."
+msgstr "נספרים רק תשלומים שהתקבלו בפועל, לפי תאריך הקבלה."
+
+msgid ""
+"Une robe est comptée à sa date de livraison, une location à sa date de "
+"retrait, même si elle n'est pas encore payée."
+msgstr "שמלה נספרת לפי תאריך המסירה והשכרה לפי תאריך האיסוף, גם אם טרם שולמה."
+
+msgid "À traiter"
+msgstr "לטיפול"
+
+msgid "Voir le détail →"
+msgstr "לפירוט ←"
+
+msgid "Chiffres clés"
+msgstr "נתונים עיקריים"
+
+msgid "Argent entré"
+msgstr "כסף שנכנס"
+
+msgid "Robes, locations, cautions conservées"
+msgstr "שמלות, השכרות, פיקדונות שנשמרו"
+
+msgid "Argent dépensé"
+msgstr "כסף שהוצא"
+
+msgid "Tissus, fournitures, frais"
+msgstr "בדים, חומרי עזר, הוצאות"
+
+msgid "Bénéfice"
+msgstr "רווח"
+
+msgid "Entré moins dépensé"
+msgstr "מה שנכנס פחות מה שיצא"
+
+msgid "Reste à encaisser"
+msgstr "נותר לגבות"
+
+msgid "Voir qui doit quoi →"
+msgstr "מי חייבת מה ←"
+
+msgid "Cautions gardées en dépôt :"
+msgstr "פיקדונות שמוחזקים:"
+
+msgid ""
+"— cet argent sera rendu aux clientes, il n'est pas compté dans tes revenus."
+msgstr "— הכסף הזה יוחזר ללקוחות ואינו נספר בהכנסות שלך."
+
+msgid "Autres devises"
+msgstr "מטבעות אחרים"
+
+msgid "Ces montants sont séparés des totaux en"
+msgstr "סכומים אלה נפרדים מהסכומים ב־"
+
+msgid "ci-dessus."
+msgstr "שלמעלה."
+
+msgid "Entré"
+msgstr "נכנס"
+
+msgid "Dépensé"
+msgstr "הוצא"
+
+msgid "Total converti en"
+msgstr "סך הכול מומר ל־"
+
+msgid "entrés,"
+msgstr "נכנסו,"
+
+msgid "dépensés, bénéfice"
+msgstr "הוצאו, רווח"
+
+msgid "Il manque le taux pour"
+msgstr "חסר שער עבור"
+
+msgid "le renseigner"
+msgstr "להזנת השער"
+
+msgid "Objectif du mois"
+msgstr "יעד החודש"
+
+msgid "sur"
+msgstr "מתוך"
+
+msgid "Objectif atteint, bravo !"
+msgstr "היעד הושג, כל הכבוד!"
+
+msgid "Évolution"
+msgstr "מגמה"
+
+msgid "Argent entré et dépensé dans le temps (en"
+msgstr "כסף שנכנס ויצא לאורך זמן (ב־"
+
+msgid "Semaines"
+msgstr "שבועות"
+
+msgid "Mois"
+msgstr "חודשים"
+
+msgid "Années"
+msgstr "שנים"
+
+msgid "Le graphique apparaîtra dès la première opération en"
+msgstr "הגרף יופיע מהפעולה הראשונה ב־"
+
+msgid "Ce mois-ci, comparé à avant"
+msgstr "החודש לעומת קודם"
+
+msgid "Argent entré, en"
+msgstr "כסף שנכנס, ב־"
+
+msgid ". La pastille montre l'écart de ce mois par rapport à la période."
+msgstr ". התג מראה את ההפרש של החודש לעומת התקופה."
+
+msgid "dépensé"
+msgstr "הוצא"
+
+msgid "· bénéfice"
+msgstr "· רווח"
+
+msgid "pas de comparaison"
+msgstr "אין השוואה"
+
+msgid "▲ ce mois +"
+msgstr "▲ החודש +"
+
+msgid "▼ ce mois"
+msgstr "▼ החודש"
+
+msgid "identique"
+msgstr "ללא שינוי"
+
+msgid "D'où vient l'argent, où part-il ?"
+msgstr "מאיפה הכסף בא ולאן הוא הולך?"
+
+msgid "Sur la période choisie en haut de page."
+msgstr "בתקופה שנבחרה בראש הדף."
+
+msgid "Confection ou location"
+msgstr "הזמנה או השכרה"
+
+msgid "de bénéfice"
+msgstr "רווח"
+
+msgid "entrés ·"
+msgstr "נכנסו ·"
+
+msgid "dépensés"
+msgstr "הוצאו"
+
+msgid "Pas encore de données sur cette période."
+msgstr "אין עדיין נתונים בתקופה הזאת."
+
+msgid "Dépenses par type"
+msgstr "הוצאות לפי סוג"
+
+msgid "Aucune dépense sur cette période."
+msgstr "אין הוצאות בתקופה הזאת."
+
+msgid "Toutes les opérations"
+msgstr "כל הפעולות"
+
+msgid ""
+"Les lignes « Auto » viennent des robes et des locations ; les autres sont "
+"saisies à la main et modifiables."
+msgstr ""
+"שורות ״אוטו׳״ מגיעות משמלות והשכרות; האחרות הוזנו ידנית וניתנות לעריכה."
+
+msgid "Auto"
+msgstr "אוטו׳"
+
+msgid "📎 justificatif"
+msgstr "📎 אסמכתא"
+
+msgid "Aucune opération sur cette période."
+msgstr "אין פעולות בתקופה הזאת."
+
+msgid "Pages d'opérations"
+msgstr "עמודי פעולות"
+
+msgid "← Plus récentes"
+msgstr "→ חדשות יותר"
+
+msgid "Page"
+msgstr "עמוד"
+
+msgid "opérations"
+msgstr "פעולות"
+
+msgid "Plus anciennes →"
+msgstr "ישנות יותר ←"
+
+msgid "Comment sont calculés ces chiffres ?"
+msgstr "איך מחושבים הנתונים האלה?"
+
+msgid ""
+"Le prix de chaque robe sur mesure et le prix de chaque location sont "
+"importés automatiquement."
+msgstr "מחיר כל שמלה בהזמנה אישית ומחיר כל השכרה נכנסים אוטומטית."
+
+msgid ""
+"La caution n'est jamais un revenu, sauf la part que tu gardes (dégâts, "
+"perte)."
+msgstr "הפיקדון אינו הכנסה לעולם, מלבד החלק שאת שומרת (נזק, אובדן)."
+
+msgid ""
+"La main d'œuvre n'apparaît pas à part : elle fait partie du prix facturé."
+msgstr "עלות העבודה אינה מופיעה בנפרד: היא חלק מהמחיר שחויב."
+
+msgid ""
+"Utilise « Ajouter une opération » uniquement pour les frais annexes "
+"(fournitures, matériel…). Ne ressaisis pas une location déjà enregistrée "
+"dans « Locations &amp; stock »."
+msgstr ""
+"השתמשי ב״הוספת פעולה״ רק להוצאות נלוות (חומרי עזר, ציוד…). אל תזיני שוב "
+"השכרה שכבר נרשמה ב״השכרות ומלאי״."
+
+msgid "Modifier une opération —"
+msgstr "עריכת פעולה —"
+
+msgid "Modifier l'opération"
+msgstr "עריכת הפעולה"
+
+msgid "Enregistrer les modifications"
+msgstr "שמירת השינויים"
+
+msgid "Impayés —"
+msgstr "חובות —"
+
+msgid ""
+"Ce que les clientes te doivent encore, les cautions à suivre et les entrées "
+"d'argent attendues."
+msgstr "מה שהלקוחות עוד חייבות לך, פיקדונות למעקב וכסף שצפוי להיכנס."
+
+msgid "Total dû"
+msgstr "סה״כ חוב"
+
+msgid "Dont en retard"
+msgstr "מתוכו באיחור"
+
+msgid "Entrées attendues"
+msgstr "כניסות צפויות"
+
+msgid "Paiements à recevoir"
+msgstr "תשלומים לקבל"
+
+msgid "Robe"
+msgstr "שמלה"
+
+msgid "Location"
+msgstr "השכרה"
+
+msgid "payé"
+msgstr "שולם"
+
+msgid "reste"
+msgstr "נותר"
+
+msgid "Encaisser"
+msgstr "גבייה"
+
+msgid "Tout est payé."
+msgstr "הכול שולם."
+
+msgid "Cautions détenues"
+msgstr "פיקדונות מוחזקים"
+
+msgid "À restituer"
+msgstr "להחזרה"
+
+msgid "Régulariser"
+msgstr "הסדרה"
+
+msgid "Aucune caution détenue."
+msgstr "אין פיקדונות מוחזקים."
+
+msgid "Paiements —"
+msgstr "תשלומים —"
+
+msgid "← Retour"
+msgstr "→ חזרה"
+
+msgid "Confection sur mesure"
+msgstr "הזמנה בהתאמה אישית"
+
+msgid "Devis PDF"
+msgstr "הצעת מחיר PDF"
+
+msgid "Facture PDF"
+msgstr "חשבונית PDF"
+
+msgid "Déjà payé"
+msgstr "שולם עד כה"
+
+msgid "Reste à payer"
+msgstr "נותר לתשלום"
+
+msgid "Paiements reçus"
+msgstr "תשלומים שהתקבלו"
+
+msgid "Reçu PDF"
+msgstr "קבלה PDF"
+
+msgid "Aucun paiement enregistré."
+msgstr "לא נרשמו תשלומים."
+
+msgid "Enregistrer un paiement"
+msgstr "רישום תשלום"
+
+msgid "Ajouter le paiement"
+msgstr "הוספת התשלום"
+
+msgid "Paramètres finances —"
+msgstr "הגדרות כספים —"
+
+msgid ""
+"Les taux servent uniquement à calculer des totaux globaux en ₪ ; les "
+"montants saisis ne sont jamais modifiés."
+msgstr ""
+"השערים משמשים רק לחישוב סכומים כוללים ב-₪; הסכומים שהוזנו לעולם אינם משתנים."
+
+msgid "Dépenses récurrentes —"
+msgstr "הוצאות קבועות —"
+
+msgid ""
+"Loyer, abonnements… Chaque mois, l'écriture est ajoutée automatiquement aux "
+"dépenses (en ₪), à partir de la date choisie."
+msgstr ""
+"שכר דירה, מנויים… בכל חודש הרישום מתווסף אוטומטית להוצאות (ב-₪), החל מהתאריך"
+" שנבחר."
+
+msgid "₪ / mois"
+msgstr "₪ / חודש"
+
+msgid "le"
+msgstr "ב־"
+
+msgid "· depuis"
+msgstr "· מאז"
+
+msgid "Active"
+msgstr "פעילה"
+
+msgid "En pause"
+msgstr "מושהית"
+
+msgid "Mettre en pause"
+msgstr "השהיה"
+
+msgid "Réactiver"
+msgstr "הפעלה מחדש"
+
+msgid "Aucune dépense récurrente."
+msgstr "אין הוצאות קבועות."
+
+msgid "Ajouter une dépense récurrente"
+msgstr "הוספת הוצאה קבועה"
+
+msgid "Rentabilité —"
+msgstr "רווחיות —"
+
+msgid ""
+"Bénéfice de chaque robe sur mesure (prix − tissu − frais rattachés) et "
+"amortissement de chaque robe du stock de location. Renseigne les heures de "
+"travail dans la fiche robe pour voir ton gain horaire réel."
+msgstr ""
+"הרווח מכל שמלה בהזמנה אישית (מחיר − בד − הוצאות קשורות) והחזר ההשקעה בכל "
+"שמלה במלאי ההשכרה. מלאי את שעות העבודה בכרטיס השמלה כדי לראות את הרווח "
+"האמיתי שלך לשעה."
+
+msgid "Robes sur mesure"
+msgstr "שמלות בהזמנה אישית"
+
+msgid "Frais"
+msgstr "הוצאות"
+
+msgid "Heures"
+msgstr "שעות"
+
+msgid "Gain / heure"
+msgstr "רווח / שעה"
+
+msgid "Aucune robe."
+msgstr "אין שמלות."
+
+msgid "Stock de location"
+msgstr "מלאי השכרה"
+
+msgid "Locations"
+msgstr "השכרות"
+
+msgid "Revenus"
+msgstr "הכנסות"
+
+msgid "Solde"
+msgstr "יתרה"
+
+msgid "Amortie à"
+msgstr "הושבה ב־"
+
+msgid "Aucune robe en stock."
+msgstr "אין שמלות במלאי."
+
+msgid "Seules les locations dans la devise de la robe sont comptées."
+msgstr "נספרות רק השכרות במטבע של השמלה."
+
+msgid "🎙️ Prise de mesures vocale par IA"
+msgstr "🎙️ לקיחת מידות בקול באמצעות AI"
+
+msgid ""
+"Cliquez sur le micro, énoncez vos mesures à voix haute, puis cliquez sur "
+"Analyser pour pré-remplir la fiche de la cliente. Dicte uniquement des "
+"mesures : ne prononce ni nom ni information personnelle."
+msgstr ""
+"לחצי על המיקרופון, הקריאי את המידות בקול ואז לחצי על ניתוח כדי למלא מראש את "
+"כרטיס הלקוחה. הכתיבי מידות בלבד: אל תאמרי שם או מידע אישי."
+
+msgid "Parlez au micro... (ex: poitrine 92, taille 70, hanches 98)"
+msgstr "דברי אל המיקרופון... (לדוגמה: חזה 92, מותניים 70, ירכיים 98)"
+
+msgid "Veuillez dicter ou écrire des mesures d’abord."
+msgstr "יש להכתיב או לכתוב מידות קודם."
+
+msgid "⚡ Extraction en cours par l’IA Gemini..."
+msgstr "⚡ ה-AI של Gemini מחלץ את המידות..."
+
+msgid "Erreur de connexion serveur"
+msgstr "שגיאת תקשורת עם השרת"
+
+#, python-format
+msgid "🎉 %%(n)s mesure(s) injectée(s) avec succès !"
+msgstr "🎉 %%(n)s מידות הוזנו בהצלחה!"
+
+msgid ""
+"🤔 Aucune mesure reconnue. Essayez de formuler clairement (ex: poitrine 94)."
+msgstr "🤔 לא זוהו מידות. נסי לנסח בבירור (לדוגמה: חזה 94)."
+
+msgid "❌ Erreur : "
+msgstr "❌ שגיאה: "
+
+msgid "Dicter"
+msgstr "הכתבה"
+
 msgid "Créer mon atelier"
 msgstr "יצירת הסדנה שלי"
 
@@ -351,11 +1820,437 @@ msgstr "פג תוקפו, כבר נעשה בו שימוש או שהוא שגוי.
 msgid "Retour à l'accueil"
 msgstr "חזרה לדף הבית"
 
+msgid "Catalogue de location —"
+msgstr "קטלוג השכרה —"
+
+msgid "Location &amp; stock"
+msgstr "השכרות ומלאי"
+
+msgid "Robes de stock"
+msgstr "שמלות מלאי"
+
+msgid "Pièces physiques disponibles pour le prêt et la location."
+msgstr "פריטים פיזיים זמינים להשאלה ולהשכרה."
+
+msgid "← Planning"
+msgstr "→ לוח זמנים"
+
+msgid "+ Nouvelle robe de stock"
+msgstr "+ שמלה חדשה למלאי"
+
+msgid "État"
+msgstr "מצב"
+
+msgid "Toutes"
+msgstr "הכול"
+
+msgid "Disponibles"
+msgstr "זמינות"
+
+msgid "Réparation"
+msgstr "בתיקון"
+
+msgid "Hors service"
+msgstr "מחוץ לשימוש"
+
+msgid "Modèle ou référence…"
+msgstr "דגם או מספר…"
+
+msgid "Pas de photo"
+msgstr "אין תמונה"
+
+msgid "Louer"
+msgstr "השכרה"
+
+msgid "Aucune robe ne correspond à ces critères."
+msgstr "אין שמלות התואמות לקריטריונים."
+
+msgid "Le catalogue de location est encore vide."
+msgstr "קטלוג ההשכרה עדיין ריק."
+
+msgid "Ajouter une première robe"
+msgstr "הוספת השמלה הראשונה"
+
+msgid "Nouveau contrat —"
+msgstr "חוזה חדש —"
+
+msgid ""
+"Le prix et la caution sont repris de la fiche de la robe ; ajuste-les si un "
+"tarif différent a été convenu."
+msgstr "המחיר והפיקדון נלקחים מכרטיס השמלה; עדכני אותם אם הוסכם תעריף אחר."
+
+msgid "Déjà réservée"
+msgstr "כבר שמורה"
+
+msgid "Pressing (battement)"
+msgstr "ניקוי וגיהוץ (הפסקה)"
+
+msgid ""
+"Dates indicatives : elles restent sélectionnables, le contrat est vérifié à "
+"l'enregistrement."
+msgstr "תאריכים מנחים: ניתן עדיין לבחור אותם, והחוזה נבדק בעת השמירה."
+
+msgid "Enregistrer le contrat"
+msgstr "שמירת החוזה"
+
+msgid "Restitution —"
+msgstr "החזרה —"
+
+msgid "Référence"
+msgstr "מספר"
+
+msgid "Retour prévu"
+msgstr "החזרה מתוכננת"
+
+msgid "Caution initiale"
+msgstr "פיקדון ראשוני"
+
+msgid "Valider la restitution"
+msgstr "אישור ההחזרה"
+
+msgid "Nouvelle robe de stock —"
+msgstr "שמלה חדשה למלאי —"
+
+msgid "Chaque pièce reçoit une référence unique, à étiqueter sur la robe."
+msgstr "כל פריט מקבל מספר ייחודי שיש להדביק על השמלה."
+
+msgid "Ajouter au stock"
+msgstr "הוספה למלאי"
+
+msgid "Locations & stock —"
+msgstr "השכרות ומלאי —"
+
+msgid "Planning des locations"
+msgstr "לוח השכרות"
+
+msgid "Suivi des sorties, des retours à l'atelier et des cautions."
+msgstr "מעקב אחר יציאות, חזרות לסדנה ופיקדונות."
+
+msgid "Catalogue du stock"
+msgstr "קטלוג המלאי"
+
+msgid "+ Nouveau contrat"
+msgstr "+ חוזה חדש"
+
+msgid "Robes sorties"
+msgstr "שמלות שיצאו"
+
+msgid "Réservations à venir"
+msgstr "הזמנות עתידיות"
+
+msgid "Retours en retard"
+msgstr "החזרות באיחור"
+
+msgid "Enregistrer le retour"
+msgstr "רישום החזרה"
+
+msgid "En cours de location"
+msgstr "בהשכרה כעת"
+
+msgid "Contrat n°"
+msgstr "חוזה מס׳"
+
+msgid "Aucune robe n'est actuellement sortie de l'atelier."
+msgstr "אף שמלה אינה מחוץ לסדנה כרגע."
+
+msgid "Retrait prévu"
+msgstr "איסוף מתוכנן"
+
+msgid "Prix convenu"
+msgstr "מחיר שהוסכם"
+
+msgid "Aucune réservation future enregistrée."
+msgstr "לא נרשמו הזמנות עתידיות."
+
+msgid "Accès temporairement bloqué —"
+msgstr "הגישה חסומה זמנית —"
+
+msgid "Sécurité"
+msgstr "אבטחה"
+
+msgid "Accès temporairement bloqué"
+msgstr "הגישה חסומה זמנית"
+
+msgid ""
+"Trop de tentatives de connexion ont échoué. Par précaution, l'accès est "
+"suspendu pendant une heure. Réessayez plus tard."
+msgstr ""
+"יותר מדי ניסיונות התחברות נכשלו. כאמצעי זהירות הגישה מושעית לשעה. נסי שוב "
+"מאוחר יותר."
+
+msgid "Retour à la connexion"
+msgstr "חזרה להתחברות"
+
+msgid "Connexion —"
+msgstr "התחברות —"
+
+msgid "Accès restreint"
+msgstr "גישה מוגבלת"
+
+msgid ""
+"Veuillez vous connecter pour accéder aux fiches clientes et aux suivis de "
+"confection."
+msgstr "יש להתחבר כדי לגשת לכרטיסי הלקוחות ולמעקב ההזמנות."
+
+msgid "Identifiants incorrects. Veuillez réessayer."
+msgstr "פרטי ההתחברות שגויים. נסי שוב."
+
+msgid "Nom d'utilisateur"
+msgstr "שם משתמש"
+
+msgid "Mot de passe oublié ?"
+msgstr "שכחת סיסמה?"
+
+msgid "Planning —"
+msgstr "לוח זמנים —"
+
+msgid "Calendrier de l'atelier"
+msgstr "לוח השנה של הסדנה"
+
+msgid "Livraisons des confections, retraits et retours des robes de location."
+msgstr "מסירות של הזמנות, איסוף והחזרה של שמלות להשכרה."
+
+msgid "+ Confection"
+msgstr "+ הזמנה"
+
+msgid "+ Contrat de location"
+msgstr "+ חוזה השכרה"
+
+msgid "Types d'évènements à afficher"
+msgstr "סוגי אירועים להצגה"
+
+msgid "Livraisons"
+msgstr "מסירות"
+
+msgid "Retraits"
+msgstr "איסופים"
+
+msgid "Retours"
+msgstr "החזרות"
+
+msgid ""
+"Impossible de charger les évènements. Recharge la page ou réessaie dans un "
+"instant."
+msgstr "לא ניתן לטעון את האירועים. רענני את הדף או נסי שוב בעוד רגע."
+
+msgid "Calendrier des livraisons, retraits et retours"
+msgstr "לוח מסירות, איסופים והחזרות"
+
+msgid "Fermer"
+msgstr "סגירה"
+
+msgid "Téléphone"
+msgstr "טלפון"
+
+#, python-format
+msgid "+%%(n)s autre"
+msgstr "+%%(n)s נוסף"
+
+#, python-format
+msgid "+%%(n)s autres"
+msgstr "+%%(n)s נוספים"
+
+msgid "Rien de prévu sur cette période."
+msgstr "אין תכנון בתקופה הזאת."
+
+msgid "Mot de passe oublié —"
+msgstr "שכחתי סיסמה —"
+
+msgid "Réinitialisation"
+msgstr "איפוס"
+
+msgid "Mot de passe oublié"
+msgstr "שכחת סיסמה"
+
+msgid ""
+"Entrez votre adresse e-mail pour recevoir un code de vérification à 6 "
+"chiffres."
+msgstr "הזיני את כתובת הדוא״ל שלך כדי לקבל קוד אימות בן 6 ספרות."
+
+msgid "exemple@domaine.com"
+msgstr "example@domain.com"
+
+msgid "Envoyer le code"
+msgstr "שליחת הקוד"
+
+msgid "Nouveau mot de passe —"
+msgstr "סיסמה חדשה —"
+
+msgid "Nouveau mot de passe"
+msgstr "סיסמה חדשה"
+
+msgid "Choisissez votre nouveau mot de passe pour votre compte."
+msgstr "בחרי סיסמה חדשה לחשבון שלך."
+
+msgid "Enregistrer le mot de passe"
+msgstr "שמירת הסיסמה"
+
+msgid "Validation du code —"
+msgstr "אימות הקוד —"
+
+msgid "Validation du code"
+msgstr "אימות הקוד"
+
+msgid "Saisissez le code à 6 chiffres reçu dans votre boîte e-mail."
+msgstr "הזיני את הקוד בן 6 הספרות שהגיע לתיבת הדוא״ל שלך."
+
+msgid "Code de vérification (6 chiffres)"
+msgstr "קוד אימות (6 ספרות)"
+
+msgid "Valider le code"
+msgstr "אישור הקוד"
+
+msgid "Recevoir un nouveau code"
+msgstr "קבלת קוד חדש"
+
+msgid "Toile d'essai"
+msgstr "בד ניסוי"
+
+msgid "Coupe du tissu"
+msgstr "גזירת הבד"
+
+msgid "Assemblage & Piqûre"
+msgstr "הרכבה ותפירה"
+
+msgid "Finitions & Ourlet"
+msgstr "גימורים ופינישים"
+
+msgid "Format JSON invalide"
+msgstr "פורמט JSON לא תקין"
+
+msgid "Aucun texte fourni"
+msgstr "לא סופק טקסט"
+
+#, python-format
+msgid "Votre code de réinitialisation - %(produit)s"
+msgstr "קוד האיפוס שלך - %(produit)s"
+
+#, python-format
+msgid ""
+"Bonjour,\n"
+"\n"
+"Voici votre code de vérification à 6 chiffres : %(code)s\n"
+"\n"
+"Ce code est valable pendant 10 minutes."
+msgstr ""
+"שלום,\n"
+"\n"
+"זה קוד האימות שלך בן 6 הספרות: %(code)s\n"
+"\n"
+"הקוד תקף ל-10 דקות."
+
+msgid "Si un compte correspond à cette adresse, un code vient d'être envoyé."
+msgstr "אם קיים חשבון עם הכתובת הזאת, נשלח אליו קוד."
+
+#, python-format
+msgid ""
+"Code invalide ou expiré (durée de validité : 10 min). Après %(n)s erreurs, "
+"il faut redemander un code."
+msgstr ""
+"הקוד שגוי או שפג תוקפו (תקף ל-10 דקות). אחרי %(n)s שגיאות יש לבקש קוד חדש."
+
+msgid "Les mots de passe ne correspondent pas."
+msgstr "הסיסמאות אינן תואמות."
+
+msgid "Votre mot de passe a été modifié avec succès !"
+msgstr "הסיסמה שלך שונתה בהצלחה!"
+
+msgid "Coordonnées enregistrées."
+msgstr "פרטי הקשר נשמרו."
+
+msgid "Le nom de l'atelier est obligatoire."
+msgstr "שם הסדנה הוא שדה חובה."
+
+msgid "Remise de la fiche d'information enregistrée."
+msgstr "מסירת דף המידע נרשמה."
+
+msgid "Dossier supprimé."
+msgstr "התיק נמחק."
+
+msgid ""
+"Données personnelles effacées. Les commandes et paiements sont conservés "
+"sans lien avec son identité (obligations comptables)."
+msgstr ""
+"הנתונים האישיים נמחקו. ההזמנות והתשלומים נשמרים ללא קשר לזהותה (חובות הנהלת "
+"חשבונות)."
+
+msgid "Écris ou dicte d'abord l'opération à analyser."
+msgstr "כתבי או הכתיבי קודם את הפעולה לניתוח."
+
+msgid "Opération modifiée."
+msgstr "הפעולה עודכנה."
+
+msgid "Opération supprimée."
+msgstr "הפעולה נמחקה."
+
+#, python-format
+msgid "La robe %(ref)s a été ajoutée au stock."
+msgstr "השמלה %(ref)s נוספה למלאי."
+
+msgid "Ajouter une robe au catalogue de location"
+msgstr "הוספת שמלה לקטלוג ההשכרה"
+
+#, python-format
+msgid "Contrat #%(id)s enregistré avec succès."
+msgstr "חוזה מס׳ %(id)s נשמר בהצלחה."
+
+msgid "Établir un nouveau contrat de location"
+msgstr "יצירת חוזה השכרה חדש"
+
+#, python-format
+msgid "Retour validé pour la robe %(ref)s."
+msgstr "ההחזרה של השמלה %(ref)s אושרה."
+
+#, python-format
+msgid "Ce paiement dépasse le reste à payer (%(montant)s %(devise)s)."
+msgstr "התשלום הזה גדול מהיתרה לתשלום (%(montant)s %(devise)s)."
+
+msgid "Paiement enregistré."
+msgstr "התשלום נרשם."
+
+msgid "Paiement supprimé."
+msgstr "התשלום נמחק."
+
+msgid "Modifier la confection"
+msgstr "עריכת ההזמנה"
+
+msgid "Dossier de la cliente"
+msgstr "תיק הלקוחה"
+
+#, python-format
+msgid "%(etape)s en retard"
+msgstr "%(etape)s באיחור"
+
+msgid "Tarif convenu"
+msgstr "תעריף שהוסכם"
+
+msgid "Contrat"
+msgstr "חוזה"
+
+#, python-format
+msgid "n° %(id)s"
+msgstr "מס׳ %(id)s"
+
+msgid "Paramètres 'start' et 'end' requis (AAAA-MM-JJ)."
+msgstr "נדרשים הפרמטרים 'start' ו-'end' (YYYY-MM-DD)."
+
+msgid "Période invalide."
+msgstr "תקופה לא תקינה."
+
 msgid "Merci ! Nous vous écrivons très vite avec votre invitation."
 msgstr "תודה! נכתוב לך בקרוב עם ההזמנה שלך."
 
 msgid "Vérifiez votre adresse e-mail."
-msgstr "בדקי את כתובת הדוא\"ל."
+msgstr "בדקי את כתובת הדוא״ל."
 
 msgid "Trop de demandes depuis cette connexion. Réessayez plus tard."
 msgstr "יותר מדי בקשות מהחיבור הזה. נסי שוב מאוחר יותר."
+
+msgid "Dépense récurrente enregistrée."
+msgstr "ההוצאה הקבועה נשמרה."
+
+msgid "Dépense récurrente supprimée (les écritures passées sont conservées)."
+msgstr "ההוצאה הקבועה נמחקה (הרישומים הקודמים נשמרים)."
+
+msgid "Paramètres enregistrés."
+msgstr "ההגדרות נשמרו."

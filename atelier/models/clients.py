@@ -3,6 +3,7 @@
 
 from django.core.validators import RegexValidator
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 from .ateliers import ModeleAtelier
 
@@ -13,7 +14,7 @@ class Client(ModeleAtelier):
     
     phone_regex = RegexValidator(
         regex=r'^\+?[1-9]\d{8,14}$', 
-        message="Le numéro doit être au format international, ex: '+33612345678'."
+        message=_("Le numéro doit être au format international, ex: '+33612345678'.")
     )
     telephone = models.CharField(validators=[phone_regex], max_length=17, blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
@@ -25,13 +26,13 @@ class Client(ModeleAtelier):
     hauteur_buste = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     notes_morphologie = models.TextField(
         blank=True, null=True,
-        help_text="Morphologie uniquement (épaules, posture…). N'écris aucune information médicale."
+        help_text=_("Morphologie uniquement (épaules, posture…). N'écris aucune information médicale.")
     )
 
     # Protection de la vie privée : preuve que la cliente a reçu la fiche d'information,
     # date de création (pour repérer les dossiers inactifs) et trace d'une anonymisation.
     information_remise_le = models.DateField(
-        blank=True, null=True, verbose_name="Fiche d'information remise le")
+        blank=True, null=True, verbose_name=_("Fiche d'information remise le"))
     cree_le = models.DateTimeField(auto_now_add=True, null=True)
     anonymisee_le = models.DateTimeField(blank=True, null=True)
 

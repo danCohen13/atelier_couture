@@ -16,6 +16,7 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.translation import gettext as _
 from django.views.decorators.http import require_GET
 
 from .acces import atelier_requis
@@ -65,18 +66,18 @@ def _evenement_livraison(robe, aujourdhui):
         'classNames': classes,
         'extendedProps': {
             'kind': 'livraison',
-            'kind_label': 'Livraison',
+            'kind_label': _('Livraison'),
             'client': _nom_cliente(robe.client),
             'telephone': robe.client.telephone or '',
             'lignes': [
-                ['Cliente', _nom_cliente(robe.client)],
-                ['Livraison', _fmt(robe.date_livraison)],
-                ['Avancement', f'{progression} %'],
-                ['Prix total', f'{robe.prix_total} {robe.symbole_devise}'],
+                [_('Cliente'), _nom_cliente(robe.client)],
+                [_('Livraison'), _fmt(robe.date_livraison)],
+                [_('Avancement'), f'{progression} %'],
+                [_('Prix total'), f'{robe.prix_total} {robe.symbole_devise}'],
             ],
             'actions': [
-                {'label': 'Modifier la confection', 'url': reverse('modifier_robe', args=[robe.pk])},
-                {'label': 'Dossier de la cliente', 'url': reverse('fiche_cliente', args=[robe.client_id]), 'primary': True},
+                {'label': _('Modifier la confection'), 'url': reverse('modifier_robe', args=[robe.pk])},
+                {'label': _('Dossier de la cliente'), 'url': reverse('fiche_cliente', args=[robe.client_id]), 'primary': True},
             ],
         },
     }
@@ -90,19 +91,19 @@ def _evenement_location(loc, kind):
     en_retard = loc.est_en_retard or loc.statut == 'EN_RETARD'
 
     if kind == 'retrait':
-        jour, libelle = loc.date_debut, 'Retrait'
+        jour, libelle = loc.date_debut, _('Retrait')
         classes = ['ev', 'ev--retrait'] + (['ev--fait'] if sortie else [])
     else:
-        jour, libelle = loc.date_fin_prevue, 'Retour'
+        jour, libelle = loc.date_fin_prevue, _('Retour')
         classes = ['ev', 'ev--retour']
         if rendue:
             classes.append('ev--fait')
         elif en_retard:
             classes.append('ev--retard')
 
-    actions = [{'label': 'Dossier de la cliente', 'url': reverse('fiche_cliente', args=[loc.client_id])}]
+    actions = [{'label': _('Dossier de la cliente'), 'url': reverse('fiche_cliente', args=[loc.client_id])}]
     if not rendue and loc.statut != 'RESERVEE':
-        actions.append({'label': 'Enregistrer le retour', 'url': reverse('retour_location', args=[loc.pk]), 'primary': True})
+        actions.append({'label': _('Enregistrer le retour'), 'url': reverse('retour_location', args=[loc.pk]), 'primary': True})
 
     return {
         'id': f'{kind}-{loc.pk}',
@@ -112,16 +113,16 @@ def _evenement_location(loc, kind):
         'classNames': classes,
         'extendedProps': {
             'kind': kind,
-            'kind_label': libelle + (' en retard' if kind == 'retour' and en_retard and not rendue else ''),
+            'kind_label': _('%(etape)s en retard') % {'etape': libelle} if kind == 'retour' and en_retard and not rendue else libelle,
             'client': _nom_cliente(loc.client),
             'telephone': loc.client.telephone or '',
             'lignes': [
-                ['Cliente', _nom_cliente(loc.client)],
-                ['Robe', f'{robe.nom_modele} ({robe.reference_stock}) · T.{robe.taille}'],
-                ['Période', f'{_fmt(loc.date_debut)} → {_fmt(loc.date_fin_prevue)}'],
-                ['Tarif convenu', f'{loc.prix_convenu} {loc.symbole_devise}'],
-                ['Caution', f'{loc.caution_montant} {loc.symbole_devise} · {loc.get_caution_statut_display()}'],
-                ['Contrat', f'n° {loc.pk} · {loc.get_statut_display()}'],
+                [_('Cliente'), _nom_cliente(loc.client)],
+                [_('Robe'), f'{robe.nom_modele} ({robe.reference_stock}) · T.{robe.taille}'],
+                [_('Période'), f'{_fmt(loc.date_debut)} → {_fmt(loc.date_fin_prevue)}'],
+                [_('Tarif convenu'), f'{loc.prix_convenu} {loc.symbole_devise}'],
+                [_('Caution'), f'{loc.caution_montant} {loc.symbole_devise} · {loc.get_caution_statut_display()}'],
+                [_('Contrat'), _('n° %(id)s') % {'id': loc.pk} + f' · {loc.get_statut_display()}'],
             ],
             'actions': actions,
         },
@@ -136,10 +137,10 @@ def api_planning_evenements(request):
         debut = _jour(request.GET.get('start'))
         fin = _jour(request.GET.get('end'))
     except ValueError:
-        return JsonResponse({'error': "Paramètres 'start' et 'end' requis (AAAA-MM-JJ)."}, status=400)
+        return JsonResponse({'error': _("Paramètres 'start' et 'end' requis (AAAA-MM-JJ).")}, status=400)
 
     if fin <= debut or (fin - debut).days > DUREE_MAX_JOURS:
-        return JsonResponse({'error': 'Période invalide.'}, status=400)
+        return JsonResponse({'error': _('Période invalide.')}, status=400)
 
     aujourdhui = timezone.localdate()
     evenements = []

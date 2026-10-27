@@ -21,6 +21,7 @@ from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
 from django.shortcuts import redirect, render
 from django.utils import timezone
+from django.utils.translation import gettext as _
 
 from .models import CodeReinitialisation
 
@@ -51,8 +52,8 @@ def _envoyer_code(user, email):
     CodeReinitialisation.objects.create(user=user, code=code)
     try:
         send_mail(
-            subject='Votre code de réinitialisation - Atelier Couture',
-            message=f'Bonjour,\n\nVoici votre code de vérification à 6 chiffres : {code}\n\nCe code est valable pendant 10 minutes.',
+            subject=_('Votre code de réinitialisation - %(produit)s') % {'produit': settings.PRODUIT_NOM},
+            message=_('Bonjour,\n\nVoici votre code de vérification à 6 chiffres : %(code)s\n\nCe code est valable pendant 10 minutes.') % {'code': code},
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[email],
         )
@@ -72,7 +73,7 @@ def demander_code_reset(request):
             request.session['reset_user_id'] = UTILISATEUR_FICTIF
 
         request.session.pop('code_verifie', None)
-        messages.info(request, "Si un compte correspond à cette adresse, un code vient d'être envoyé.")
+        messages.info(request, _("Si un compte correspond à cette adresse, un code vient d'être envoyé."))
         return redirect('verifier_code_reset')
 
     return render(request, 'atelier/registration/demander_code.html')
@@ -101,8 +102,8 @@ def verifier_code_reset(request):
 
         messages.error(
             request,
-            "Code invalide ou expiré (durée de validité : 10 min). "
-            f"Après {MAX_TENTATIVES} erreurs, il faut redemander un code.",
+            _("Code invalide ou expiré (durée de validité : 10 min). "
+              "Après %(n)s erreurs, il faut redemander un code.") % {'n': MAX_TENTATIVES},
         )
 
     return render(request, 'atelier/registration/verifier_code.html')
@@ -124,7 +125,7 @@ def nouveau_mot_de_passe(request):
         mdp2 = request.POST.get('password_confirm')
 
         if not mdp1 or mdp1 != mdp2:
-            messages.error(request, "Les mots de passe ne correspondent pas.")
+            messages.error(request, _("Les mots de passe ne correspondent pas."))
         else:
             try:
                 validate_password(mdp1, user)
@@ -138,7 +139,7 @@ def nouveau_mot_de_passe(request):
                 request.session.pop('reset_user_id', None)
                 request.session.pop('code_verifie', None)
 
-                messages.success(request, "Votre mot de passe a été modifié avec succès !")
+                messages.success(request, _("Votre mot de passe a été modifié avec succès !"))
                 return redirect('login')
 
     return render(request, 'atelier/registration/nouveau_mot_de_passe.html')

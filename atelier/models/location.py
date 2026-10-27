@@ -6,6 +6,7 @@ from decimal import Decimal
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
 from .ateliers import ModeleAtelier
 from .constantes import DEVISE_CHOICES, SYMBOLES_DEVISE
@@ -16,49 +17,49 @@ class RobeLocation(ModeleAtelier):
     Représente une pièce physique en stock destinée à la location.
     """
     STATUT_PHYSIQUE_CHOICES = [
-        ('DISPONIBLE', 'Disponible'),
-        ('NETTOYAGE', 'Au pressing / Nettoyage'),
-        ('REPARATION', 'En réparation / Atelier'),
-        ('HORS_SERVICE', 'Hors service / Retirée'),
+        ('DISPONIBLE', _('Disponible')),
+        ('NETTOYAGE', _('Au pressing / Nettoyage')),
+        ('REPARATION', _('En réparation / Atelier')),
+        ('HORS_SERVICE', _('Hors service / Retirée')),
     ]
 
     reference_stock = models.CharField(
         max_length=50,
-        verbose_name="Référence stock (ex: LOC-042)",
-        help_text="Identifiant unique étiqueté sur la robe"
+        verbose_name=_("Référence stock (ex: LOC-042)"),
+        help_text=_("Identifiant unique étiqueté sur la robe")
     )
-    nom_modele = models.CharField(max_length=150, verbose_name="Nom du modèle")
-    taille = models.CharField(max_length=20, verbose_name="Taille")
-    couleur = models.CharField(max_length=50, verbose_name="Couleur")
-    description = models.TextField(blank=True, verbose_name="Description")
+    nom_modele = models.CharField(max_length=150, verbose_name=_("Nom du modèle"))
+    taille = models.CharField(max_length=20, verbose_name=_("Taille"))
+    couleur = models.CharField(max_length=50, verbose_name=_("Couleur"))
+    description = models.TextField(blank=True, verbose_name=_("Description"))
     
-    photo = models.ImageField(upload_to="robes_location/", blank=True, null=True, verbose_name="Photo")
+    photo = models.ImageField(upload_to="robes_location/", blank=True, null=True, verbose_name=_("Photo"))
     
     devise = models.CharField(
-        max_length=3, choices=DEVISE_CHOICES, default='ILS', verbose_name="Devise",
-        help_text="Devise du prix et de la caution standard (₪ par défaut)"
+        max_length=3, choices=DEVISE_CHOICES, default='ILS', verbose_name=_("Devise"),
+        help_text=_("Devise du prix et de la caution standard (₪ par défaut)")
     )
     prix_location_defaut = models.DecimalField(
-        max_digits=10, decimal_places=2, verbose_name="Prix standard"
+        max_digits=10, decimal_places=2, verbose_name=_("Prix standard")
     )
     caution_defaut = models.DecimalField(
-        max_digits=10, decimal_places=2, verbose_name="Caution standard"
+        max_digits=10, decimal_places=2, verbose_name=_("Caution standard")
     )
 
     cout_revient = models.DecimalField(
-        max_digits=10, decimal_places=2, default=0, verbose_name="Coût de revient",
-        help_text="Prix d'achat ou de confection de la robe, dans la devise ci-dessus (pour mesurer sa rentabilité)"
+        max_digits=10, decimal_places=2, default=0, verbose_name=_("Coût de revient"),
+        help_text=_("Prix d'achat ou de confection de la robe, dans la devise ci-dessus (pour mesurer sa rentabilité)")
     )
 
     statut_physique = models.CharField(
         max_length=30,
         choices=STATUT_PHYSIQUE_CHOICES,
         default='DISPONIBLE',
-        verbose_name="État de disponibilité atelier"
+        verbose_name=_("État de disponibilité atelier")
     )
     etat_general = models.TextField(
         blank=True,
-        verbose_name="État général / Notes d'usure"
+        verbose_name=_("État général / Notes d'usure")
     )
     
     date_creation = models.DateTimeField(auto_now_add=True)
@@ -100,73 +101,73 @@ class Location(ModeleAtelier):
     Contrat et événement de location reliant une cliente à une robe physique.
     """
     STATUT_LOCATION_CHOICES = [
-        ('RESERVEE', 'Réservée'),
-        ('EN_COURS', 'En cours (sortie atelier)'),
-        ('TERMINEE', 'Terminée (restituée)'),
-        ('EN_RETARD', 'En retard de restitution'),
-        ('ANNULEE', 'Annulée'),
+        ('RESERVEE', _('Réservée')),
+        ('EN_COURS', _('En cours (sortie atelier)')),
+        ('TERMINEE', _('Terminée (restituée)')),
+        ('EN_RETARD', _('En retard de restitution')),
+        ('ANNULEE', _('Annulée')),
     ]
 
     CAUTION_STATUT_CHOICES = [
-        ('NON_DEPOSEE', 'Non déposée'),
-        ('ENREGISTREE', 'Enregistrée (Chèque / Empreinte)'),
-        ('RESTITUEE', 'Restituée'),
-        ('ENCAISSEE_PARTIEL', 'Retenue partielle'),
-        ('ENCAISSEE_TOTAL', 'Encaissée (Perte / Dégâts)'),
+        ('NON_DEPOSEE', _('Non déposée')),
+        ('ENREGISTREE', _('Enregistrée (Chèque / Empreinte)')),
+        ('RESTITUEE', _('Restituée')),
+        ('ENCAISSEE_PARTIEL', _('Retenue partielle')),
+        ('ENCAISSEE_TOTAL', _('Encaissée (Perte / Dégâts)')),
     ]
 
     client = models.ForeignKey(
         'Client',
         on_delete=models.CASCADE,
         related_name='locations',
-        verbose_name="Cliente"
+        verbose_name=_("Cliente")
     )
     robe_location = models.ForeignKey(
         RobeLocation,
         on_delete=models.PROTECT,
         related_name='locations',
-        verbose_name="Robe louée"
+        verbose_name=_("Robe louée")
     )
 
-    date_debut = models.DateField(verbose_name="Date de retrait prévue")
-    date_fin_prevue = models.DateField(verbose_name="Date de retour prévue")
+    date_debut = models.DateField(verbose_name=_("Date de retrait prévue"))
+    date_fin_prevue = models.DateField(verbose_name=_("Date de retour prévue"))
     date_retour_effectif = models.DateField(
-        null=True, blank=True, verbose_name="Date de retour effective"
+        null=True, blank=True, verbose_name=_("Date de retour effective")
     )
     delai_tampon_jours = models.PositiveIntegerField(
         default=2,
-        verbose_name="Jours de battement (pressing)",
-        help_text="Nombre de jours de blocage après le retour pour l'entretien"
+        verbose_name=_("Jours de battement (pressing)"),
+        help_text=_("Nombre de jours de blocage après le retour pour l'entretien")
     )
 
     devise = models.CharField(
-        max_length=3, choices=DEVISE_CHOICES, default='ILS', verbose_name="Devise",
-        help_text="Devise du prix et de la caution de ce contrat (₪ par défaut)"
+        max_length=3, choices=DEVISE_CHOICES, default='ILS', verbose_name=_("Devise"),
+        help_text=_("Devise du prix et de la caution de ce contrat (₪ par défaut)")
     )
-    prix_convenu = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Prix de la location")
-    caution_montant = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Montant de la caution")
+    prix_convenu = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Prix de la location"))
+    caution_montant = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Montant de la caution"))
     caution_statut = models.CharField(
         max_length=30,
         choices=CAUTION_STATUT_CHOICES,
         default='NON_DEPOSEE',
-        verbose_name="Statut de la caution"
+        verbose_name=_("Statut de la caution")
     )
 
     caution_retenue = models.DecimalField(
-        max_digits=10, decimal_places=2, default=0, verbose_name="Montant de caution retenu",
-        help_text="Partie de la caution gardée (dégâts, perte). Elle devient alors un revenu."
+        max_digits=10, decimal_places=2, default=0, verbose_name=_("Montant de caution retenu"),
+        help_text=_("Partie de la caution gardée (dégâts, perte). Elle devient alors un revenu.")
     )
 
     statut = models.CharField(
         max_length=30,
         choices=STATUT_LOCATION_CHOICES,
         default='RESERVEE',
-        verbose_name="Statut du contrat"
+        verbose_name=_("Statut du contrat")
     )
 
-    etat_avant = models.TextField(blank=True, verbose_name="Constat d'état au départ")
-    etat_apres = models.TextField(blank=True, verbose_name="Constat d'état au retour")
-    notes = models.TextField(blank=True, verbose_name="Notes / Ajustements temporaires")
+    etat_avant = models.TextField(blank=True, verbose_name=_("Constat d'état au départ"))
+    etat_apres = models.TextField(blank=True, verbose_name=_("Constat d'état au retour"))
+    notes = models.TextField(blank=True, verbose_name=_("Notes / Ajustements temporaires"))
 
     date_creation = models.DateTimeField(auto_now_add=True)
     date_modification = models.DateTimeField(auto_now=True)

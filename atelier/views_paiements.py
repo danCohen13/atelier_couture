@@ -2,6 +2,7 @@
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
+from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
 
 from .acces import atelier_requis
@@ -24,10 +25,10 @@ def _paiements_vue(request, type_, pk):
         form = PaiementForm(request.POST, instance=Paiement(**{'robe' if type_ == 'robe' else 'location': dossier}))
         if form.is_valid():
             if form.cleaned_data['montant'] > dossier.reste_a_payer:
-                form.add_error('montant', f"Ce paiement dépasse le reste à payer ({dossier.reste_a_payer} {dossier.symbole_devise}).")
+                form.add_error('montant', _("Ce paiement dépasse le reste à payer (%(montant)s %(devise)s).") % {'montant': dossier.reste_a_payer, 'devise': dossier.symbole_devise})
             else:
                 form.save()
-                messages.success(request, "Paiement enregistré.")
+                messages.success(request, _("Paiement enregistré."))
                 return redirect(request.path)
     else:
         form = PaiementForm(initial={'date': timezone.localdate()})
@@ -54,7 +55,7 @@ def supprimer_paiement(request, paiement_id):
     paiement = get_object_or_404(Paiement.objects.de(request.atelier), pk=paiement_id)
     retour = ('paiements_robe', paiement.robe_id) if paiement.robe_id else ('paiements_location', paiement.location_id)
     paiement.delete()
-    messages.success(request, "Paiement supprimé.")
+    messages.success(request, _("Paiement supprimé."))
     return redirect(retour[0], retour[1])
 
 

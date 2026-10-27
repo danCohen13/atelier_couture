@@ -1,7 +1,8 @@
 {% extends 'atelier/base.html' %}
+{% load i18n %}
 {% load static %}
 
-{% block title %}Planning — {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
+{% block title %}{% trans "Planning —" %} {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
 
 {% block extra_css %}<link rel="stylesheet" href="{% static 'atelier/css/planning.css' %}">{% endblock %}
 
@@ -10,44 +11,44 @@
 
     <div class="page-head">
         <div>
-            <span class="eyebrow">Planning</span>
-            <h1>Calendrier de l'atelier</h1>
-            <p>Livraisons des confections, retraits et retours des robes de location.</p>
+            <span class="eyebrow">{% trans "Planning" %}</span>
+            <h1>{% trans "Calendrier de l'atelier" %}</h1>
+            <p>{% trans "Livraisons des confections, retraits et retours des robes de location." %}</p>
         </div>
         <div class="page-head__actions">
-            <a href="{% url 'ajouter_robe' %}" class="btn btn--outline">+ Confection</a>
-            <a href="{% url 'creer_location' %}" class="btn btn--primary">+ Contrat de location</a>
+            <a href="{% url 'ajouter_robe' %}" class="btn btn--outline">{% trans "+ Confection" %}</a>
+            <a href="{% url 'creer_location' %}" class="btn btn--primary">{% trans "+ Contrat de location" %}</a>
         </div>
     </div>
 
     <div class="legend-strip">
-        <div class="filter-group" role="group" aria-label="Types d'évènements à afficher">
-            <span class="eyebrow">Afficher</span>
+        <div class="filter-group" role="group" aria-label="{% trans "Types d'évènements à afficher" %}">
+            <span class="eyebrow">{% trans "Afficher" %}</span>
             <button type="button" class="kind-chip" data-kind="livraison" aria-pressed="true">
-                <i class="kind-chip__dot" aria-hidden="true"></i>Livraisons
+                <i class="kind-chip__dot" aria-hidden="true"></i>{% trans "Livraisons" %}
             </button>
             <button type="button" class="kind-chip" data-kind="retrait" aria-pressed="true">
-                <i class="kind-chip__dot" aria-hidden="true"></i>Retraits
+                <i class="kind-chip__dot" aria-hidden="true"></i>{% trans "Retraits" %}
             </button>
             <button type="button" class="kind-chip" data-kind="retour" aria-pressed="true">
-                <i class="kind-chip__dot" aria-hidden="true"></i>Retours
+                <i class="kind-chip__dot" aria-hidden="true"></i>{% trans "Retours" %}
             </button>
         </div>
     </div>
 
     <p class="form-alert planning-error" id="planning-error" role="alert" hidden>
-        Impossible de charger les évènements. Recharge la page ou réessaie dans un instant.
+        {% trans "Impossible de charger les évènements. Recharge la page ou réessaie dans un instant." %}
     </p>
 
     <div class="calendar-wrap">
-        <div id="calendar" aria-label="Calendrier des livraisons, retraits et retours"></div>
+        <div id="calendar" aria-label="{% trans "Calendrier des livraisons, retraits et retours" %}"></div>
     </div>
 
     <!-- Détail d'un évènement -->
     <dialog id="event-dialog" class="event-dialog" aria-labelledby="event-dialog-title">
         <div class="event-dialog__head">
             <span class="eyebrow" id="event-dialog-kind"></span>
-            <button type="button" class="event-dialog__close" id="event-dialog-close" aria-label="Fermer">×</button>
+            <button type="button" class="event-dialog__close" id="event-dialog-close" aria-label="{% trans "Fermer" %}">×</button>
         </div>
         <h2 id="event-dialog-title"></h2>
         <div id="event-dialog-lines"></div>
@@ -75,7 +76,17 @@ document.addEventListener('DOMContentLoaded', function () {
         retrait: css.getPropertyValue('--blueprint').trim(),
         retour: css.getPropertyValue('--wine').trim(),
     };
-    const LIBELLES = { livraison: 'Livraison', retrait: 'Retrait', retour: 'Retour' };
+    // Textes affichés par le script : traduits côté serveur (jamais de texte en dur ici).
+    const TXT = {
+        livraison: "{% trans 'Livraison' as t %}{{ t|escapejs }}",
+        retrait: "{% trans 'Retrait' as t %}{{ t|escapejs }}",
+        retour: "{% trans 'Retour' as t %}{{ t|escapejs }}",
+        telephone: "{% trans 'Téléphone' as t %}{{ t|escapejs }}",
+        autre: "{% trans '+%(n)s autre' as t %}{{ t|escapejs }}",
+        autres: "{% trans '+%(n)s autres' as t %}{{ t|escapejs }}",
+        rien: "{% trans 'Rien de prévu sur cette période.' as t %}{{ t|escapejs }}",
+    };
+    const LIBELLES = { livraison: TXT.livraison, retrait: TXT.retrait, retour: TXT.retour };
 
     const estMobile = () => window.matchMedia('(max-width: 640px)').matches;
     const masques = new Set();   // types décochés dans la légende
@@ -119,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function () {
             lien.href = 'tel:' + p.telephone;
             const valeur = el('strong');
             valeur.append(lien);
-            ligne.append(el('span', null, 'Téléphone'), valeur);
+            ligne.append(el('span', null, TXT.telephone), valeur);
             lignes.push(ligne);
         }
         dlgLignes.replaceChildren(...lignes);
@@ -151,10 +162,9 @@ document.addEventListener('DOMContentLoaded', function () {
         fixedWeekCount: false,
         initialView: etaitMobile ? 'listMonth' : 'dayGridMonth',
         headerToolbar: barreOutils(),
-        buttonText: { today: "Aujourd'hui", month: 'Mois', week: 'Semaine', list: 'Liste' },
         dayMaxEvents: 3,
-        moreLinkText: (n) => estMobile() ? '+' + n : '+' + n + ' autre' + (n > 1 ? 's' : ''),
-        noEventsText: 'Rien de prévu sur cette période.',
+        moreLinkText: (n) => estMobile() ? '+' + n : (n > 1 ? TXT.autres : TXT.autre).replace('%(n)s', n),
+        noEventsText: TXT.rien,
 
         events: function (info, succes, echec) {
             const url = URL_EVENEMENTS + '?start=' + encodeURIComponent(info.startStr) +

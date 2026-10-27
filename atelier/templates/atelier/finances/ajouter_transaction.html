@@ -1,29 +1,30 @@
 {% extends 'atelier/base.html' %}
 
-{% block title %}Enregistrer une opération — {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Enregistrer une opération —" %} {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
 
 {% block content %}
 <main class="page page--narrow">
 
-    <a href="{% url 'finances' %}" class="back-link">← Retour aux finances</a>
+    <a href="{% url 'finances' %}" class="back-link">{% trans "← Retour aux finances" %}</a>
 
     <div class="form-card">
         <div class="form-card__inner">
-            <span class="eyebrow">Finances</span>
-            <h2>Enregistrer une opération</h2>
+            <span class="eyebrow">{% trans "Finances" %}</span>
+            <h2>{% trans "Enregistrer une opération" %}</h2>
 
             <!-- Saisie rapide : l'IA lit la phrase et pré-remplit le formulaire ci-dessous (rien n'est enregistré) -->
             <form method="post" class="quick-ia">
                 {% csrf_token %}
-                <h3>Saisie rapide par IA</h3>
-                <p>Tape ou dicte ton opération librement ; l'IA remplit les champs ci-dessous.</p>
+                <h3>{% trans "Saisie rapide par IA" %}</h3>
+                <p>{% trans "Tape ou dicte ton opération librement ; l'IA remplit les champs ci-dessous." %}</p>
 
                 <div class="quick-ia__row">
                     {% include 'atelier/includes/_microphone_generic.html' with btn_id="btn-mic-finance" target_id="finance-transcript" %}
                     <input type="text" id="finance-transcript" name="texte_ia" class="field-input"
                            value="{{ texte_ia|default:'' }}"
-                           placeholder="Ex : acheté du fil de soie 45 shekels hier">
-                    <button type="submit" name="analyser" class="btn btn--primary">Analyser</button>
+                           placeholder="{% trans "Ex : acheté du fil de soie 45 shekels hier" %}">
+                    <button type="submit" name="analyser" class="btn btn--primary">{% trans "Analyser" %}</button>
                 </div>
 
                 {% if erreur_ia %}
@@ -36,8 +37,8 @@
                 {% csrf_token %}
                 {{ form.as_p }}
                 <div class="form-actions">
-                    <a href="{% url 'finances' %}" class="btn btn--outline">Annuler</a>
-                    <button type="submit" name="enregistrer" class="btn btn--primary">Enregistrer l'opération</button>
+                    <a href="{% url 'finances' %}" class="btn btn--outline">{% trans "Annuler" %}</a>
+                    <button type="submit" name="enregistrer" class="btn btn--primary">{% trans "Enregistrer l'opération" %}</button>
                 </div>
             </form>
         </div>

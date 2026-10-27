@@ -1,14 +1,15 @@
 {% extends 'atelier/base.html' %}
-{% block title %}Modifier la fiche — {{ cliente.nom }} {{ cliente.prenom }}{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Modifier la fiche —" %} {{ cliente.nom }} {{ cliente.prenom }}{% endblock %}
 
 {% block content %}
 <main class="page" style="max-width: 760px;">
     <div class="form-card">
         <div class="form-card__inner">
-            <span class="eyebrow">Ajustement d'atelier</span>
-            <h2>Modifier la fiche de {{ cliente.prenom }} {{ cliente.nom }}</h2>
+            <span class="eyebrow">{% trans "Ajustement d'atelier" %}</span>
+            <h2>{% trans "Modifier la fiche de" %} {{ cliente.prenom }} {{ cliente.nom }}</h2>
             <p style="color: var(--ink-soft); font-size: 13.5px; margin-bottom: 26px;">
-                Mets à jour ses coordonnées ou ses mensurations.
+                {% trans "Mets à jour ses coordonnées ou ses mensurations." %}
             </p>
 
             <!-- Module de dictée vocale réutilisable, comme sur la fiche de création -->
@@ -19,8 +20,8 @@
                 {{ form.as_p }}
 
                 <div class="form-actions">
-                    <a href="{% url 'fiche_cliente' cliente.id %}" class="btn btn--outline">Annuler</a>
-                    <button type="submit" class="btn btn--primary">Sauvegarder</button>
+                    <a href="{% url 'fiche_cliente' cliente.id %}" class="btn btn--outline">{% trans "Annuler" %}</a>
+                    <button type="submit" class="btn btn--primary">{% trans "Sauvegarder" %}</button>
                 </div>
             </form>
         </div>

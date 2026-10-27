@@ -6,6 +6,7 @@ import secrets
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
 from .ateliers import ModeleAtelier
 
@@ -27,15 +28,15 @@ class CodeReinitialisation(models.Model):
 
 class IncidentSecurite(ModeleAtelier):
     """Registre des incidents de sécurité (obligation de documenter, règlement de sécurité 2017)."""
-    date_constat = models.DateField(default=timezone.localdate, verbose_name="Date du constat")
-    description = models.TextField(help_text="Ce qui s'est passé (perte d'un téléphone, accès suspect…)")
-    donnees_concernees = models.CharField(max_length=255, blank=True, verbose_name="Données concernées")
-    mesures_prises = models.TextField(blank=True, verbose_name="Mesures prises")
+    date_constat = models.DateField(default=timezone.localdate, verbose_name=_("Date du constat"))
+    description = models.TextField(help_text=_("Ce qui s'est passé (perte d'un téléphone, accès suspect…)"))
+    donnees_concernees = models.CharField(max_length=255, blank=True, verbose_name=_("Données concernées"))
+    mesures_prises = models.TextField(blank=True, verbose_name=_("Mesures prises"))
     grave = models.BooleanField(
-        default=False, verbose_name="Incident grave",
-        help_text="Accès non autorisé ou atteinte à l'intégrité d'une partie importante des données : "
-                  "à signaler immédiatement à l'Autorité israélienne de protection de la vie privée.")
-    signale_autorite_le = models.DateField(blank=True, null=True, verbose_name="Signalé à l'Autorité le")
+        default=False, verbose_name=_("Incident grave"),
+        help_text=_("Accès non autorisé ou atteinte à l'intégrité d'une partie importante des données : "
+                  "à signaler immédiatement à l'Autorité israélienne de protection de la vie privée."))
+    signale_autorite_le = models.DateField(blank=True, null=True, verbose_name=_("Signalé à l'Autorité le"))
 
     class Meta:
         ordering = ['-date_constat', '-id']

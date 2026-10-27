@@ -1,47 +1,48 @@
 {% extends 'atelier/base.html' %}
-{% block title %}Dossier {{ cliente.nom }} — {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Dossier" %} {{ cliente.nom }} — {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
 
 {% block content %}
 <main class="page">
     <div class="hero-card">
         <div>
-            <span class="eyebrow">Dossier cliente</span>
+            <span class="eyebrow">{% trans "Dossier cliente" %}</span>
             <h1>{{ cliente.nom.upper }} {{ cliente.prenom }}</h1>
             <p style="margin: 6px 0 0; color: var(--ink-soft); font-size: 13.5px;">
                 {% if cliente.telephone %}{{ cliente.telephone }} · {% endif %}
-                {% if cliente.date_naissance %}Née le {{ cliente.date_naissance|date:"d/m/Y" }}{% endif %}
+                {% if cliente.date_naissance %}{% trans "Née le" %} {{ cliente.date_naissance|date:"d/m/Y" }}{% endif %}
             </p>
             <p style="margin: 6px 0 0; font-size: 12.5px; color: var(--ink-soft);">
                 {% if cliente.est_anonymisee %}
-                    Dossier anonymisé le {{ cliente.anonymisee_le|date:"d/m/Y" }}.
+                    {% trans "Dossier anonymisé le" %} {{ cliente.anonymisee_le|date:"d/m/Y" }}.
                 {% elif cliente.information_remise_le %}
-                    Fiche d'information remise le {{ cliente.information_remise_le|date:"d/m/Y" }}.
+                    {% trans "Fiche d'information remise le" %} {{ cliente.information_remise_le|date:"d/m/Y" }}.
                 {% else %}
-                    Fiche d'information non remise —
-                    <form method="post" action="{% url 'information_remise' cliente.id %}" class="inline-form">{% csrf_token %}<button type="submit" class="pill-btn">marquer comme remise aujourd'hui</button></form>
-                    · <a href="{% url 'confidentialite_fiche_pdf' %}" target="_blank">imprimer la fiche</a>
+                    {% trans "Fiche d'information non remise —" %}
+                    <form method="post" action="{% url 'information_remise' cliente.id %}" class="inline-form">{% csrf_token %}<button type="submit" class="pill-btn">{% trans "marquer comme remise aujourd'hui" %}</button></form>
+                    · <a href="{% url 'confidentialite_fiche_pdf' %}" target="_blank">{% trans "imprimer la fiche" %}</a>
                 {% endif %}
             </p>
         </div>
         <div class="hero-card__meta" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
             <!-- 📄 Bouton d'exportation PDF -->
             <a href="{% url 'exporter_pdf_cliente' cliente.id %}" class="btn btn--outline">
-                📄 Exporter PDF
+                {% trans "📄 Exporter PDF" %}
             </a>
             <!-- 👗 Nouvelle location de stock -->
             <a href="{% url 'creer_location' %}?client_id={{ cliente.id }}" class="btn btn--outline">
-                👗 Louer une robe
+                {% trans "👗 Louer une robe" %}
             </a>
             {% if not cliente.est_anonymisee %}
             <form method="post" action="{% url 'supprimer_cliente' cliente.id %}" class="inline-form"
                   onsubmit="return confirm('Effacer les données personnelles de cette cliente ? Cette action est définitive. Les commandes et paiements déjà enregistrés sont conservés sans son identité.');">
                 {% csrf_token %}
-                <button type="submit" class="btn btn--outline">Effacer ses données</button>
+                <button type="submit" class="btn btn--outline">{% trans "Effacer ses données" %}</button>
             </form>
             {% endif %}
             <!-- 🧵 Nouvelle confection sur mesure -->
             <a href="{% url 'ajouter_robe' %}?client_id={{ cliente.id }}" class="btn btn--primary">
-                Lancer une confection
+                {% trans "Lancer une confection" %}
             </a>
         </div>
     </div>
@@ -49,16 +50,16 @@
     <div class="detail-grid">
         <div class="card" style="height: fit-content;">
             <div class="card-header-row">
-                <h4>Mensurations</h4>
-                <a href="{% url 'modifier_client' cliente.id %}" class="card-link">Ajuster la fiche</a>
+                <h4>{% trans "Mensurations" %}</h4>
+                <a href="{% url 'modifier_client' cliente.id %}" class="card-link">{% trans "Ajuster la fiche" %}</a>
             </div>
-            <div class="finance-line"><span>Tour de poitrine</span><strong>{% if cliente.tour_poitrine %}{{ cliente.tour_poitrine }} cm{% else %}—{% endif %}</strong></div>
-            <div class="finance-line"><span>Tour de taille</span><strong>{% if cliente.tour_taille %}{{ cliente.tour_taille }} cm{% else %}—{% endif %}</strong></div>
-            <div class="finance-line"><span>Tour de hanches</span><strong>{% if cliente.tour_hanches %}{{ cliente.tour_hanches }} cm{% else %}—{% endif %}</strong></div>
-            <div class="finance-line"><span>Hauteur buste</span><strong>{% if cliente.hauteur_buste %}{{ cliente.hauteur_buste }} cm{% else %}—{% endif %}</strong></div>
+            <div class="finance-line"><span>{% trans "Tour de poitrine" %}</span><strong>{% if cliente.tour_poitrine %}{{ cliente.tour_poitrine }} {% trans "cm" %}{% else %}—{% endif %}</strong></div>
+            <div class="finance-line"><span>{% trans "Tour de taille" %}</span><strong>{% if cliente.tour_taille %}{{ cliente.tour_taille }} {% trans "cm" %}{% else %}—{% endif %}</strong></div>
+            <div class="finance-line"><span>{% trans "Tour de hanches" %}</span><strong>{% if cliente.tour_hanches %}{{ cliente.tour_hanches }} {% trans "cm" %}{% else %}—{% endif %}</strong></div>
+            <div class="finance-line"><span>{% trans "Hauteur buste" %}</span><strong>{% if cliente.hauteur_buste %}{{ cliente.hauteur_buste }} {% trans "cm" %}{% else %}—{% endif %}</strong></div>
             {% if cliente.notes_morphologie %}
             <div class="notes-block">
-                <span class="eyebrow">Notes spécifiques</span>
+                <span class="eyebrow">{% trans "Notes spécifiques" %}</span>
                 <p>{{ cliente.notes_morphologie }}</p>
             </div>
             {% endif %}
@@ -66,17 +67,17 @@
 
         <div class="column-stack">
             <!-- 1. SECTION CONFECTIONS SUR-MESURE -->
-            <span class="eyebrow column-stack__label">Confections &amp; suivi d'atelier</span>
+            <span class="eyebrow column-stack__label">{% trans "Confections &amp; suivi d'atelier" %}</span>
 
             <div class="swatch-table-wrap">
                 <table class="swatch-table">
                     <thead>
                         <tr>
-                            <th>Modèle</th>
-                            <th>Livraison</th>
-                            <th>Délai</th>
-                            <th style="width: 180px;">Avancement</th>
-                            <th>Prix total</th>
+                            <th>{% trans "Modèle" %}</th>
+                            <th>{% trans "Livraison" %}</th>
+                            <th>{% trans "Délai" %}</th>
+                            <th style="width: 180px;">{% trans "Avancement" %}</th>
+                            <th>{% trans "Prix total" %}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -85,7 +86,7 @@
                         {% include 'atelier/confection/_tiroir_robe.html' %}
                         {% empty %}
                         <tr>
-                            <td colspan="5" class="empty-state">Aucune confection enregistrée pour cette cliente.</td>
+                            <td colspan="5" class="empty-state">{% trans "Aucune confection enregistrée pour cette cliente." %}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -95,20 +96,20 @@
             <!-- 2. SECTION LOCATIONS DE STOCK -->
             <div style="margin-top: 32px;">
                 <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
-                    <span class="eyebrow column-stack__label" style="margin-bottom: 0;">Robes louées &amp; prêts de stock</span>
-                    <a href="{% url 'creer_location' %}?client_id={{ cliente.id }}" class="card-link" style="font-size: 13px;">+ Louer une robe</a>
+                    <span class="eyebrow column-stack__label" style="margin-bottom: 0;">{% trans "Robes louées &amp; prêts de stock" %}</span>
+                    <a href="{% url 'creer_location' %}?client_id={{ cliente.id }}" class="card-link" style="font-size: 13px;">{% trans "+ Louer une robe" %}</a>
                 </div>
 
                 <div class="swatch-table-wrap">
                     <table class="swatch-table">
                         <thead>
                             <tr>
-                                <th>Réf. &amp; Modèle</th>
-                                <th>Période</th>
-                                <th>Caution</th>
-                                <th>Tarif</th>
-                                <th>Statut</th>
-                                <th style="text-align: right;">Action</th>
+                                <th>{% trans "Réf. &amp; Modèle" %}</th>
+                                <th>{% trans "Période" %}</th>
+                                <th>{% trans "Caution" %}</th>
+                                <th>{% trans "Tarif" %}</th>
+                                <th>{% trans "Statut" %}</th>
+                                <th style="text-align: right;">{% trans "Action" %}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -116,11 +117,11 @@
                             <tr class="swatch-row swatch-row--static">
                                 <td>
                                     <span class="model-name">{{ loc.robe_location.nom_modele }}</span>
-                                    <span class="cell-sub">Réf. {{ loc.robe_location.reference_stock }} · T.{{ loc.robe_location.taille }}</span>
+                                    <span class="cell-sub">{% trans "Réf." %} {{ loc.robe_location.reference_stock }} · T.{{ loc.robe_location.taille }}</span>
                                 </td>
                                 <td data-label="Période">
                                     <span class="cell-date">{{ loc.date_debut|date:"d/m/Y" }}</span>
-                                    <span class="cell-sub">au {{ loc.date_fin_prevue|date:"d/m/Y" }}</span>
+                                    <span class="cell-sub">{% trans "au" %} {{ loc.date_fin_prevue|date:"d/m/Y" }}</span>
                                 </td>
                                 <td data-label="Caution">
                                     <span class="price-cell">{{ loc.caution_montant }} {{ loc.symbole_devise }}</span>
@@ -129,26 +130,26 @@
                                 <td data-label="Tarif"><span class="price-cell">{{ loc.prix_convenu }} {{ loc.symbole_devise }}</span></td>
                                 <td data-label="Statut">
                                     {% if loc.statut == 'EN_COURS' %}
-                                        <span class="tag tag--done">En cours</span>
+                                        <span class="tag tag--done">{% trans "En cours" %}</span>
                                     {% elif loc.statut == 'TERMINEE' %}
-                                        <span class="tag tag--ok">Restituée</span>
+                                        <span class="tag tag--ok">{% trans "Restituée" %}</span>
                                     {% elif loc.statut == 'RESERVEE' %}
-                                        <span class="tag tag--soon">Réservée</span>
+                                        <span class="tag tag--soon">{% trans "Réservée" %}</span>
                                     {% elif loc.statut == 'EN_RETARD' %}
-                                        <span class="tag tag--urgent">En retard</span>
+                                        <span class="tag tag--urgent">{% trans "En retard" %}</span>
                                     {% else %}
                                         <span class="tag tag--auto">{{ loc.get_statut_display }}</span>
                                     {% endif %}
                                 </td>
                                 <td class="cell-actions">
                                     {% if loc.statut == 'EN_COURS' %}
-                                        <a href="{% url 'retour_location' loc.id %}" class="btn btn--outline btn--outline-accent btn--sm">Restitution</a>
+                                        <a href="{% url 'retour_location' loc.id %}" class="btn btn--outline btn--outline-accent btn--sm">{% trans "Restitution" %}</a>
                                     {% endif %}
                                 </td>
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="6" class="empty-state">Cette cliente n'a encore loué aucune robe de stock.</td>
+                                <td colspan="6" class="empty-state">{% trans "Cette cliente n'a encore loué aucune robe de stock." %}</td>
                             </tr>
                             {% endfor %}
                         </tbody>

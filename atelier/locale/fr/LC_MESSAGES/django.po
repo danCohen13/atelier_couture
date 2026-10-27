@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-26 20:16+0200\n"
+"POT-Creation-Date: 2026-10-27 11:27+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "contact@exemple.com ou +972…"
+msgstr "contact@exemple.com ou +972…"
 
 msgid "Nom de votre atelier"
 msgstr "Nom de votre atelier"
@@ -38,6 +41,106 @@ msgstr "Les deux mots de passe ne sont pas identiques."
 msgid "Votre adresse e-mail"
 msgstr "Votre adresse e-mail"
 
+msgid "Date de naissance"
+msgstr "Date de naissance"
+
+msgid "Fiche d'information remise le"
+msgstr "Fiche d'information remise le"
+
+msgid "+972... ou +336..."
+msgstr "+972... ou +336..."
+
+msgid "Morphologie uniquement — pas d'information médicale"
+msgstr "Morphologie uniquement — pas d'information médicale"
+
+msgid "jj/mm/aaaa"
+msgstr "jj/mm/aaaa"
+
+msgid "Date de commencement"
+msgstr "Date de commencement"
+
+msgid "Date de livraison"
+msgstr "Date de livraison"
+
+msgid "Date"
+msgstr "Date"
+
+msgid "Ex : Achat fils dorés, acompte…"
+msgstr "Ex : Achat fils dorés, acompte…"
+
+msgid "Photo du ticket (facultatif)"
+msgstr "Photo du ticket (facultatif)"
+
+msgid "Le montant doit être positif."
+msgstr "Le montant doit être positif."
+
+msgid "Date du paiement"
+msgstr "Date du paiement"
+
+msgid "Acompte, solde…"
+msgstr "Acompte, solde…"
+
+msgid "À partir du"
+msgstr "À partir du"
+
+msgid "Loyer atelier, abonnement…"
+msgstr "Loyer atelier, abonnement…"
+
+msgid "Choisis un jour entre 1 et 28."
+msgstr "Choisis un jour entre 1 et 28."
+
+msgid "ex : 4.0000"
+msgstr "ex : 4.0000"
+
+msgid "ex : 3.7000"
+msgstr "ex : 3.7000"
+
+msgid "ex : 15000"
+msgstr "ex : 15000"
+
+msgid "La valeur doit être positive."
+msgstr "La valeur doit être positive."
+
+msgid "Une robe du stock porte déjà cette référence."
+msgstr "Une robe du stock porte déjà cette référence."
+
+msgid "ex: LOC-042"
+msgstr "ex: LOC-042"
+
+msgid "ex: Modèle Aurore"
+msgstr "ex: Modèle Aurore"
+
+msgid "ex: 38"
+msgstr "ex: 38"
+
+msgid "ex: Ivoire"
+msgstr "ex: Ivoire"
+
+msgid "Notes sur l'usure, petits accrocs passés..."
+msgstr "Notes sur l'usure, petits accrocs passés..."
+
+msgid "Date de retrait prévue"
+msgstr "Date de retrait prévue"
+
+msgid "Date de retour prévue"
+msgstr "Date de retour prévue"
+
+msgid "Constat de départ et retouches éphémères convenues..."
+msgstr "Constat de départ et retouches éphémères convenues..."
+
+msgid "Date de retour effective"
+msgstr "Date de retour effective"
+
+msgid "Taches, réparations à prévoir, départ pressing..."
+msgstr "Taches, réparations à prévoir, départ pressing..."
+
+#, python-format
+msgid "La somme retenue doit être comprise entre 0 et %(max)s."
+msgstr "La somme retenue doit être comprise entre 0 et %(max)s."
+
+msgid "Indique la somme retenue sur la caution."
+msgstr "Indique la somme retenue sur la caution."
+
 #, python-format
 msgid "Votre invitation à %(produit)s"
 msgstr "Votre invitation à %(produit)s"
@@ -58,15 +161,381 @@ msgstr ""
 "\n"
 "%(lien)s\n"
 
+msgid "Actif"
+msgstr "Actif"
+
+msgid "En essai"
+msgstr "En essai"
+
+msgid "Suspendu"
+msgstr "Suspendu"
+
+msgid "Gratuit (lancement)"
+msgstr "Gratuit (lancement)"
+
+msgid "Nom de l'atelier"
+msgstr "Nom de l'atelier"
+
+msgid "Contact pour la protection des données"
+msgstr "Contact pour la protection des données"
+
+msgid ""
+"E-mail ou téléphone où une cliente peut exercer ses droits (fiche "
+"d'information)."
+msgstr ""
+"E-mail ou téléphone où une cliente peut exercer ses droits (fiche "
+"d'information)."
+
+msgid "Adresse e-mail de la personne invitée"
+msgstr "Adresse e-mail de la personne invitée"
+
+msgid "Nom d'atelier proposé"
+msgstr "Nom d'atelier proposé"
+
+msgid "Un compte existe déjà avec cette adresse e-mail."
+msgstr "Un compte existe déjà avec cette adresse e-mail."
+
+msgid "Adresse e-mail"
+msgstr "Adresse e-mail"
+
+msgid "Invitation envoyée"
+msgstr "Invitation envoyée"
+
+msgid "Propriétaire"
+msgstr "Propriétaire"
+
+msgid "Employée"
+msgstr "Employée"
+
+msgid "Langue de l'interface de cette utilisatrice."
+msgstr "Langue de l'interface de cette utilisatrice."
+
+msgid "Cet élément ne peut pas être lié à un élément d'un autre atelier."
+msgstr "Cet élément ne peut pas être lié à un élément d'un autre atelier."
+
+msgid "Le numéro doit être au format international, ex: '+33612345678'."
+msgstr "Le numéro doit être au format international, ex: '+33612345678'."
+
+msgid ""
+"Morphologie uniquement (épaules, posture…). N'écris aucune information "
+"médicale."
+msgstr ""
+"Morphologie uniquement (épaules, posture…). N'écris aucune information "
+"médicale."
+
+msgid "Devise"
+msgstr "Devise"
+
+msgid "Heures de travail"
+msgstr "Heures de travail"
+
+msgid "Sert à calculer le gain horaire réel de la robe (facultatif)"
+msgstr "Sert à calculer le gain horaire réel de la robe (facultatif)"
+
+msgid "₪ (Shekel)"
+msgstr "₪ (Shekel)"
+
+msgid "€ (Euro)"
+msgstr "€ (Euro)"
+
+msgid "$ (Dollar)"
+msgstr "$ (Dollar)"
+
+msgid "🟢 Recette (Entrée d'argent)"
+msgstr "🟢 Recette (Entrée d'argent)"
+
+msgid "🔴 Dépense (Sortie d'argent)"
+msgstr "🔴 Dépense (Sortie d'argent)"
+
+msgid "Paiement de cliente"
+msgstr "Paiement de cliente"
+
+msgid "Location de robe"
+msgstr "Location de robe"
+
+msgid "Achat de tissu"
+msgstr "Achat de tissu"
+
+msgid "Fournitures (Fils, fermetures, boutons...)"
+msgstr "Fournitures (Fils, fermetures, boutons...)"
+
+msgid "Matériel & Machines (Entretien, achat...)"
+msgstr "Matériel & Machines (Entretien, achat...)"
+
+msgid "Autre frais / Divers"
+msgstr "Autre frais / Divers"
+
+msgid "Ex: Acompte robe Salome, Achat fils noirs..."
+msgstr "Ex: Acompte robe Salome, Achat fils noirs..."
+
+msgid "Location associée"
+msgstr "Location associée"
+
+msgid "Photo du justificatif"
+msgstr "Photo du justificatif"
+
+msgid "Photo du ticket ou de la facture (facultatif)"
+msgstr "Photo du ticket ou de la facture (facultatif)"
+
+msgid "Dépense récurrente d'origine"
+msgstr "Dépense récurrente d'origine"
+
+msgid "Espèces"
+msgstr "Espèces"
+
+msgid "Virement"
+msgstr "Virement"
+
+msgid "Carte bancaire"
+msgstr "Carte bancaire"
+
+msgid "Chèque"
+msgstr "Chèque"
+
+msgid "Autre"
+msgstr "Autre"
+
+msgid "Mode de paiement"
+msgstr "Mode de paiement"
+
+msgid "Note"
+msgstr "Note"
+
+msgid "Un paiement concerne soit une robe sur mesure, soit une location."
+msgstr "Un paiement concerne soit une robe sur mesure, soit une location."
+
+msgid "Jour du mois (1 à 28)"
+msgstr "Jour du mois (1 à 28)"
+
+msgid "1 € vaut … ₪"
+msgstr "1 € vaut … ₪"
+
+msgid "1 $ vaut … ₪"
+msgstr "1 $ vaut … ₪"
+
+msgid "Objectif de chiffre d'affaires mensuel (₪)"
+msgstr "Objectif de chiffre d'affaires mensuel (₪)"
+
+msgid "Disponible"
+msgstr "Disponible"
+
+msgid "Au pressing / Nettoyage"
+msgstr "Au pressing / Nettoyage"
+
+msgid "En réparation / Atelier"
+msgstr "En réparation / Atelier"
+
+msgid "Hors service / Retirée"
+msgstr "Hors service / Retirée"
+
+msgid "Référence stock (ex: LOC-042)"
+msgstr "Référence stock (ex: LOC-042)"
+
+msgid "Identifiant unique étiqueté sur la robe"
+msgstr "Identifiant unique étiqueté sur la robe"
+
+msgid "Nom du modèle"
+msgstr "Nom du modèle"
+
+msgid "Taille"
+msgstr "Taille"
+
+msgid "Couleur"
+msgstr "Couleur"
+
+msgid "Description"
+msgstr "Description"
+
+msgid "Photo"
+msgstr "Photo"
+
+msgid "Devise du prix et de la caution standard (₪ par défaut)"
+msgstr "Devise du prix et de la caution standard (₪ par défaut)"
+
+msgid "Prix standard"
+msgstr "Prix standard"
+
+msgid "Caution standard"
+msgstr "Caution standard"
+
+msgid "Coût de revient"
+msgstr "Coût de revient"
+
+msgid ""
+"Prix d'achat ou de confection de la robe, dans la devise ci-dessus (pour "
+"mesurer sa rentabilité)"
+msgstr ""
+"Prix d'achat ou de confection de la robe, dans la devise ci-dessus (pour "
+"mesurer sa rentabilité)"
+
+msgid "État de disponibilité atelier"
+msgstr "État de disponibilité atelier"
+
+msgid "État général / Notes d'usure"
+msgstr "État général / Notes d'usure"
+
+msgid "Réservée"
+msgstr "Réservée"
+
+msgid "En cours (sortie atelier)"
+msgstr "En cours (sortie atelier)"
+
+msgid "Terminée (restituée)"
+msgstr "Terminée (restituée)"
+
+msgid "En retard de restitution"
+msgstr "En retard de restitution"
+
+msgid "Annulée"
+msgstr "Annulée"
+
+msgid "Non déposée"
+msgstr "Non déposée"
+
+msgid "Enregistrée (Chèque / Empreinte)"
+msgstr "Enregistrée (Chèque / Empreinte)"
+
+msgid "Restituée"
+msgstr "Restituée"
+
+msgid "Retenue partielle"
+msgstr "Retenue partielle"
+
+msgid "Encaissée (Perte / Dégâts)"
+msgstr "Encaissée (Perte / Dégâts)"
+
+msgid "Cliente"
+msgstr "Cliente"
+
+msgid "Robe louée"
+msgstr "Robe louée"
+
+msgid "Jours de battement (pressing)"
+msgstr "Jours de battement (pressing)"
+
+msgid "Nombre de jours de blocage après le retour pour l'entretien"
+msgstr "Nombre de jours de blocage après le retour pour l'entretien"
+
+msgid "Devise du prix et de la caution de ce contrat (₪ par défaut)"
+msgstr "Devise du prix et de la caution de ce contrat (₪ par défaut)"
+
+msgid "Prix de la location"
+msgstr "Prix de la location"
+
+msgid "Montant de la caution"
+msgstr "Montant de la caution"
+
+msgid "Statut de la caution"
+msgstr "Statut de la caution"
+
+msgid "Montant de caution retenu"
+msgstr "Montant de caution retenu"
+
+msgid ""
+"Partie de la caution gardée (dégâts, perte). Elle devient alors un revenu."
+msgstr ""
+"Partie de la caution gardée (dégâts, perte). Elle devient alors un revenu."
+
+msgid "Statut du contrat"
+msgstr "Statut du contrat"
+
+msgid "Constat d'état au départ"
+msgstr "Constat d'état au départ"
+
+msgid "Constat d'état au retour"
+msgstr "Constat d'état au retour"
+
+msgid "Notes / Ajustements temporaires"
+msgstr "Notes / Ajustements temporaires"
+
+msgid "Date du constat"
+msgstr "Date du constat"
+
+msgid "Ce qui s'est passé (perte d'un téléphone, accès suspect…)"
+msgstr "Ce qui s'est passé (perte d'un téléphone, accès suspect…)"
+
+msgid "Données concernées"
+msgstr "Données concernées"
+
+msgid "Mesures prises"
+msgstr "Mesures prises"
+
+msgid "Incident grave"
+msgstr "Incident grave"
+
+msgid ""
+"Accès non autorisé ou atteinte à l'intégrité d'une partie importante des "
+"données : à signaler immédiatement à l'Autorité israélienne de protection de"
+" la vie privée."
+msgstr ""
+"Accès non autorisé ou atteinte à l'intégrité d'une partie importante des "
+"données : à signaler immédiatement à l'Autorité israélienne de protection de"
+" la vie privée."
+
+msgid "Signalé à l'Autorité le"
+msgstr "Signalé à l'Autorité le"
+
+msgid "Jan"
+msgstr "Jan"
+
+msgid "Fév"
+msgstr "Fév"
+
+msgid "Mar"
+msgstr "Mar"
+
+msgid "Avr"
+msgstr "Avr"
+
+msgid "Mai"
+msgstr "Mai"
+
+msgid "Juin"
+msgstr "Juin"
+
+msgid "Juil"
+msgstr "Juil"
+
+msgid "Août"
+msgstr "Août"
+
+msgid "Sep"
+msgstr "Sep"
+
+msgid "Oct"
+msgstr "Oct"
+
+msgid "Nov"
+msgstr "Nov"
+
+msgid "Déc"
+msgstr "Déc"
+
+msgid "Accès impossible —"
+msgstr "Accès impossible —"
+
+msgid "Accès impossible"
+msgstr "Accès impossible"
+
+msgid "Cet atelier est suspendu. Contactez le support pour le réactiver."
+msgstr "Cet atelier est suspendu. Contactez le support pour le réactiver."
+
+msgid ""
+"Ce compte n'est rattaché à aucun atelier. Utilisez le lien d'invitation que "
+"vous avez reçu, ou contactez le support."
+msgstr ""
+"Ce compte n'est rattaché à aucun atelier. Utilisez le lien d'invitation que "
+"vous avez reçu, ou contactez le support."
+
+msgid "Se déconnecter"
+msgstr "Se déconnecter"
+
 msgid "Gestion d'atelier de couture et de location de robes"
 msgstr "Gestion d'atelier de couture et de location de robes"
 
 msgid "Chaque robe, de la première mesure à la livraison."
 msgstr "Chaque robe, de la première mesure à la livraison."
 
-#| msgid ""
-#| "Chaque robe, chaque essayage, chaque paiement : suivis au même endroit, en "
-#| "hébreu ou en français."
 msgid ""
 "Confections, locations, acomptes et livraisons : tout votre atelier au même "
 "endroit, en hébreu ou en français."
@@ -92,11 +561,9 @@ msgstr "Robe sur mannequin de couture, mesurée au mètre ruban"
 msgid "Robe de mariée"
 msgstr "Robe de mariée"
 
-#| msgid "Livraison dans 9 jours"
 msgid "Livraison dans 5 jours"
 msgstr "Livraison dans 5 jours"
 
-#| msgid "L'acompte arrive"
 msgid "Acompte reçu"
 msgstr "Acompte reçu"
 
@@ -115,14 +582,12 @@ msgstr "Suivi des confections"
 msgid "Chaque robe, sa cliente, ses étapes et sa date de livraison."
 msgstr "Chaque robe, sa cliente, ses étapes et sa date de livraison."
 
-#| msgid "Robe de soirée « Aurore »"
 msgid "Robe de soirée"
 msgstr "Robe de soirée"
 
 msgid "Retouches"
 msgstr "Retouches"
 
-#| msgid "Locations &amp; stock"
 msgid "Location et stock"
 msgstr "Location et stock"
 
@@ -140,7 +605,6 @@ msgstr "Pressing"
 msgid "Libre"
 msgstr "Libre"
 
-#| msgid "Finances &amp; bilans"
 msgid "Finances claires"
 msgstr "Finances claires"
 
@@ -165,9 +629,6 @@ msgstr "Retour"
 msgid "Des données bien protégées"
 msgstr "Des données bien protégées"
 
-#| msgid ""
-#| "Chaque atelier ne voit que ses propres clientes. Aucun autre atelier ne peut"
-#| " les lire ni les modifier."
 msgid ""
 "Chaque atelier ne voit que ses propres clientes, avec des outils de "
 "protection de la vie privée."
@@ -175,7 +636,6 @@ msgstr ""
 "Chaque atelier ne voit que ses propres clientes, avec des outils de "
 "protection de la vie privée."
 
-#| msgid "Votre langue, dans le bon sens"
 msgid "Dans votre langue, dans votre sens de lecture"
 msgstr "Dans votre langue, dans votre sens de lecture"
 
@@ -340,6 +800,1056 @@ msgstr "Finances &amp; bilans"
 msgid "Confidentialité"
 msgstr "Confidentialité"
 
+msgid "Modifier la photo"
+msgstr "Modifier la photo"
+
+msgid "Image enregistrée"
+msgstr "Image enregistrée"
+
+msgid "Aucun fichier choisi"
+msgstr "Aucun fichier choisi"
+
+msgid "Image prête"
+msgstr "Image prête"
+
+msgid "Changer la photo"
+msgstr "Changer la photo"
+
+msgid "Choisir un croquis"
+msgstr "Choisir un croquis"
+
+msgid "Choisir un tissu"
+msgstr "Choisir un tissu"
+
+msgid "Photographier le justificatif"
+msgstr "Photographier le justificatif"
+
+msgid "Croquis du modèle"
+msgstr "Croquis du modèle"
+
+msgid "Échantillon de tissu"
+msgstr "Échantillon de tissu"
+
+msgid "Coût tissu"
+msgstr "Coût tissu"
+
+msgid "Main d'œuvre"
+msgstr "Main d'œuvre"
+
+msgid "Prix total"
+msgstr "Prix total"
+
+msgid "Voir la fiche cliente"
+msgstr "Voir la fiche cliente"
+
+msgid "Livrée"
+msgstr "Livrée"
+
+msgid "jours"
+msgstr "jours"
+
+msgid "— Actions sur cette confection"
+msgstr "— Actions sur cette confection"
+
+msgid "Modifier"
+msgstr "Modifier"
+
+msgid "Paiements"
+msgstr "Paiements"
+
+msgid "Supprimer définitivement cette confection ?"
+msgstr "Supprimer définitivement cette confection ?"
+
+msgid "Supprimer"
+msgstr "Supprimer"
+
+msgid "Finances"
+msgstr "Finances"
+
+msgid "Tissu"
+msgstr "Tissu"
+
+msgid "Atelier"
+msgstr "Atelier"
+
+msgid "Total"
+msgstr "Total"
+
+msgid "Carnet de style"
+msgstr "Carnet de style"
+
+msgid "Croquis"
+msgstr "Croquis"
+
+msgid "Image indisponible"
+msgstr "Image indisponible"
+
+msgid "+ Ajouter"
+msgstr "+ Ajouter"
+
+msgid "Échantillon"
+msgstr "Échantillon"
+
+msgid "Étapes de fabrication"
+msgstr "Étapes de fabrication"
+
+msgid "Ajouter"
+msgstr "Ajouter"
+
+msgid "+ Toile"
+msgstr "+ Toile"
+
+msgid "+ Coupe"
+msgstr "+ Coupe"
+
+msgid "+ Assemblage"
+msgstr "+ Assemblage"
+
+msgid "+ Finitions"
+msgstr "+ Finitions"
+
+msgid "Étape sur mesure…"
+msgstr "Étape sur mesure…"
+
+msgid "Terminé"
+msgstr "Terminé"
+
+msgid "À faire"
+msgstr "À faire"
+
+msgid "Supprimer l'étape"
+msgstr "Supprimer l'étape"
+
+msgid "Aucune étape configurée."
+msgstr "Aucune étape configurée."
+
+msgid "Nouvelle cliente —"
+msgstr "Nouvelle cliente —"
+
+msgid "Fiche cliente"
+msgstr "Fiche cliente"
+
+msgid "Nouvelle cliente &amp; mensurations"
+msgstr "Nouvelle cliente &amp; mensurations"
+
+msgid ""
+"Ces informations serviront de base à chaque nouvelle confection pour cette "
+"cliente."
+msgstr ""
+"Ces informations serviront de base à chaque nouvelle confection pour cette "
+"cliente."
+
+msgid "Annuler"
+msgstr "Annuler"
+
+msgid "Enregistrer la cliente"
+msgstr "Enregistrer la cliente"
+
+msgid "Nouvelle confection —"
+msgstr "Nouvelle confection —"
+
+msgid "Nouvelle commande"
+msgstr "Nouvelle commande"
+
+msgid "Lancer une confection"
+msgstr "Lancer une confection"
+
+msgid ""
+"Renseigne le modèle, les délais et les coûts pour ouvrir le suivi de "
+"production."
+msgstr ""
+"Renseigne le modèle, les délais et les coûts pour ouvrir le suivi de "
+"production."
+
+msgid "Créer la robe"
+msgstr "Créer la robe"
+
+msgid "Tableau de bord —"
+msgstr "Tableau de bord —"
+
+msgid "Suivi de production"
+msgstr "Suivi de production"
+
+msgid "Confections en atelier"
+msgstr "Confections en atelier"
+
+msgid ""
+"Vue d'ensemble de chaque pièce, de sa cliente et de son avancement jusqu'à "
+"la livraison."
+msgstr ""
+"Vue d'ensemble de chaque pièce, de sa cliente et de son avancement jusqu'à "
+"la livraison."
+
+msgid "+ Nouvelle cliente"
+msgstr "+ Nouvelle cliente"
+
+msgid "+ Créer une robe"
+msgstr "+ Créer une robe"
+
+msgid "Liste des clientes"
+msgstr "Liste des clientes"
+
+msgid "Statut"
+msgstr "Statut"
+
+msgid "En cours"
+msgstr "En cours"
+
+msgid "Terminées"
+msgstr "Terminées"
+
+msgid "Toutes les robes"
+msgstr "Toutes les robes"
+
+msgid "Trier par"
+msgstr "Trier par"
+
+msgid "Délai"
+msgstr "Délai"
+
+msgid "Prix"
+msgstr "Prix"
+
+msgid "Modèle"
+msgstr "Modèle"
+
+msgid "Avancement"
+msgstr "Avancement"
+
+msgid "Aucune robe ne correspond aux critères de sélection."
+msgstr "Aucune robe ne correspond aux critères de sélection."
+
+msgid "Dossier"
+msgstr "Dossier"
+
+msgid "Dossier cliente"
+msgstr "Dossier cliente"
+
+msgid "Née le"
+msgstr "Née le"
+
+msgid "Dossier anonymisé le"
+msgstr "Dossier anonymisé le"
+
+msgid "Fiche d'information non remise —"
+msgstr "Fiche d'information non remise —"
+
+msgid "marquer comme remise aujourd'hui"
+msgstr "marquer comme remise aujourd'hui"
+
+msgid "imprimer la fiche"
+msgstr "imprimer la fiche"
+
+msgid "📄 Exporter PDF"
+msgstr "📄 Exporter PDF"
+
+msgid "👗 Louer une robe"
+msgstr "👗 Louer une robe"
+
+msgid "Effacer ses données"
+msgstr "Effacer ses données"
+
+msgid "Mensurations"
+msgstr "Mensurations"
+
+msgid "Ajuster la fiche"
+msgstr "Ajuster la fiche"
+
+msgid "Tour de poitrine"
+msgstr "Tour de poitrine"
+
+msgid "cm"
+msgstr "cm"
+
+msgid "Tour de taille"
+msgstr "Tour de taille"
+
+msgid "Tour de hanches"
+msgstr "Tour de hanches"
+
+msgid "Hauteur buste"
+msgstr "Hauteur buste"
+
+msgid "Notes spécifiques"
+msgstr "Notes spécifiques"
+
+msgid "Confections &amp; suivi d'atelier"
+msgstr "Confections &amp; suivi d'atelier"
+
+msgid "Aucune confection enregistrée pour cette cliente."
+msgstr "Aucune confection enregistrée pour cette cliente."
+
+msgid "Robes louées &amp; prêts de stock"
+msgstr "Robes louées &amp; prêts de stock"
+
+msgid "+ Louer une robe"
+msgstr "+ Louer une robe"
+
+msgid "Réf. &amp; Modèle"
+msgstr "Réf. &amp; Modèle"
+
+msgid "Période"
+msgstr "Période"
+
+msgid "Caution"
+msgstr "Caution"
+
+msgid "Tarif"
+msgstr "Tarif"
+
+msgid "Action"
+msgstr "Action"
+
+msgid "Réf."
+msgstr "Réf."
+
+msgid "au"
+msgstr "au"
+
+msgid "En retard"
+msgstr "En retard"
+
+msgid "Restitution"
+msgstr "Restitution"
+
+msgid "Cette cliente n'a encore loué aucune robe de stock."
+msgstr "Cette cliente n'a encore loué aucune robe de stock."
+
+msgid "Répertoire des clientes —"
+msgstr "Répertoire des clientes —"
+
+msgid "Fichier clientes"
+msgstr "Fichier clientes"
+
+msgid "Rechercher"
+msgstr "Rechercher"
+
+msgid "Saisir un nom ou un prénom…"
+msgstr "Saisir un nom ou un prénom…"
+
+msgid "Filtrer"
+msgstr "Filtrer"
+
+msgid "Effacer"
+msgstr "Effacer"
+
+msgid "Voir le dossier complet →"
+msgstr "Voir le dossier complet →"
+
+msgid "Aucune cliente ne correspond à «"
+msgstr "Aucune cliente ne correspond à «"
+
+msgid "Modifier la fiche —"
+msgstr "Modifier la fiche —"
+
+msgid "Ajustement d'atelier"
+msgstr "Ajustement d'atelier"
+
+msgid "Modifier la fiche de"
+msgstr "Modifier la fiche de"
+
+msgid "Mets à jour ses coordonnées ou ses mensurations."
+msgstr "Mets à jour ses coordonnées ou ses mensurations."
+
+msgid "Sauvegarder"
+msgstr "Sauvegarder"
+
+msgid "Modifier commande —"
+msgstr "Modifier commande —"
+
+msgid "Modifier la confection :"
+msgstr "Modifier la confection :"
+
+msgid ""
+"Modifie le modèle, décalez les dates ou réajustez les coûts de production."
+msgstr ""
+"Modifie le modèle, décalez les dates ou réajustez les coûts de production."
+
+msgid "Confidentialité —"
+msgstr "Confidentialité —"
+
+msgid "Protection des données"
+msgstr "Protection des données"
+
+msgid "Confidentialité des clientes"
+msgstr "Confidentialité des clientes"
+
+msgid ""
+"Tes clientes te confient leur identité, leurs coordonnées et leurs mesures. "
+"La loi israélienne sur la protection de la vie privée te demande de les "
+"informer, de protéger ces données et de ne pas les garder sans raison."
+msgstr ""
+"Tes clientes te confient leur identité, leurs coordonnées et leurs mesures. "
+"La loi israélienne sur la protection de la vie privée te demande de les "
+"informer, de protéger ces données et de ne pas les garder sans raison."
+
+msgid "Imprimer la fiche d'information"
+msgstr "Imprimer la fiche d'information"
+
+msgid "Coordonnées à renseigner"
+msgstr "Coordonnées à renseigner"
+
+msgid ""
+"La fiche d'information doit indiquer comment te joindre pour exercer ses "
+"droits. Renseigne ton e-mail ou ton téléphone dans le formulaire « Mon "
+"atelier » ci-dessous."
+msgstr ""
+"La fiche d'information doit indiquer comment te joindre pour exercer ses "
+"droits. Renseigne ton e-mail ou ton téléphone dans le formulaire « Mon "
+"atelier » ci-dessous."
+
+msgid "Mon atelier"
+msgstr "Mon atelier"
+
+msgid ""
+"Ces informations figurent sur la fiche d'information remise aux clientes."
+msgstr ""
+"Ces informations figurent sur la fiche d'information remise aux clientes."
+
+msgid "Contact pour exercer ses droits"
+msgstr "Contact pour exercer ses droits"
+
+msgid "Enregistrer"
+msgstr "Enregistrer"
+
+msgid "1. Informer chaque cliente"
+msgstr "1. Informer chaque cliente"
+
+msgid ""
+"Remets la fiche d'information avant de prendre des mesures, puis enregistre "
+"la remise sur son dossier."
+msgstr ""
+"Remets la fiche d'information avant de prendre des mesures, puis enregistre "
+"la remise sur son dossier."
+
+#, python-format
+msgid ""
+"<strong>%(n)s</strong> dossier sans remise de fiche enregistrée. Ouvre le "
+"dossier de la cliente et clique sur « marquer comme remise »."
+msgid_plural ""
+"<strong>%(n)s</strong> dossiers sans remise de fiche enregistrée. Ouvre le "
+"dossier de la cliente et clique sur « marquer comme remise »."
+msgstr[0] ""
+"<strong>%(n)s</strong> dossier sans remise de fiche enregistrée. Ouvre le "
+"dossier de la cliente et clique sur « marquer comme remise »."
+msgstr[1] ""
+"<strong>%(n)s</strong> dossiers sans remise de fiche enregistrée. Ouvre le "
+"dossier de la cliente et clique sur « marquer comme remise »."
+
+msgid "Toutes les clientes ont reçu la fiche d'information."
+msgstr "Toutes les clientes ont reçu la fiche d'information."
+
+msgid "2. Dossiers inactifs"
+msgstr "2. Dossiers inactifs"
+
+#, python-format
+msgid ""
+"Sans activité depuis plus de %(n)s an (ni commande, ni location, ni "
+"paiement). Efface leurs données personnelles : les montants et commandes "
+"restent pour la comptabilité."
+msgid_plural ""
+"Sans activité depuis plus de %(n)s ans (ni commande, ni location, ni "
+"paiement). Efface leurs données personnelles : les montants et commandes "
+"restent pour la comptabilité."
+msgstr[0] ""
+"Sans activité depuis plus de %(n)s an (ni commande, ni location, ni "
+"paiement). Efface leurs données personnelles : les montants et commandes "
+"restent pour la comptabilité."
+msgstr[1] ""
+"Sans activité depuis plus de %(n)s ans (ni commande, ni location, ni "
+"paiement). Efface leurs données personnelles : les montants et commandes "
+"restent pour la comptabilité."
+
+msgid "Inactif depuis"
+msgstr "Inactif depuis"
+
+msgid "ans"
+msgstr "ans"
+
+msgid "Afficher"
+msgstr "Afficher"
+
+msgid "Dernière activité :"
+msgstr "Dernière activité :"
+
+msgid "Aucune activité enregistrée"
+msgstr "Aucune activité enregistrée"
+
+msgid "Aucun dossier inactif."
+msgstr "Aucun dossier inactif."
+
+msgid "3. Sécurité et incidents"
+msgstr "3. Sécurité et incidents"
+
+msgid ""
+"Note tout incident (téléphone perdu, accès suspect…) dans le registre "
+"d'administration. Un incident grave doit être signalé immédiatement à "
+"l'Autorité israélienne de protection de la vie privée."
+msgstr ""
+"Note tout incident (téléphone perdu, accès suspect…) dans le registre "
+"d'administration. Un incident grave doit être signalé immédiatement à "
+"l'Autorité israélienne de protection de la vie privée."
+
+msgid "Ouvrir le registre des incidents →"
+msgstr "Ouvrir le registre des incidents →"
+
+msgid "Le registre des incidents se trouve dans l'espace d'administration."
+msgstr "Le registre des incidents se trouve dans l'espace d'administration."
+
+msgid ""
+"Le document « PROTECTION_DES_DONNEES.md » du dépôt décrit la base de "
+"données, les prestataires et la marche à suivre ; relis-le une fois par an."
+msgstr ""
+"Le document « PROTECTION_DES_DONNEES.md » du dépôt décrit la base de "
+"données, les prestataires et la marche à suivre ; relis-le une fois par an."
+
+msgid "Sections des finances"
+msgstr "Sections des finances"
+
+msgid "Bilan"
+msgstr "Bilan"
+
+msgid "Impayés &amp; prévisions"
+msgstr "Impayés &amp; prévisions"
+
+msgid "Rentabilité"
+msgstr "Rentabilité"
+
+msgid "Dépenses récurrentes"
+msgstr "Dépenses récurrentes"
+
+msgid "Paramètres"
+msgstr "Paramètres"
+
+msgid "Enregistrer une opération —"
+msgstr "Enregistrer une opération —"
+
+msgid "← Retour aux finances"
+msgstr "← Retour aux finances"
+
+msgid "Enregistrer une opération"
+msgstr "Enregistrer une opération"
+
+msgid "Saisie rapide par IA"
+msgstr "Saisie rapide par IA"
+
+msgid ""
+"Tape ou dicte ton opération librement ; l'IA remplit les champs ci-dessous."
+msgstr ""
+"Tape ou dicte ton opération librement ; l'IA remplit les champs ci-dessous."
+
+msgid "Ex : acheté du fil de soie 45 shekels hier"
+msgstr "Ex : acheté du fil de soie 45 shekels hier"
+
+msgid "Analyser"
+msgstr "Analyser"
+
+msgid "Enregistrer l'opération"
+msgstr "Enregistrer l'opération"
+
+msgid "Finances —"
+msgstr "Finances —"
+
+msgid "Comptabilité"
+msgstr "Comptabilité"
+
+msgid "Ce que l'atelier gagne, ce qu'il dépense, et ce qu'on lui doit encore."
+msgstr ""
+"Ce que l'atelier gagne, ce qu'il dépense, et ce qu'on lui doit encore."
+
+msgid "+ Ajouter une opération"
+msgstr "+ Ajouter une opération"
+
+msgid "Exporter"
+msgstr "Exporter"
+
+msgid "Tableau Excel (CSV)"
+msgstr "Tableau Excel (CSV)"
+
+msgid "Récapitulatif PDF"
+msgstr "Récapitulatif PDF"
+
+msgid "Aujourd'hui"
+msgstr "Aujourd'hui"
+
+msgid "Ce mois"
+msgstr "Ce mois"
+
+msgid "Cette année"
+msgstr "Cette année"
+
+msgid "Tout"
+msgstr "Tout"
+
+msgid "Compter"
+msgstr "Compter"
+
+msgid "Le facturé"
+msgstr "Le facturé"
+
+msgid "L'argent reçu"
+msgstr "L'argent reçu"
+
+msgid ""
+"Seuls les paiements réellement reçus sont comptés, à leur date de réception."
+msgstr ""
+"Seuls les paiements réellement reçus sont comptés, à leur date de réception."
+
+msgid ""
+"Une robe est comptée à sa date de livraison, une location à sa date de "
+"retrait, même si elle n'est pas encore payée."
+msgstr ""
+"Une robe est comptée à sa date de livraison, une location à sa date de "
+"retrait, même si elle n'est pas encore payée."
+
+msgid "À traiter"
+msgstr "À traiter"
+
+msgid "Voir le détail →"
+msgstr "Voir le détail →"
+
+msgid "Chiffres clés"
+msgstr "Chiffres clés"
+
+msgid "Argent entré"
+msgstr "Argent entré"
+
+msgid "Robes, locations, cautions conservées"
+msgstr "Robes, locations, cautions conservées"
+
+msgid "Argent dépensé"
+msgstr "Argent dépensé"
+
+msgid "Tissus, fournitures, frais"
+msgstr "Tissus, fournitures, frais"
+
+msgid "Bénéfice"
+msgstr "Bénéfice"
+
+msgid "Entré moins dépensé"
+msgstr "Entré moins dépensé"
+
+msgid "Reste à encaisser"
+msgstr "Reste à encaisser"
+
+msgid "Voir qui doit quoi →"
+msgstr "Voir qui doit quoi →"
+
+msgid "Cautions gardées en dépôt :"
+msgstr "Cautions gardées en dépôt :"
+
+msgid ""
+"— cet argent sera rendu aux clientes, il n'est pas compté dans tes revenus."
+msgstr ""
+"— cet argent sera rendu aux clientes, il n'est pas compté dans tes revenus."
+
+msgid "Autres devises"
+msgstr "Autres devises"
+
+msgid "Ces montants sont séparés des totaux en"
+msgstr "Ces montants sont séparés des totaux en"
+
+msgid "ci-dessus."
+msgstr "ci-dessus."
+
+msgid "Entré"
+msgstr "Entré"
+
+msgid "Dépensé"
+msgstr "Dépensé"
+
+msgid "Total converti en"
+msgstr "Total converti en"
+
+msgid "entrés,"
+msgstr "entrés,"
+
+msgid "dépensés, bénéfice"
+msgstr "dépensés, bénéfice"
+
+msgid "Il manque le taux pour"
+msgstr "Il manque le taux pour"
+
+msgid "le renseigner"
+msgstr "le renseigner"
+
+msgid "Objectif du mois"
+msgstr "Objectif du mois"
+
+msgid "sur"
+msgstr "sur"
+
+msgid "Objectif atteint, bravo !"
+msgstr "Objectif atteint, bravo !"
+
+msgid "Évolution"
+msgstr "Évolution"
+
+msgid "Argent entré et dépensé dans le temps (en"
+msgstr "Argent entré et dépensé dans le temps (en"
+
+msgid "Semaines"
+msgstr "Semaines"
+
+msgid "Mois"
+msgstr "Mois"
+
+msgid "Années"
+msgstr "Années"
+
+msgid "Le graphique apparaîtra dès la première opération en"
+msgstr "Le graphique apparaîtra dès la première opération en"
+
+msgid "Ce mois-ci, comparé à avant"
+msgstr "Ce mois-ci, comparé à avant"
+
+msgid "Argent entré, en"
+msgstr "Argent entré, en"
+
+msgid ". La pastille montre l'écart de ce mois par rapport à la période."
+msgstr ". La pastille montre l'écart de ce mois par rapport à la période."
+
+msgid "dépensé"
+msgstr "dépensé"
+
+msgid "· bénéfice"
+msgstr "· bénéfice"
+
+msgid "pas de comparaison"
+msgstr "pas de comparaison"
+
+msgid "▲ ce mois +"
+msgstr "▲ ce mois +"
+
+msgid "▼ ce mois"
+msgstr "▼ ce mois"
+
+msgid "identique"
+msgstr "identique"
+
+msgid "D'où vient l'argent, où part-il ?"
+msgstr "D'où vient l'argent, où part-il ?"
+
+msgid "Sur la période choisie en haut de page."
+msgstr "Sur la période choisie en haut de page."
+
+msgid "Confection ou location"
+msgstr "Confection ou location"
+
+msgid "de bénéfice"
+msgstr "de bénéfice"
+
+msgid "entrés ·"
+msgstr "entrés ·"
+
+msgid "dépensés"
+msgstr "dépensés"
+
+msgid "Pas encore de données sur cette période."
+msgstr "Pas encore de données sur cette période."
+
+msgid "Dépenses par type"
+msgstr "Dépenses par type"
+
+msgid "Aucune dépense sur cette période."
+msgstr "Aucune dépense sur cette période."
+
+msgid "Toutes les opérations"
+msgstr "Toutes les opérations"
+
+msgid ""
+"Les lignes « Auto » viennent des robes et des locations ; les autres sont "
+"saisies à la main et modifiables."
+msgstr ""
+"Les lignes « Auto » viennent des robes et des locations ; les autres sont "
+"saisies à la main et modifiables."
+
+msgid "Auto"
+msgstr "Auto"
+
+msgid "📎 justificatif"
+msgstr "📎 justificatif"
+
+msgid "Aucune opération sur cette période."
+msgstr "Aucune opération sur cette période."
+
+msgid "Pages d'opérations"
+msgstr "Pages d'opérations"
+
+msgid "← Plus récentes"
+msgstr "← Plus récentes"
+
+msgid "Page"
+msgstr "Page"
+
+msgid "opérations"
+msgstr "opérations"
+
+msgid "Plus anciennes →"
+msgstr "Plus anciennes →"
+
+msgid "Comment sont calculés ces chiffres ?"
+msgstr "Comment sont calculés ces chiffres ?"
+
+msgid ""
+"Le prix de chaque robe sur mesure et le prix de chaque location sont "
+"importés automatiquement."
+msgstr ""
+"Le prix de chaque robe sur mesure et le prix de chaque location sont "
+"importés automatiquement."
+
+msgid ""
+"La caution n'est jamais un revenu, sauf la part que tu gardes (dégâts, "
+"perte)."
+msgstr ""
+"La caution n'est jamais un revenu, sauf la part que tu gardes (dégâts, "
+"perte)."
+
+msgid ""
+"La main d'œuvre n'apparaît pas à part : elle fait partie du prix facturé."
+msgstr ""
+"La main d'œuvre n'apparaît pas à part : elle fait partie du prix facturé."
+
+msgid ""
+"Utilise « Ajouter une opération » uniquement pour les frais annexes "
+"(fournitures, matériel…). Ne ressaisis pas une location déjà enregistrée "
+"dans « Locations &amp; stock »."
+msgstr ""
+"Utilise « Ajouter une opération » uniquement pour les frais annexes "
+"(fournitures, matériel…). Ne ressaisis pas une location déjà enregistrée "
+"dans « Locations &amp; stock »."
+
+msgid "Modifier une opération —"
+msgstr "Modifier une opération —"
+
+msgid "Modifier l'opération"
+msgstr "Modifier l'opération"
+
+msgid "Enregistrer les modifications"
+msgstr "Enregistrer les modifications"
+
+msgid "Impayés —"
+msgstr "Impayés —"
+
+msgid ""
+"Ce que les clientes te doivent encore, les cautions à suivre et les entrées "
+"d'argent attendues."
+msgstr ""
+"Ce que les clientes te doivent encore, les cautions à suivre et les entrées "
+"d'argent attendues."
+
+msgid "Total dû"
+msgstr "Total dû"
+
+msgid "Dont en retard"
+msgstr "Dont en retard"
+
+msgid "Entrées attendues"
+msgstr "Entrées attendues"
+
+msgid "Paiements à recevoir"
+msgstr "Paiements à recevoir"
+
+msgid "Robe"
+msgstr "Robe"
+
+msgid "Location"
+msgstr "Location"
+
+msgid "payé"
+msgstr "payé"
+
+msgid "reste"
+msgstr "reste"
+
+msgid "Encaisser"
+msgstr "Encaisser"
+
+msgid "Tout est payé."
+msgstr "Tout est payé."
+
+msgid "Cautions détenues"
+msgstr "Cautions détenues"
+
+msgid "À restituer"
+msgstr "À restituer"
+
+msgid "Régulariser"
+msgstr "Régulariser"
+
+msgid "Aucune caution détenue."
+msgstr "Aucune caution détenue."
+
+msgid "Paiements —"
+msgstr "Paiements —"
+
+msgid "← Retour"
+msgstr "← Retour"
+
+msgid "Confection sur mesure"
+msgstr "Confection sur mesure"
+
+msgid "Devis PDF"
+msgstr "Devis PDF"
+
+msgid "Facture PDF"
+msgstr "Facture PDF"
+
+msgid "Déjà payé"
+msgstr "Déjà payé"
+
+msgid "Reste à payer"
+msgstr "Reste à payer"
+
+msgid "Paiements reçus"
+msgstr "Paiements reçus"
+
+msgid "Reçu PDF"
+msgstr "Reçu PDF"
+
+msgid "Aucun paiement enregistré."
+msgstr "Aucun paiement enregistré."
+
+msgid "Enregistrer un paiement"
+msgstr "Enregistrer un paiement"
+
+msgid "Ajouter le paiement"
+msgstr "Ajouter le paiement"
+
+msgid "Paramètres finances —"
+msgstr "Paramètres finances —"
+
+msgid ""
+"Les taux servent uniquement à calculer des totaux globaux en ₪ ; les "
+"montants saisis ne sont jamais modifiés."
+msgstr ""
+"Les taux servent uniquement à calculer des totaux globaux en ₪ ; les "
+"montants saisis ne sont jamais modifiés."
+
+msgid "Dépenses récurrentes —"
+msgstr "Dépenses récurrentes —"
+
+msgid ""
+"Loyer, abonnements… Chaque mois, l'écriture est ajoutée automatiquement aux "
+"dépenses (en ₪), à partir de la date choisie."
+msgstr ""
+"Loyer, abonnements… Chaque mois, l'écriture est ajoutée automatiquement aux "
+"dépenses (en ₪), à partir de la date choisie."
+
+msgid "₪ / mois"
+msgstr "₪ / mois"
+
+msgid "le"
+msgstr "le"
+
+msgid "· depuis"
+msgstr "· depuis"
+
+msgid "Active"
+msgstr "Active"
+
+msgid "En pause"
+msgstr "En pause"
+
+msgid "Mettre en pause"
+msgstr "Mettre en pause"
+
+msgid "Réactiver"
+msgstr "Réactiver"
+
+msgid "Aucune dépense récurrente."
+msgstr "Aucune dépense récurrente."
+
+msgid "Ajouter une dépense récurrente"
+msgstr "Ajouter une dépense récurrente"
+
+msgid "Rentabilité —"
+msgstr "Rentabilité —"
+
+msgid ""
+"Bénéfice de chaque robe sur mesure (prix − tissu − frais rattachés) et "
+"amortissement de chaque robe du stock de location. Renseigne les heures de "
+"travail dans la fiche robe pour voir ton gain horaire réel."
+msgstr ""
+"Bénéfice de chaque robe sur mesure (prix − tissu − frais rattachés) et "
+"amortissement de chaque robe du stock de location. Renseigne les heures de "
+"travail dans la fiche robe pour voir ton gain horaire réel."
+
+msgid "Robes sur mesure"
+msgstr "Robes sur mesure"
+
+msgid "Frais"
+msgstr "Frais"
+
+msgid "Heures"
+msgstr "Heures"
+
+msgid "Gain / heure"
+msgstr "Gain / heure"
+
+msgid "Aucune robe."
+msgstr "Aucune robe."
+
+msgid "Stock de location"
+msgstr "Stock de location"
+
+msgid "Locations"
+msgstr "Locations"
+
+msgid "Revenus"
+msgstr "Revenus"
+
+msgid "Solde"
+msgstr "Solde"
+
+msgid "Amortie à"
+msgstr "Amortie à"
+
+msgid "Aucune robe en stock."
+msgstr "Aucune robe en stock."
+
+msgid "Seules les locations dans la devise de la robe sont comptées."
+msgstr "Seules les locations dans la devise de la robe sont comptées."
+
+msgid "🎙️ Prise de mesures vocale par IA"
+msgstr "🎙️ Prise de mesures vocale par IA"
+
+msgid ""
+"Cliquez sur le micro, énoncez vos mesures à voix haute, puis cliquez sur "
+"Analyser pour pré-remplir la fiche de la cliente. Dicte uniquement des "
+"mesures : ne prononce ni nom ni information personnelle."
+msgstr ""
+"Cliquez sur le micro, énoncez vos mesures à voix haute, puis cliquez sur "
+"Analyser pour pré-remplir la fiche de la cliente. Dicte uniquement des "
+"mesures : ne prononce ni nom ni information personnelle."
+
+msgid "Parlez au micro... (ex: poitrine 92, taille 70, hanches 98)"
+msgstr "Parlez au micro... (ex: poitrine 92, taille 70, hanches 98)"
+
+msgid "Veuillez dicter ou écrire des mesures d’abord."
+msgstr "Veuillez dicter ou écrire des mesures d’abord."
+
+msgid "⚡ Extraction en cours par l’IA Gemini..."
+msgstr "⚡ Extraction en cours par l’IA Gemini..."
+
+msgid "Erreur de connexion serveur"
+msgstr "Erreur de connexion serveur"
+
+#, python-format
+msgid "🎉 %%(n)s mesure(s) injectée(s) avec succès !"
+msgstr "🎉 %%(n)s mesure(s) injectée(s) avec succès !"
+
+msgid ""
+"🤔 Aucune mesure reconnue. Essayez de formuler clairement (ex: poitrine 94)."
+msgstr ""
+"🤔 Aucune mesure reconnue. Essayez de formuler clairement (ex: poitrine 94)."
+
+msgid "❌ Erreur : "
+msgstr "❌ Erreur : "
+
+msgid "Dicter"
+msgstr "Dicter"
+
 msgid "Créer mon atelier"
 msgstr "Créer mon atelier"
 
@@ -373,6 +1883,435 @@ msgstr ""
 msgid "Retour à l'accueil"
 msgstr "Retour à l'accueil"
 
+msgid "Catalogue de location —"
+msgstr "Catalogue de location —"
+
+msgid "Location &amp; stock"
+msgstr "Location &amp; stock"
+
+msgid "Robes de stock"
+msgstr "Robes de stock"
+
+msgid "Pièces physiques disponibles pour le prêt et la location."
+msgstr "Pièces physiques disponibles pour le prêt et la location."
+
+msgid "← Planning"
+msgstr "← Planning"
+
+msgid "+ Nouvelle robe de stock"
+msgstr "+ Nouvelle robe de stock"
+
+msgid "État"
+msgstr "État"
+
+msgid "Toutes"
+msgstr "Toutes"
+
+msgid "Disponibles"
+msgstr "Disponibles"
+
+msgid "Réparation"
+msgstr "Réparation"
+
+msgid "Hors service"
+msgstr "Hors service"
+
+msgid "Modèle ou référence…"
+msgstr "Modèle ou référence…"
+
+msgid "Pas de photo"
+msgstr "Pas de photo"
+
+msgid "Louer"
+msgstr "Louer"
+
+msgid "Aucune robe ne correspond à ces critères."
+msgstr "Aucune robe ne correspond à ces critères."
+
+msgid "Le catalogue de location est encore vide."
+msgstr "Le catalogue de location est encore vide."
+
+msgid "Ajouter une première robe"
+msgstr "Ajouter une première robe"
+
+msgid "Nouveau contrat —"
+msgstr "Nouveau contrat —"
+
+msgid ""
+"Le prix et la caution sont repris de la fiche de la robe ; ajuste-les si un "
+"tarif différent a été convenu."
+msgstr ""
+"Le prix et la caution sont repris de la fiche de la robe ; ajuste-les si un "
+"tarif différent a été convenu."
+
+msgid "Déjà réservée"
+msgstr "Déjà réservée"
+
+msgid "Pressing (battement)"
+msgstr "Pressing (battement)"
+
+msgid ""
+"Dates indicatives : elles restent sélectionnables, le contrat est vérifié à "
+"l'enregistrement."
+msgstr ""
+"Dates indicatives : elles restent sélectionnables, le contrat est vérifié à "
+"l'enregistrement."
+
+msgid "Enregistrer le contrat"
+msgstr "Enregistrer le contrat"
+
+msgid "Restitution —"
+msgstr "Restitution —"
+
+msgid "Référence"
+msgstr "Référence"
+
+msgid "Retour prévu"
+msgstr "Retour prévu"
+
+msgid "Caution initiale"
+msgstr "Caution initiale"
+
+msgid "Valider la restitution"
+msgstr "Valider la restitution"
+
+msgid "Nouvelle robe de stock —"
+msgstr "Nouvelle robe de stock —"
+
+msgid "Chaque pièce reçoit une référence unique, à étiqueter sur la robe."
+msgstr "Chaque pièce reçoit une référence unique, à étiqueter sur la robe."
+
+msgid "Ajouter au stock"
+msgstr "Ajouter au stock"
+
+msgid "Locations & stock —"
+msgstr "Locations & stock —"
+
+msgid "Planning des locations"
+msgstr "Planning des locations"
+
+msgid "Suivi des sorties, des retours à l'atelier et des cautions."
+msgstr "Suivi des sorties, des retours à l'atelier et des cautions."
+
+msgid "Catalogue du stock"
+msgstr "Catalogue du stock"
+
+msgid "+ Nouveau contrat"
+msgstr "+ Nouveau contrat"
+
+msgid "Robes sorties"
+msgstr "Robes sorties"
+
+msgid "Réservations à venir"
+msgstr "Réservations à venir"
+
+msgid "Retours en retard"
+msgstr "Retours en retard"
+
+msgid "Enregistrer le retour"
+msgstr "Enregistrer le retour"
+
+msgid "En cours de location"
+msgstr "En cours de location"
+
+msgid "Contrat n°"
+msgstr "Contrat n°"
+
+msgid "Aucune robe n'est actuellement sortie de l'atelier."
+msgstr "Aucune robe n'est actuellement sortie de l'atelier."
+
+msgid "Retrait prévu"
+msgstr "Retrait prévu"
+
+msgid "Prix convenu"
+msgstr "Prix convenu"
+
+msgid "Aucune réservation future enregistrée."
+msgstr "Aucune réservation future enregistrée."
+
+msgid "Accès temporairement bloqué —"
+msgstr "Accès temporairement bloqué —"
+
+msgid "Sécurité"
+msgstr "Sécurité"
+
+msgid "Accès temporairement bloqué"
+msgstr "Accès temporairement bloqué"
+
+msgid ""
+"Trop de tentatives de connexion ont échoué. Par précaution, l'accès est "
+"suspendu pendant une heure. Réessayez plus tard."
+msgstr ""
+"Trop de tentatives de connexion ont échoué. Par précaution, l'accès est "
+"suspendu pendant une heure. Réessayez plus tard."
+
+msgid "Retour à la connexion"
+msgstr "Retour à la connexion"
+
+msgid "Connexion —"
+msgstr "Connexion —"
+
+msgid "Accès restreint"
+msgstr "Accès restreint"
+
+msgid ""
+"Veuillez vous connecter pour accéder aux fiches clientes et aux suivis de "
+"confection."
+msgstr ""
+"Veuillez vous connecter pour accéder aux fiches clientes et aux suivis de "
+"confection."
+
+msgid "Identifiants incorrects. Veuillez réessayer."
+msgstr "Identifiants incorrects. Veuillez réessayer."
+
+msgid "Nom d'utilisateur"
+msgstr "Nom d'utilisateur"
+
+msgid "Mot de passe oublié ?"
+msgstr "Mot de passe oublié ?"
+
+msgid "Planning —"
+msgstr "Planning —"
+
+msgid "Calendrier de l'atelier"
+msgstr "Calendrier de l'atelier"
+
+msgid "Livraisons des confections, retraits et retours des robes de location."
+msgstr ""
+"Livraisons des confections, retraits et retours des robes de location."
+
+msgid "+ Confection"
+msgstr "+ Confection"
+
+msgid "+ Contrat de location"
+msgstr "+ Contrat de location"
+
+msgid "Types d'évènements à afficher"
+msgstr "Types d'évènements à afficher"
+
+msgid "Livraisons"
+msgstr "Livraisons"
+
+msgid "Retraits"
+msgstr "Retraits"
+
+msgid "Retours"
+msgstr "Retours"
+
+msgid ""
+"Impossible de charger les évènements. Recharge la page ou réessaie dans un "
+"instant."
+msgstr ""
+"Impossible de charger les évènements. Recharge la page ou réessaie dans un "
+"instant."
+
+msgid "Calendrier des livraisons, retraits et retours"
+msgstr "Calendrier des livraisons, retraits et retours"
+
+msgid "Fermer"
+msgstr "Fermer"
+
+msgid "Téléphone"
+msgstr "Téléphone"
+
+#, python-format
+msgid "+%%(n)s autre"
+msgstr "+%%(n)s autre"
+
+#, python-format
+msgid "+%%(n)s autres"
+msgstr "+%%(n)s autres"
+
+msgid "Rien de prévu sur cette période."
+msgstr "Rien de prévu sur cette période."
+
+msgid "Mot de passe oublié —"
+msgstr "Mot de passe oublié —"
+
+msgid "Réinitialisation"
+msgstr "Réinitialisation"
+
+msgid "Mot de passe oublié"
+msgstr "Mot de passe oublié"
+
+msgid ""
+"Entrez votre adresse e-mail pour recevoir un code de vérification à 6 "
+"chiffres."
+msgstr ""
+"Entrez votre adresse e-mail pour recevoir un code de vérification à 6 "
+"chiffres."
+
+msgid "exemple@domaine.com"
+msgstr "exemple@domaine.com"
+
+msgid "Envoyer le code"
+msgstr "Envoyer le code"
+
+msgid "Nouveau mot de passe —"
+msgstr "Nouveau mot de passe —"
+
+msgid "Nouveau mot de passe"
+msgstr "Nouveau mot de passe"
+
+msgid "Choisissez votre nouveau mot de passe pour votre compte."
+msgstr "Choisissez votre nouveau mot de passe pour votre compte."
+
+msgid "Enregistrer le mot de passe"
+msgstr "Enregistrer le mot de passe"
+
+msgid "Validation du code —"
+msgstr "Validation du code —"
+
+msgid "Validation du code"
+msgstr "Validation du code"
+
+msgid "Saisissez le code à 6 chiffres reçu dans votre boîte e-mail."
+msgstr "Saisissez le code à 6 chiffres reçu dans votre boîte e-mail."
+
+msgid "Code de vérification (6 chiffres)"
+msgstr "Code de vérification (6 chiffres)"
+
+msgid "Valider le code"
+msgstr "Valider le code"
+
+msgid "Recevoir un nouveau code"
+msgstr "Recevoir un nouveau code"
+
+msgid "Toile d'essai"
+msgstr "Toile d'essai"
+
+msgid "Coupe du tissu"
+msgstr "Coupe du tissu"
+
+msgid "Assemblage & Piqûre"
+msgstr "Assemblage & Piqûre"
+
+msgid "Finitions & Ourlet"
+msgstr "Finitions & Ourlet"
+
+msgid "Format JSON invalide"
+msgstr "Format JSON invalide"
+
+msgid "Aucun texte fourni"
+msgstr "Aucun texte fourni"
+
+#, python-format
+msgid "Votre code de réinitialisation - %(produit)s"
+msgstr "Votre code de réinitialisation - %(produit)s"
+
+#, python-format
+msgid ""
+"Bonjour,\n"
+"\n"
+"Voici votre code de vérification à 6 chiffres : %(code)s\n"
+"\n"
+"Ce code est valable pendant 10 minutes."
+msgstr ""
+"Bonjour,\n"
+"\n"
+"Voici votre code de vérification à 6 chiffres : %(code)s\n"
+"\n"
+"Ce code est valable pendant 10 minutes."
+
+msgid "Si un compte correspond à cette adresse, un code vient d'être envoyé."
+msgstr "Si un compte correspond à cette adresse, un code vient d'être envoyé."
+
+#, python-format
+msgid ""
+"Code invalide ou expiré (durée de validité : 10 min). Après %(n)s erreurs, "
+"il faut redemander un code."
+msgstr ""
+"Code invalide ou expiré (durée de validité : 10 min). Après %(n)s erreurs, "
+"il faut redemander un code."
+
+msgid "Les mots de passe ne correspondent pas."
+msgstr "Les mots de passe ne correspondent pas."
+
+msgid "Votre mot de passe a été modifié avec succès !"
+msgstr "Votre mot de passe a été modifié avec succès !"
+
+msgid "Coordonnées enregistrées."
+msgstr "Coordonnées enregistrées."
+
+msgid "Le nom de l'atelier est obligatoire."
+msgstr "Le nom de l'atelier est obligatoire."
+
+msgid "Remise de la fiche d'information enregistrée."
+msgstr "Remise de la fiche d'information enregistrée."
+
+msgid "Dossier supprimé."
+msgstr "Dossier supprimé."
+
+msgid ""
+"Données personnelles effacées. Les commandes et paiements sont conservés "
+"sans lien avec son identité (obligations comptables)."
+msgstr ""
+"Données personnelles effacées. Les commandes et paiements sont conservés "
+"sans lien avec son identité (obligations comptables)."
+
+msgid "Écris ou dicte d'abord l'opération à analyser."
+msgstr "Écris ou dicte d'abord l'opération à analyser."
+
+msgid "Opération modifiée."
+msgstr "Opération modifiée."
+
+msgid "Opération supprimée."
+msgstr "Opération supprimée."
+
+#, python-format
+msgid "La robe %(ref)s a été ajoutée au stock."
+msgstr "La robe %(ref)s a été ajoutée au stock."
+
+msgid "Ajouter une robe au catalogue de location"
+msgstr "Ajouter une robe au catalogue de location"
+
+#, python-format
+msgid "Contrat #%(id)s enregistré avec succès."
+msgstr "Contrat #%(id)s enregistré avec succès."
+
+msgid "Établir un nouveau contrat de location"
+msgstr "Établir un nouveau contrat de location"
+
+#, python-format
+msgid "Retour validé pour la robe %(ref)s."
+msgstr "Retour validé pour la robe %(ref)s."
+
+#, python-format
+msgid "Ce paiement dépasse le reste à payer (%(montant)s %(devise)s)."
+msgstr "Ce paiement dépasse le reste à payer (%(montant)s %(devise)s)."
+
+msgid "Paiement enregistré."
+msgstr "Paiement enregistré."
+
+msgid "Paiement supprimé."
+msgstr "Paiement supprimé."
+
+msgid "Modifier la confection"
+msgstr "Modifier la confection"
+
+msgid "Dossier de la cliente"
+msgstr "Dossier de la cliente"
+
+#, python-format
+msgid "%(etape)s en retard"
+msgstr "%(etape)s en retard"
+
+msgid "Tarif convenu"
+msgstr "Tarif convenu"
+
+msgid "Contrat"
+msgstr "Contrat"
+
+#, python-format
+msgid "n° %(id)s"
+msgstr "n° %(id)s"
+
+msgid "Paramètres 'start' et 'end' requis (AAAA-MM-JJ)."
+msgstr "Paramètres 'start' et 'end' requis (AAAA-MM-JJ)."
+
+msgid "Période invalide."
+msgstr "Période invalide."
+
 msgid "Merci ! Nous vous écrivons très vite avec votre invitation."
 msgstr "Merci ! Nous vous écrivons très vite avec votre invitation."
 
@@ -381,3 +2320,12 @@ msgstr "Vérifiez votre adresse e-mail."
 
 msgid "Trop de demandes depuis cette connexion. Réessayez plus tard."
 msgstr "Trop de demandes depuis cette connexion. Réessayez plus tard."
+
+msgid "Dépense récurrente enregistrée."
+msgstr "Dépense récurrente enregistrée."
+
+msgid "Dépense récurrente supprimée (les écritures passées sont conservées)."
+msgstr "Dépense récurrente supprimée (les écritures passées sont conservées)."
+
+msgid "Paramètres enregistrés."
+msgstr "Paramètres enregistrés."

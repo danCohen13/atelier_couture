@@ -1,38 +1,39 @@
 {% extends 'atelier/base.html' %}
-{% block title %}Connexion — {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Connexion —" %} {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
 
 {% block content %}
 <main class="page login-page">
     <div class="form-card">
         <div class="form-card__inner">
-            <span class="eyebrow">Accès restreint</span>
+            <span class="eyebrow">{% trans "Accès restreint" %}</span>
             <h2>{{ PRODUIT_NOM }}</h2>
             <p class="auth-subtitle">
-                Veuillez vous connecter pour accéder aux fiches clientes et aux suivis de confection.
+                {% trans "Veuillez vous connecter pour accéder aux fiches clientes et aux suivis de confection." %}
             </p>
 
             {% if form.errors %}
-            <p class="form-error">Identifiants incorrects. Veuillez réessayer.</p>
+            <p class="form-error">{% trans "Identifiants incorrects. Veuillez réessayer." %}</p>
             {% endif %}
 
             <form method="POST">
                 {% csrf_token %}
 
                 <p>
-                    <label for="id_username">Nom d'utilisateur</label>
+                    <label for="id_username">{% trans "Nom d'utilisateur" %}</label>
                     <input type="text" name="username" autofocus required class="field-input" id="id_username">
                 </p>
 
                 <p>
-                    <label for="id_password">Mot de passe</label>
+                    <label for="id_password">{% trans "Mot de passe" %}</label>
                     <input type="password" name="password" required class="field-input" id="id_password">
                 </p>
 
-                <button type="submit" class="btn btn--primary btn--block">Se connecter</button>
+                <button type="submit" class="btn btn--primary btn--block">{% trans "Se connecter" %}</button>
             </form>
 
             <div class="auth-footer">
-                <a href="{% url 'demander_code_reset' %}">Mot de passe oublié ?</a>
+                <a href="{% url 'demander_code_reset' %}">{% trans "Mot de passe oublié ?" %}</a>
             </div>
         </div>
     </div>

@@ -2,6 +2,7 @@ import datetime
 import json
 from unittest import mock
 
+from django.conf import settings
 from django.core import mail
 from django.test import TestCase
 from django.urls import reverse
@@ -88,6 +89,9 @@ class MesuresIATests(ConnecteTestCase):
 class ReinitialisationMotDePasseTests(TestCase):
     """Parcours complet : e-mail → code à 6 chiffres → nouveau mot de passe (views_auth)."""
 
+    def setUp(self):
+        self.client.cookies[settings.LANGUAGE_COOKIE_NAME] = 'fr'  # ces tests vérifient les textes français
+
     @classmethod
     def setUpTestData(cls):
         cls.user = utilisateur_test("couturiere", "c@example.com", "AncienMdp123!")
@@ -110,7 +114,9 @@ class ReinitialisationMotDePasseTests(TestCase):
     def test_email_inconnu_ne_revele_pas_que_le_compte_n_existe_pas(self):
         """Même réponse qu'un compte existant (pas d'énumération), mais aucun e-mail n'est envoyé."""
         connu = self.client.post(reverse("demander_code_reset"), {"email": "c@example.com"}, follow=True)
-        inconnu = self.client_class().post(reverse("demander_code_reset"), {"email": "inconnu@example.com"}, follow=True)
+        autre_client = self.client_class()
+        autre_client.cookies[settings.LANGUAGE_COOKIE_NAME] = "fr"
+        inconnu = autre_client.post(reverse("demander_code_reset"), {"email": "inconnu@example.com"}, follow=True)
 
         self.assertEqual(connu.redirect_chain, inconnu.redirect_chain)
         self.assertEqual(connu.redirect_chain[-1][0], reverse("verifier_code_reset"))

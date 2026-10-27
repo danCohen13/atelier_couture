@@ -4,6 +4,7 @@ from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
 
 from .acces import atelier_requis
@@ -143,10 +144,10 @@ def modifier_robe(request, robe_id):
 def ajouter_tache_rapide(request, robe_id, type_tache):
     robe = get_object_or_404(Robe.objects.de(request.atelier), id=robe_id)
     correspondances = {
-        'toile': "Toile d'essai",
-        'coupe': "Coupe du tissu",
-        'assemblage': "Assemblage & Piqûre",
-        'finitions': "Finitions & Ourlet"
+        'toile': _("Toile d'essai"),
+        'coupe': _("Coupe du tissu"),
+        'assemblage': _("Assemblage & Piqûre"),
+        'finitions': _("Finitions & Ourlet")
     }
     if type_tache in correspondances:
         Tache.objects.create(robe=robe, libelle=correspondances[type_tache], est_faite=False)
@@ -217,11 +218,11 @@ def analyser_mesures_ia(request):
     try:
         data = json.loads(request.body)
     except json.JSONDecodeError:
-        return JsonResponse({'error': 'Format JSON invalide'}, status=400)
+        return JsonResponse({'error': _('Format JSON invalide')}, status=400)
 
     texte_mesures = data.get('texte', '').strip()
     if not texte_mesures:
-        return JsonResponse({'error': 'Aucun texte fourni'}, status=400)
+        return JsonResponse({'error': _('Aucun texte fourni')}, status=400)
 
     try:
         return JsonResponse(extraire_mesures(texte_mesures))

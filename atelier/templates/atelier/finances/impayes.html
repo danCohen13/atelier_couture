@@ -1,23 +1,24 @@
 {% extends 'atelier/base.html' %}
 
-{% block title %}Impayés — {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Impayés —" %} {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
 
 {% block content %}
 <main class="page fin-page">
     <div class="page-head"><div>
-        <span class="eyebrow">Comptabilité</span>
-        <h1>Impayés &amp; prévisions</h1>
-        <p>Ce que les clientes te doivent encore, les cautions à suivre et les entrées d'argent attendues.</p>
+        <span class="eyebrow">{% trans "Comptabilité" %}</span>
+        <h1>{% trans "Impayés &amp; prévisions" %}</h1>
+        <p>{% trans "Ce que les clientes te doivent encore, les cautions à suivre et les entrées d'argent attendues." %}</p>
     </div></div>
     {% include 'atelier/finances/_nav.html' %}
 
     <div class="score-grid">
-        <div class="score-card"><span class="eyebrow">Total dû</span><div class="value value--neutral">{% include 'atelier/finances/_montants.html' with montants=total_du %}</div></div>
-        <div class="score-card"><span class="eyebrow">Dont en retard</span><div class="value value--negative">{% include 'atelier/finances/_montants.html' with montants=total_retard %}</div></div>
+        <div class="score-card"><span class="eyebrow">{% trans "Total dû" %}</span><div class="value value--neutral">{% include 'atelier/finances/_montants.html' with montants=total_du %}</div></div>
+        <div class="score-card"><span class="eyebrow">{% trans "Dont en retard" %}</span><div class="value value--negative">{% include 'atelier/finances/_montants.html' with montants=total_retard %}</div></div>
     </div>
 
     <div class="card">
-        <h4>Entrées attendues</h4>
+        <h4>{% trans "Entrées attendues" %}</h4>
         <table class="ledger-table"><tbody>
         {% for t in previsionnel %}
             <tr><td class="ledger-model">{{ t.label }}</td>
@@ -27,35 +28,35 @@
     </div>
 
     <div class="card">
-        <h4>Paiements à recevoir</h4>
+        <h4>{% trans "Paiements à recevoir" %}</h4>
         <table class="ledger-table"><tbody>
         {% for e in elements %}
             <tr>
                 <td class="ledger-date">{{ e.echeance|date:"d/m/Y" }}</td>
-                <td class="ledger-model">{% if e.type == 'robe' %}Robe{% else %}Location{% endif %} — {{ e.libelle }}</td>
-                <td class="ledger-desc">{{ e.client }}{% if e.en_retard %} <span class="tag tag--depense">En retard</span>{% endif %}</td>
-                <td class="ledger-amount">payé {{ e.paye }} / {{ e.total }} {{ e.symbole }}</td>
-                <td class="ledger-amount ledger-amount--out">reste {{ e.reste }} {{ e.symbole }}</td>
+                <td class="ledger-model">{% if e.type == 'robe' %}{% trans "Robe" %}{% else %}{% trans "Location" %}{% endif %} — {{ e.libelle }}</td>
+                <td class="ledger-desc">{{ e.client }}{% if e.en_retard %} <span class="tag tag--depense">{% trans "En retard" %}</span>{% endif %}</td>
+                <td class="ledger-amount">{% trans "payé" %} {{ e.paye }} / {{ e.total }} {{ e.symbole }}</td>
+                <td class="ledger-amount ledger-amount--out">{% trans "reste" %} {{ e.reste }} {{ e.symbole }}</td>
                 <td class="ledger-actions">
-                    <a href="{% if e.type == 'robe' %}{% url 'paiements_robe' e.objet.pk %}{% else %}{% url 'paiements_location' e.objet.pk %}{% endif %}">Encaisser</a>
+                    <a href="{% if e.type == 'robe' %}{% url 'paiements_robe' e.objet.pk %}{% else %}{% url 'paiements_location' e.objet.pk %}{% endif %}">{% trans "Encaisser" %}</a>
                 </td>
             </tr>
-        {% empty %}<tr><td class="empty-state">Tout est payé.</td></tr>{% endfor %}
+        {% empty %}<tr><td class="empty-state">{% trans "Tout est payé." %}</td></tr>{% endfor %}
         </tbody></table>
     </div>
 
     <div class="card">
-        <h4>Cautions détenues</h4>
+        <h4>{% trans "Cautions détenues" %}</h4>
         <table class="ledger-table"><tbody>
         {% for c in cautions %}
             <tr>
                 <td class="ledger-model">{{ c.location.robe_location.reference_stock }} — {{ c.location.robe_location.nom_modele }}</td>
                 <td class="ledger-desc">{{ c.location.client }}</td>
                 <td class="ledger-amount">{{ c.location.caution_montant }} {{ c.location.symbole_devise }}</td>
-                <td>{% if c.a_restituer %}<span class="tag tag--depense">À restituer</span>{% else %}<span class="tag tag--auto">En cours</span>{% endif %}</td>
-                <td class="ledger-actions"><a href="{% url 'retour_location' c.location.pk %}">Régulariser</a></td>
+                <td>{% if c.a_restituer %}<span class="tag tag--depense">{% trans "À restituer" %}</span>{% else %}<span class="tag tag--auto">{% trans "En cours" %}</span>{% endif %}</td>
+                <td class="ledger-actions"><a href="{% url 'retour_location' c.location.pk %}">{% trans "Régulariser" %}</a></td>
             </tr>
-        {% empty %}<tr><td class="empty-state">Aucune caution détenue.</td></tr>{% endfor %}
+        {% empty %}<tr><td class="empty-state">{% trans "Aucune caution détenue." %}</td></tr>{% endfor %}
         </tbody></table>
     </div>
 </main>

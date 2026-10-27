@@ -1,5 +1,6 @@
 {% extends 'atelier/base.html' %}
-{% block title %}Nouveau mot de passe — {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Nouveau mot de passe —" %} {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
 {# Cette page affiche déjà les messages dans sa carte : on neutralise l'affichage global. #}
 {% block messages %}{% endblock %}
 
@@ -7,10 +8,10 @@
 <main class="page login-page">
     <div class="form-card">
         <div class="form-card__inner">
-            <span class="eyebrow">Réinitialisation</span>
-            <h2>Nouveau mot de passe</h2>
+            <span class="eyebrow">{% trans "Réinitialisation" %}</span>
+            <h2>{% trans "Nouveau mot de passe" %}</h2>
             <p class="auth-subtitle">
-                Choisissez votre nouveau mot de passe pour votre compte.
+                {% trans "Choisissez votre nouveau mot de passe pour votre compte." %}
             </p>
 
             {% if messages %}
@@ -23,16 +24,16 @@
                 {% csrf_token %}
 
                 <p>
-                    <label for="password">Nouveau mot de passe</label>
+                    <label for="password">{% trans "Nouveau mot de passe" %}</label>
                     <input type="password" id="password" name="password" placeholder="••••••••" required class="field-input">
                 </p>
 
                 <p>
-                    <label for="password_confirm">Confirmez le mot de passe</label>
+                    <label for="password_confirm">{% trans "Confirmez le mot de passe" %}</label>
                     <input type="password" id="password_confirm" name="password_confirm" placeholder="••••••••" required class="field-input">
                 </p>
 
-                <button type="submit" class="btn btn--primary btn--block">Enregistrer le mot de passe</button>
+                <button type="submit" class="btn btn--primary btn--block">{% trans "Enregistrer le mot de passe" %}</button>
             </form>
         </div>
     </div>

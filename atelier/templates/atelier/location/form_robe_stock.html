@@ -1,23 +1,24 @@
 {% extends 'atelier/base.html' %}
 
-{% block title %}Nouvelle robe de stock — {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Nouvelle robe de stock —" %} {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
 
 {% block content %}
 <main class="page page--narrow">
     <div class="form-card">
         <div class="form-card__inner">
-            <span class="eyebrow">Location &amp; stock</span>
+            <span class="eyebrow">{% trans "Location &amp; stock" %}</span>
             <h2>{{ titre }}</h2>
             <p style="color: var(--ink-soft); font-size: 13.5px; margin: 0 0 26px;">
-                Chaque pièce reçoit une référence unique, à étiqueter sur la robe.
+                {% trans "Chaque pièce reçoit une référence unique, à étiqueter sur la robe." %}
             </p>
 
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form.as_p }}
                 <div class="form-actions">
-                    <a href="{% url 'catalogue_location' %}" class="btn btn--outline">Retour</a>
-                    <button type="submit" class="btn btn--primary">Ajouter au stock</button>
+                    <a href="{% url 'catalogue_location' %}" class="btn btn--outline">{% trans "Retour" %}</a>
+                    <button type="submit" class="btn btn--primary">{% trans "Ajouter au stock" %}</button>
                 </div>
             </form>
         </div>

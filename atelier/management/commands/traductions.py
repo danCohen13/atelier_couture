@@ -33,11 +33,14 @@ class Command(BaseCommand):
             chemin_fr = os.path.join('locale', 'fr', 'LC_MESSAGES', 'django.po')
             catalogue = polib.pofile(chemin_fr)
             for entree in catalogue:
-                entree.msgstr = entree.msgid
+                if entree.msgid_plural:
+                    entree.msgstr_plural = {0: entree.msgid, 1: entree.msgid_plural}
+                else:
+                    entree.msgstr = entree.msgid
             catalogue.metadata['Language'] = 'fr'
             catalogue.save()
             call_command('compilemessages', verbosity=0)
         finally:
             os.chdir(os.path.dirname(racine))
-        vides = [e.msgid for e in polib.pofile(os.path.join(racine, 'locale', 'he', 'LC_MESSAGES', 'django.po')) if not e.msgstr]
+        vides = [e.msgid for e in polib.pofile(os.path.join(racine, 'locale', 'he', 'LC_MESSAGES', 'django.po')) if not (e.msgstr or any(e.msgstr_plural.values()))]
         self.stdout.write(self.style.SUCCESS(f"Catalogues à jour. Entrées hébraïques à traduire : {len(vides)}"))

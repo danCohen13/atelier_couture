@@ -2,9 +2,10 @@
 from datetime import date, timedelta
 
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
-MOIS_ABBR = ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin",
-             "Juil", "Août", "Sep", "Oct", "Nov", "Déc"]
+MOIS_ABBR = [_("Jan"), _("Fév"), _("Mar"), _("Avr"), _("Mai"), _("Juin"),
+             _("Juil"), _("Août"), _("Sep"), _("Oct"), _("Nov"), _("Déc")]
 
 
 def construire_serie_graphe(lignes, granularite):

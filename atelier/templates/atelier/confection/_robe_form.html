@@ -1,47 +1,48 @@
+{% load i18n %}
 {% csrf_token %}
 <p>
-    <label for="{{ form.client.id_for_label }}">Cliente</label>
+    <label for="{{ form.client.id_for_label }}">{% trans "Cliente" %}</label>
     {{ form.client }}
 </p>
 <p>
-    <label for="{{ form.nom_modele.id_for_label }}">Nom du modèle</label>
+    <label for="{{ form.nom_modele.id_for_label }}">{% trans "Nom du modèle" %}</label>
     {{ form.nom_modele }}
 </p>
 <p>
-    <label for="{{ form.croquis.id_for_label }}">Croquis du modèle</label>
+    <label for="{{ form.croquis.id_for_label }}">{% trans "Croquis du modèle" %}</label>
     {{ form.croquis }}
 </p>
 <p>
-    <label for="{{ form.photo_tissus.id_for_label }}">Échantillon de tissu</label>
+    <label for="{{ form.photo_tissus.id_for_label }}">{% trans "Échantillon de tissu" %}</label>
     {{ form.photo_tissus }}
 </p>
 
 <div class="form-row">
     <div>
-        <label for="{{ form.date_commencement.id_for_label }}">Date de commencement</label>
+        <label for="{{ form.date_commencement.id_for_label }}">{% trans "Date de commencement" %}</label>
         {{ form.date_commencement }}
     </div>
     <div>
-        <label for="{{ form.date_livraison.id_for_label }}">Date de livraison</label>
+        <label for="{{ form.date_livraison.id_for_label }}">{% trans "Date de livraison" %}</label>
         {{ form.date_livraison }}
     </div>
 </div>
 
 <div class="form-row form-row--tight">
     <div style="flex: 2;">
-        <label for="{{ form.cout_tissu.id_for_label }}">Coût tissu</label>
+        <label for="{{ form.cout_tissu.id_for_label }}">{% trans "Coût tissu" %}</label>
         {{ form.cout_tissu }}
     </div>
     <div style="flex: 2;">
-        <label for="{{ form.cout_main_doeuvre.id_for_label }}">Main d'œuvre</label>
+        <label for="{{ form.cout_main_doeuvre.id_for_label }}">{% trans "Main d'œuvre" %}</label>
         {{ form.cout_main_doeuvre }}
     </div>
     <div style="flex: 2;">
-        <label for="{{ form.prix_total.id_for_label }}">Prix total</label>
+        <label for="{{ form.prix_total.id_for_label }}">{% trans "Prix total" %}</label>
         {{ form.prix_total }}
     </div>
     <div style="flex: 1.5;">
-        <label for="{{ form.devise.id_for_label }}">Devise</label>
+        <label for="{{ form.devise.id_for_label }}">{% trans "Devise" %}</label>
         {{ form.devise }}
     </div>
 </div>

@@ -1,39 +1,40 @@
 {% extends 'atelier/base.html' %}
+{% load i18n %}
 {% load static %}
 
-{% block title %}Tableau de bord — {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
+{% block title %}{% trans "Tableau de bord —" %} {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
 
 {% block content %}
 <main class="page">
     <!-- ... Conserve l'intégralité de ton bloc page-head et legend-strip à l'identique ... -->
     <div class="page-head">
         <div>
-            <span class="eyebrow">Suivi de production</span>
-            <h1>Confections en atelier</h1>
-            <p>Vue d'ensemble de chaque pièce, de sa cliente et de son avancement jusqu'à la livraison.</p>
+            <span class="eyebrow">{% trans "Suivi de production" %}</span>
+            <h1>{% trans "Confections en atelier" %}</h1>
+            <p>{% trans "Vue d'ensemble de chaque pièce, de sa cliente et de son avancement jusqu'à la livraison." %}</p>
         </div>
         <div class="page-head__actions">
-            <a href="{% url 'ajouter_client' %}" class="btn btn--outline">+ Nouvelle cliente</a>
-            <a href="{% url 'ajouter_robe' %}" class="btn btn--primary">+ Créer une robe</a>
-            <a href="{% url 'liste_clientes' %}" class="btn btn--outline btn--outline-accent">Liste des clientes</a>
+            <a href="{% url 'ajouter_client' %}" class="btn btn--outline">{% trans "+ Nouvelle cliente" %}</a>
+            <a href="{% url 'ajouter_robe' %}" class="btn btn--primary">{% trans "+ Créer une robe" %}</a>
+            <a href="{% url 'liste_clientes' %}" class="btn btn--outline btn--outline-accent">{% trans "Liste des clientes" %}</a>
         </div>
     </div>
 
     <div class="legend-strip">
         <div class="filter-group">
-            <span class="eyebrow">Statut</span>
-            <a href="?status=actifs&amp;tri={{ current_tri }}" class="filter-chip {% if current_status == 'actifs' %}is-active{% endif %}">En cours</a>
-            <a href="?status=termines&amp;tri={{ current_tri }}" class="filter-chip {% if current_status == 'termines' %}is-active{% endif %}">Terminées</a>
-            <a href="?status=toutes&amp;tri={{ current_tri }}" class="filter-chip {% if current_status == 'toutes' %}is-active{% endif %}">Toutes les robes</a>
+            <span class="eyebrow">{% trans "Statut" %}</span>
+            <a href="?status=actifs&amp;tri={{ current_tri }}" class="filter-chip {% if current_status == 'actifs' %}is-active{% endif %}">{% trans "En cours" %}</a>
+            <a href="?status=termines&amp;tri={{ current_tri }}" class="filter-chip {% if current_status == 'termines' %}is-active{% endif %}">{% trans "Terminées" %}</a>
+            <a href="?status=toutes&amp;tri={{ current_tri }}" class="filter-chip {% if current_status == 'toutes' %}is-active{% endif %}">{% trans "Toutes les robes" %}</a>
         </div>
 
         <div class="sort-group">
-            <span class="eyebrow">Trier par</span>
-            <a href="?status={{ current_status }}&amp;tri=urgence" class="sort-link {% if current_tri == 'urgence' %}is-active{% endif %}">Délai</a>
+            <span class="eyebrow">{% trans "Trier par" %}</span>
+            <a href="?status={{ current_status }}&amp;tri=urgence" class="sort-link {% if current_tri == 'urgence' %}is-active{% endif %}">{% trans "Délai" %}</a>
             <span class="sort-sep">/</span>
-            <a href="?status={{ current_status }}&amp;tri=prix" class="sort-link {% if current_tri == 'prix' %}is-active{% endif %}">Prix</a>
+            <a href="?status={{ current_status }}&amp;tri=prix" class="sort-link {% if current_tri == 'prix' %}is-active{% endif %}">{% trans "Prix" %}</a>
             <span class="sort-sep">/</span>
-            <a href="?status={{ current_status }}&amp;tri=modele" class="sort-link {% if current_tri == 'modele' %}is-active{% endif %}">Modèle</a>
+            <a href="?status={{ current_status }}&amp;tri=modele" class="sort-link {% if current_tri == 'modele' %}is-active{% endif %}">{% trans "Modèle" %}</a>
         </div>
     </div>
 
@@ -41,12 +42,12 @@
         <table class="swatch-table">
             <thead>
                 <tr>
-                    <th>Modèle</th>
-                    <th>Cliente</th>
-                    <th>Livraison</th>
-                    <th>Délai</th>
-                    <th style="width: 220px;">Avancement</th>
-                    <th>Prix total</th>
+                    <th>{% trans "Modèle" %}</th>
+                    <th>{% trans "Cliente" %}</th>
+                    <th>{% trans "Livraison" %}</th>
+                    <th>{% trans "Délai" %}</th>
+                    <th style="width: 220px;">{% trans "Avancement" %}</th>
+                    <th>{% trans "Prix total" %}</th>
                 </tr>
             </thead>
             <tbody>
@@ -58,7 +59,7 @@
                     {% include 'atelier/confection/_tiroir_robe.html' %}
                 {% empty %}
                 <tr>
-                    <td colspan="6" class="empty-state">Aucune robe ne correspond aux critères de sélection.</td>
+                    <td colspan="6" class="empty-state">{% trans "Aucune robe ne correspond aux critères de sélection." %}</td>
                 </tr>
                 {% endfor %}
             </tbody>

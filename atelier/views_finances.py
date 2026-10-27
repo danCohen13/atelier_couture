@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
+from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
 
 from .acces import atelier_requis
@@ -47,7 +48,7 @@ def ajouter_transaction_view(request):
         contexte['texte_ia'] = phrase
         initial = {'date': timezone.localdate(), 'type': 'DEPENSE'}
         if not phrase:
-            contexte['erreur_ia'] = "Écris ou dicte d'abord l'opération à analyser."
+            contexte['erreur_ia'] = _("Écris ou dicte d'abord l'opération à analyser.")
         else:
             try:
                 initial.update(extraire_operation(phrase, timezone.localdate()))
@@ -77,7 +78,7 @@ def modifier_transaction_view(request, pk):
         form = TransactionForm(request.POST, instance=transaction)
         if form.is_valid():
             form.save()
-            messages.success(request, "Opération modifiée.")
+            messages.success(request, _("Opération modifiée."))
             return redirect('finances')
     else:
         form = TransactionForm(instance=transaction)
@@ -88,7 +89,7 @@ def modifier_transaction_view(request, pk):
 @require_POST
 def supprimer_transaction(request, pk):
     get_object_or_404(Transaction.objects.de(request.atelier), pk=pk).delete()
-    messages.success(request, "Opération supprimée.")
+    messages.success(request, _("Opération supprimée."))
     return redirect('finances')
 
 
@@ -99,11 +100,11 @@ def analyser_texte_ia(request):
     try:
         data = json.loads(request.body)
     except json.JSONDecodeError:
-        return JsonResponse({'error': 'Format JSON invalide'}, status=400)
+        return JsonResponse({'error': _('Format JSON invalide')}, status=400)
 
     phrase = data.get('phrase', '').strip()
     if not phrase:
-        return JsonResponse({'error': 'Aucun texte fourni'}, status=400)
+        return JsonResponse({'error': _('Aucun texte fourni')}, status=400)
 
     try:
         champs = extraire_operation(phrase, timezone.localdate())

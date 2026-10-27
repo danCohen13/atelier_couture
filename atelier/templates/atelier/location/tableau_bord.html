@@ -1,33 +1,34 @@
 {% extends 'atelier/base.html' %}
 
-{% block title %}Locations & stock — {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Locations & stock —" %} {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
 
 {% block content %}
 <main class="page">
 
     <div class="page-head">
         <div>
-            <span class="eyebrow">Location &amp; stock</span>
-            <h1>Planning des locations</h1>
-            <p>Suivi des sorties, des retours à l'atelier et des cautions.</p>
+            <span class="eyebrow">{% trans "Location &amp; stock" %}</span>
+            <h1>{% trans "Planning des locations" %}</h1>
+            <p>{% trans "Suivi des sorties, des retours à l'atelier et des cautions." %}</p>
         </div>
         <div class="page-head__actions">
-            <a href="{% url 'catalogue_location' %}" class="btn btn--outline">Catalogue du stock</a>
-            <a href="{% url 'creer_location' %}" class="btn btn--primary">+ Nouveau contrat</a>
+            <a href="{% url 'catalogue_location' %}" class="btn btn--outline">{% trans "Catalogue du stock" %}</a>
+            <a href="{% url 'creer_location' %}" class="btn btn--primary">{% trans "+ Nouveau contrat" %}</a>
         </div>
     </div>
 
     <div class="score-grid">
         <div class="score-card">
-            <span class="eyebrow">Robes sorties</span>
+            <span class="eyebrow">{% trans "Robes sorties" %}</span>
             <div class="value value--neutral">{{ locations_en_cours|length }}</div>
         </div>
         <div class="score-card">
-            <span class="eyebrow">Réservations à venir</span>
+            <span class="eyebrow">{% trans "Réservations à venir" %}</span>
             <div class="value value--neutral">{{ locations_reservees|length }}</div>
         </div>
         <div class="score-card">
-            <span class="eyebrow">Retours en retard</span>
+            <span class="eyebrow">{% trans "Retours en retard" %}</span>
             <div class="value {% if retours_en_retard %}value--negative{% else %}value--positive{% endif %}">{{ retours_en_retard|length }}</div>
         </div>
     </div>
@@ -35,16 +36,16 @@
     {% if retours_en_retard %}
     <section class="alert-strip">
         <div class="alert-strip__head">
-            <h2>Retours en retard</h2>
+            <h2>{% trans "Retours en retard" %}</h2>
             <span class="tag tag--urgent">{{ retours_en_retard|length }}</span>
         </div>
         <table class="swatch-table">
             <thead>
                 <tr>
-                    <th>Cliente</th>
-                    <th>Robe</th>
-                    <th>Retour prévu</th>
-                    <th>Caution</th>
+                    <th>{% trans "Cliente" %}</th>
+                    <th>{% trans "Robe" %}</th>
+                    <th>{% trans "Retour prévu" %}</th>
+                    <th>{% trans "Caution" %}</th>
                     <th></th>
                 </tr>
             </thead>
@@ -68,8 +69,8 @@
                         {% include 'atelier/location/_tag_caution.html' %}
                     </td>
                     <td class="cell-actions">
-                        <a href="{% url 'retour_location' loc.id %}" class="btn btn--danger btn--sm">Enregistrer le retour</a>
-                        <a href="{% url 'paiements_location' loc.id %}" class="btn btn--outline btn--sm">Paiements</a>
+                        <a href="{% url 'retour_location' loc.id %}" class="btn btn--danger btn--sm">{% trans "Enregistrer le retour" %}</a>
+                        <a href="{% url 'paiements_location' loc.id %}" class="btn btn--outline btn--sm">{% trans "Paiements" %}</a>
                     </td>
                 </tr>
                 {% endfor %}
@@ -79,17 +80,17 @@
     {% endif %}
 
     <div class="section-head section-head--first">
-        <h2>En cours de location</h2>
+        <h2>{% trans "En cours de location" %}</h2>
         <span class="tag tag--done">{{ locations_en_cours|length }}</span>
     </div>
     <div class="swatch-table-wrap">
         <table class="swatch-table">
             <thead>
                 <tr>
-                    <th>Robe</th>
-                    <th>Cliente</th>
-                    <th>Période</th>
-                    <th>Caution</th>
+                    <th>{% trans "Robe" %}</th>
+                    <th>{% trans "Cliente" %}</th>
+                    <th>{% trans "Période" %}</th>
+                    <th>{% trans "Caution" %}</th>
                     <th></th>
                 </tr>
             </thead>
@@ -99,7 +100,7 @@
                     <td>
                         <span class="model-name">{{ loc.robe_location.nom_modele }}</span>
                         <span class="ref-tag">{{ loc.robe_location.reference_stock }}</span>
-                        <span class="cell-sub">Contrat n° {{ loc.id }}</span>
+                        <span class="cell-sub">{% trans "Contrat n°" %} {{ loc.id }}</span>
                     </td>
                     <td data-label="Cliente">
                         <a href="{% url 'fiche_cliente' loc.client.id %}" class="client-link">
@@ -110,13 +111,13 @@
                     <td data-label="Période"><span class="cell-date">{{ loc.date_debut|date:"d/m" }} → {{ loc.date_fin_prevue|date:"d/m/Y" }}</span></td>
                     <td data-label="Caution">{% include 'atelier/location/_tag_caution.html' %}</td>
                     <td class="cell-actions">
-                        <a href="{% url 'retour_location' loc.id %}" class="btn btn--outline btn--outline-accent btn--sm">Restitution</a>
-                        <a href="{% url 'paiements_location' loc.id %}" class="btn btn--outline btn--sm">Paiements</a>
+                        <a href="{% url 'retour_location' loc.id %}" class="btn btn--outline btn--outline-accent btn--sm">{% trans "Restitution" %}</a>
+                        <a href="{% url 'paiements_location' loc.id %}" class="btn btn--outline btn--sm">{% trans "Paiements" %}</a>
                     </td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="5" class="empty-state">Aucune robe n'est actuellement sortie de l'atelier.</td>
+                    <td colspan="5" class="empty-state">{% trans "Aucune robe n'est actuellement sortie de l'atelier." %}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -124,18 +125,18 @@
     </div>
 
     <div class="section-head">
-        <h2>Réservations à venir</h2>
+        <h2>{% trans "Réservations à venir" %}</h2>
         <span class="tag tag--soon">{{ locations_reservees|length }}</span>
     </div>
     <div class="swatch-table-wrap">
         <table class="swatch-table">
             <thead>
                 <tr>
-                    <th>Retrait prévu</th>
-                    <th>Cliente</th>
-                    <th>Robe</th>
-                    <th>Prix convenu</th>
-                    <th>Caution</th>
+                    <th>{% trans "Retrait prévu" %}</th>
+                    <th>{% trans "Cliente" %}</th>
+                    <th>{% trans "Robe" %}</th>
+                    <th>{% trans "Prix convenu" %}</th>
+                    <th>{% trans "Caution" %}</th>
                 </tr>
             </thead>
             <tbody>
@@ -150,14 +151,14 @@
                     </td>
                     <td data-label="Robe">
                         <span class="model-name">{{ loc.robe_location.nom_modele }}</span>
-                        <span class="cell-sub">Taille {{ loc.robe_location.taille }}</span>
+                        <span class="cell-sub">{% trans "Taille" %} {{ loc.robe_location.taille }}</span>
                     </td>
                     <td data-label="Prix convenu"><span class="price-cell">{{ loc.prix_convenu }} {{ loc.symbole_devise }}</span></td>
                     <td data-label="Caution">{% include 'atelier/location/_tag_caution.html' %}</td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="5" class="empty-state">Aucune réservation future enregistrée.</td>
+                    <td colspan="5" class="empty-state">{% trans "Aucune réservation future enregistrée." %}</td>
                 </tr>
                 {% endfor %}
             </tbody>

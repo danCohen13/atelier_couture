@@ -4,6 +4,7 @@ from decimal import Decimal
 
 from django.db import models
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
 from .ateliers import ModeleAtelier
 from .constantes import DEVISE_CHOICES, SYMBOLES_DEVISE
@@ -21,10 +22,10 @@ class Robe(ModeleAtelier):
     cout_tissu = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
     cout_main_doeuvre = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
     prix_total = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
-    devise = models.CharField(max_length=3, choices=DEVISE_CHOICES, default='ILS', verbose_name="Devise")
+    devise = models.CharField(max_length=3, choices=DEVISE_CHOICES, default='ILS', verbose_name=_("Devise"))
     heures_travail = models.DecimalField(
-        max_digits=6, decimal_places=1, default=0, verbose_name="Heures de travail",
-        help_text="Sert à calculer le gain horaire réel de la robe (facultatif)"
+        max_digits=6, decimal_places=1, default=0, verbose_name=_("Heures de travail"),
+        help_text=_("Sert à calculer le gain horaire réel de la robe (facultatif)")
     )
     croquis = models.URLField(max_length=500, blank=True, null=True)
     photo_tissus = models.URLField(max_length=500, blank=True, null=True)

@@ -2,6 +2,7 @@
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
+from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
 
 from .acces import atelier_requis
@@ -19,7 +20,7 @@ def depenses_recurrentes(request):
             recurrente.atelier = request.atelier
             recurrente.save()
             compta.generer_depenses_recurrentes(request.atelier)
-            messages.success(request, "Dépense récurrente enregistrée.")
+            messages.success(request, _("Dépense récurrente enregistrée."))
             return redirect('depenses_recurrentes')
     else:
         form = DepenseRecurrenteForm(initial={'date_debut': timezone.localdate(), 'jour_du_mois': 1})
@@ -42,7 +43,7 @@ def basculer_depense_recurrente(request, pk):
 def supprimer_depense_recurrente(request, pk):
     rec = get_object_or_404(DepenseRecurrente.objects.de(request.atelier), pk=pk)
     rec.delete()  # les écritures déjà créées sont conservées (lien mis à NULL)
-    messages.success(request, "Dépense récurrente supprimée (les écritures passées sont conservées).")
+    messages.success(request, _("Dépense récurrente supprimée (les écritures passées sont conservées)."))
     return redirect('depenses_recurrentes')
 
 
@@ -53,7 +54,7 @@ def parametres_finance(request):
         form = ParametresFinanceForm(request.POST, instance=params)
         if form.is_valid():
             form.save()
-            messages.success(request, "Paramètres enregistrés.")
+            messages.success(request, _("Paramètres enregistrés."))
             return redirect('parametres_finance')
     else:
         form = ParametresFinanceForm(instance=params)

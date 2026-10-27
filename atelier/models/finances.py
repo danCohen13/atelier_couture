@@ -5,6 +5,7 @@ from decimal import Decimal
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
 from .ateliers import Atelier, ModeleAtelier
 from .constantes import SYMBOLES_DEVISE
@@ -14,23 +15,23 @@ class Transaction(ModeleAtelier):
     PARENTS_ATELIER = ('robe', 'location', 'recurrente')
 
     TYPE_CHOICES = [
-        ('RECETTE', '🟢 Recette (Entrée d\'argent)'),
-        ('DEPENSE', '🔴 Dépense (Sortie d\'argent)'),
+        ('RECETTE', _('🟢 Recette (Entrée d\'argent)')),
+        ('DEPENSE', _('🔴 Dépense (Sortie d\'argent)')),
     ]
     
     CATEGORIE_CHOICES = [
-        ('PAIEMENT_CLIENT', 'Paiement de cliente'),
-        ('LOCATION_ROBE', 'Location de robe'),
-        ('TISSU', 'Achat de tissu'),
-        ('FOURNITURES', 'Fournitures (Fils, fermetures, boutons...)'),
-        ('MATERIEL', 'Matériel & Machines (Entretien, achat...)'),
-        ('AUTRE', 'Autre frais / Divers'),
+        ('PAIEMENT_CLIENT', _('Paiement de cliente')),
+        ('LOCATION_ROBE', _('Location de robe')),
+        ('TISSU', _('Achat de tissu')),
+        ('FOURNITURES', _('Fournitures (Fils, fermetures, boutons...)')),
+        ('MATERIEL', _('Matériel & Machines (Entretien, achat...)')),
+        ('AUTRE', _('Autre frais / Divers')),
     ]
 
     type = models.CharField(max_length=10, choices=TYPE_CHOICES)
     montant = models.DecimalField(max_digits=10, decimal_places=2)
     categorie = models.CharField(max_length=20, choices=CATEGORIE_CHOICES)
-    designation = models.CharField(max_length=255, help_text="Ex: Acompte robe Salome, Achat fils noirs...")
+    designation = models.CharField(max_length=255, help_text=_("Ex: Acompte robe Salome, Achat fils noirs..."))
     date = models.DateField(default=timezone.now)
     
     robe = models.ForeignKey(
@@ -46,15 +47,15 @@ class Transaction(ModeleAtelier):
         null=True,
         blank=True,
         related_name='transactions',
-        verbose_name="Location associée"
+        verbose_name=_("Location associée")
     )
     justificatif = models.URLField(
-        max_length=500, blank=True, default='', verbose_name="Photo du justificatif",
-        help_text="Photo du ticket ou de la facture (facultatif)"
+        max_length=500, blank=True, default='', verbose_name=_("Photo du justificatif"),
+        help_text=_("Photo du ticket ou de la facture (facultatif)")
     )
     recurrente = models.ForeignKey(
         'DepenseRecurrente', on_delete=models.SET_NULL, null=True, blank=True,
-        related_name='transactions', verbose_name="Dépense récurrente d'origine"
+        related_name='transactions', verbose_name=_("Dépense récurrente d'origine")
     )
 
     class Meta:
@@ -69,19 +70,19 @@ class Paiement(ModeleAtelier):
 
     """Somme reçue d'une cliente (acompte ou solde) pour une robe sur mesure ou une location."""
     MODE_CHOICES = [
-        ('ESPECES', 'Espèces'),
-        ('VIREMENT', 'Virement'),
-        ('CARTE', 'Carte bancaire'),
-        ('CHEQUE', 'Chèque'),
-        ('AUTRE', 'Autre'),
+        ('ESPECES', _('Espèces')),
+        ('VIREMENT', _('Virement')),
+        ('CARTE', _('Carte bancaire')),
+        ('CHEQUE', _('Chèque')),
+        ('AUTRE', _('Autre')),
     ]
 
     robe = models.ForeignKey('Robe', on_delete=models.CASCADE, null=True, blank=True, related_name='paiements')
     location = models.ForeignKey('Location', on_delete=models.CASCADE, null=True, blank=True, related_name='paiements')
     montant = models.DecimalField(max_digits=10, decimal_places=2)
     date = models.DateField(default=timezone.localdate)
-    mode = models.CharField(max_length=10, choices=MODE_CHOICES, default='ESPECES', verbose_name="Mode de paiement")
-    note = models.CharField(max_length=200, blank=True, verbose_name="Note")
+    mode = models.CharField(max_length=10, choices=MODE_CHOICES, default='ESPECES', verbose_name=_("Mode de paiement"))
+    note = models.CharField(max_length=200, blank=True, verbose_name=_("Note"))
 
     class Meta:
         ordering = ['date', 'id']
@@ -89,7 +90,7 @@ class Paiement(ModeleAtelier):
     def clean(self):
         super().clean()
         if bool(self.robe_id) == bool(self.location_id):
-            raise ValidationError("Un paiement concerne soit une robe sur mesure, soit une location.")
+            raise ValidationError(_("Un paiement concerne soit une robe sur mesure, soit une location."))
         if self.montant is not None and self.montant <= 0:
             raise ValidationError({'montant': "Le montant doit être positif."})
 
@@ -117,8 +118,8 @@ class DepenseRecurrente(ModeleAtelier):
         max_length=20, choices=[c for c in Transaction.CATEGORIE_CHOICES if c[0] not in ('PAIEMENT_CLIENT', 'LOCATION_ROBE')],
         default='AUTRE'
     )
-    jour_du_mois = models.PositiveSmallIntegerField(default=1, verbose_name="Jour du mois (1 à 28)")
-    date_debut = models.DateField(default=timezone.localdate, verbose_name="À partir du")
+    jour_du_mois = models.PositiveSmallIntegerField(default=1, verbose_name=_("Jour du mois (1 à 28)"))
+    date_debut = models.DateField(default=timezone.localdate, verbose_name=_("À partir du"))
     actif = models.BooleanField(default=True)
 
     class Meta:
@@ -141,11 +142,11 @@ class ParametresFinance(models.Model):
     """Réglages de la comptabilité d'un atelier : taux de change vers le shekel et objectif mensuel."""
     atelier = models.OneToOneField(Atelier, on_delete=models.PROTECT, related_name='parametres_finance')
     taux_eur = models.DecimalField(
-        max_digits=8, decimal_places=4, null=True, blank=True, verbose_name="1 € vaut … ₪")
+        max_digits=8, decimal_places=4, null=True, blank=True, verbose_name=_("1 € vaut … ₪"))
     taux_usd = models.DecimalField(
-        max_digits=8, decimal_places=4, null=True, blank=True, verbose_name="1 $ vaut … ₪")
+        max_digits=8, decimal_places=4, null=True, blank=True, verbose_name=_("1 $ vaut … ₪"))
     objectif_mensuel = models.DecimalField(
-        max_digits=10, decimal_places=2, null=True, blank=True, verbose_name="Objectif de chiffre d'affaires mensuel (₪)")
+        max_digits=10, decimal_places=2, null=True, blank=True, verbose_name=_("Objectif de chiffre d'affaires mensuel (₪)"))
 
     class Meta:
         verbose_name = "Paramètres de finance"

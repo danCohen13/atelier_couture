@@ -1,27 +1,28 @@
 {% extends 'atelier/base.html' %}
 
-{% block title %}Restitution — {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Restitution —" %} {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
 
 {% block content %}
 <main class="page page--narrow">
     <div class="form-card">
         <div class="form-card__inner">
-            <span class="eyebrow">Restitution</span>
+            <span class="eyebrow">{% trans "Restitution" %}</span>
             <h2>{{ location.robe_location.nom_modele }}</h2>
 
             <div class="recap-strip">
-                <div><span class="eyebrow">Référence</span><strong>{{ location.robe_location.reference_stock }}</strong></div>
-                <div><span class="eyebrow">Cliente</span><strong>{{ location.client.nom.upper }} {{ location.client.prenom }}</strong></div>
-                <div><span class="eyebrow">Retour prévu</span><strong>{{ location.date_fin_prevue|date:"d/m/Y" }}</strong></div>
-                <div><span class="eyebrow">Caution initiale</span><strong>{{ location.caution_montant }} {{ location.symbole_devise }}</strong></div>
+                <div><span class="eyebrow">{% trans "Référence" %}</span><strong>{{ location.robe_location.reference_stock }}</strong></div>
+                <div><span class="eyebrow">{% trans "Cliente" %}</span><strong>{{ location.client.nom.upper }} {{ location.client.prenom }}</strong></div>
+                <div><span class="eyebrow">{% trans "Retour prévu" %}</span><strong>{{ location.date_fin_prevue|date:"d/m/Y" }}</strong></div>
+                <div><span class="eyebrow">{% trans "Caution initiale" %}</span><strong>{{ location.caution_montant }} {{ location.symbole_devise }}</strong></div>
             </div>
 
             <form method="post">
                 {% csrf_token %}
                 {{ form.as_p }}
                 <div class="form-actions">
-                    <a href="{% url 'tableau_bord_locations' %}" class="btn btn--outline">Annuler</a>
-                    <button type="submit" class="btn btn--success">Valider la restitution</button>
+                    <a href="{% url 'tableau_bord_locations' %}" class="btn btn--outline">{% trans "Annuler" %}</a>
+                    <button type="submit" class="btn btn--success">{% trans "Valider la restitution" %}</button>
                 </div>
             </form>
         </div>

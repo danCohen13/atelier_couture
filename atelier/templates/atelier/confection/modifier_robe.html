@@ -1,14 +1,15 @@
 {% extends 'atelier/base.html' %}
-{% block title %}Modifier commande — {{ robe.nom_modele }}{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Modifier commande —" %} {{ robe.nom_modele }}{% endblock %}
 
 {% block content %}
 <main class="page" style="max-width: 760px;">
     <div class="form-card">
         <div class="form-card__inner">
-            <span class="eyebrow">Ajustement d'atelier</span>
-            <h2>Modifier la confection : {{ robe.nom_modele }}</h2>
+            <span class="eyebrow">{% trans "Ajustement d'atelier" %}</span>
+            <h2>{% trans "Modifier la confection :" %} {{ robe.nom_modele }}</h2>
             <p style="color: var(--ink-soft); font-size: 13.5px; margin-bottom: 26px;">
-                Modifie le modèle, décalez les dates ou réajustez les coûts de production.
+                {% trans "Modifie le modèle, décalez les dates ou réajustez les coûts de production." %}
             </p>
 
             <form method="POST" enctype="multipart/form-data">
@@ -16,8 +17,8 @@
                 {% include 'atelier/confection/_robe_form.html' %}
 
                 <div class="form-actions">
-                    <a href="{% url 'dashboard' %}" class="btn btn--outline">Annuler</a>
-                    <button type="submit" class="btn btn--primary">Sauvegarder</button>
+                    <a href="{% url 'dashboard' %}" class="btn btn--outline">{% trans "Annuler" %}</a>
+                    <button type="submit" class="btn btn--primary">{% trans "Sauvegarder" %}</button>
                 </div>
             </form>
         </div>

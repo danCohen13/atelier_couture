@@ -1,5 +1,6 @@
 """Briques communes aux formulaires : champs de date jj/mm/aaaa."""
 from django import forms
+from django.utils.translation import gettext_lazy as _
 
 # --- Dates : format unique jj/mm/aaaa sur tout le site -----------------------
 DATE_FR = '%d/%m/%Y'
@@ -12,7 +13,7 @@ def date_widget():
         format=DATE_FR,
         attrs={
             'class': 'field-input datepicker',
-            'placeholder': 'jj/mm/aaaa',
+            'placeholder': _('jj/mm/aaaa'),
             'inputmode': 'numeric',
             'autocomplete': 'off',
         },

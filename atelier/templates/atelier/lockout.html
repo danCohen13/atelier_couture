@@ -1,18 +1,18 @@
 {% extends 'atelier/base.html' %}
-{% block title %}Accès temporairement bloqué — {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Accès temporairement bloqué —" %} {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
 
 {% block content %}
 <main class="page login-page">
     <div class="form-card">
         <div class="form-card__inner">
-            <span class="eyebrow">Sécurité</span>
-            <h2>Accès temporairement bloqué</h2>
+            <span class="eyebrow">{% trans "Sécurité" %}</span>
+            <h2>{% trans "Accès temporairement bloqué" %}</h2>
             <p class="auth-subtitle">
-                Trop de tentatives de connexion ont échoué. Par précaution, l'accès est
-                suspendu pendant une heure. Réessayez plus tard.
+                {% trans "Trop de tentatives de connexion ont échoué. Par précaution, l'accès est suspendu pendant une heure. Réessayez plus tard." %}
             </p>
             <div class="auth-footer">
-                <a href="{% url 'login' %}">Retour à la connexion</a>
+                <a href="{% url 'login' %}">{% trans "Retour à la connexion" %}</a>
             </div>
         </div>
     </div>

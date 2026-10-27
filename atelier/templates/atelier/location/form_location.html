@@ -1,28 +1,29 @@
 {% extends 'atelier/base.html' %}
 
-{% block title %}Nouveau contrat — {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Nouveau contrat —" %} {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
 
 {% block content %}
 <main class="page page--narrow">
     <div class="form-card">
         <div class="form-card__inner">
-            <span class="eyebrow">Location &amp; stock</span>
+            <span class="eyebrow">{% trans "Location &amp; stock" %}</span>
             <h2>{{ titre }}</h2>
             <p style="color: var(--ink-soft); font-size: 13.5px; margin: 0 0 26px;">
-                Le prix et la caution sont repris de la fiche de la robe ; ajuste-les si un tarif différent a été convenu.
+                {% trans "Le prix et la caution sont repris de la fiche de la robe ; ajuste-les si un tarif différent a été convenu." %}
             </p>
 
             <form method="post">
                 {% csrf_token %}
                 {{ form.as_p }}
                 <p class="legende-reservations" id="legende-reservations" hidden>
-                    <span class="legende-reservations__item"><span class="pastille pastille--reservee"></span>Déjà réservée</span>
-                    <span class="legende-reservations__item"><span class="pastille pastille--pressing"></span>Pressing (battement)</span>
-                    <span class="legende-reservations__note">Dates indicatives : elles restent sélectionnables, le contrat est vérifié à l'enregistrement.</span>
+                    <span class="legende-reservations__item"><span class="pastille pastille--reservee"></span>{% trans "Déjà réservée" %}</span>
+                    <span class="legende-reservations__item"><span class="pastille pastille--pressing"></span>{% trans "Pressing (battement)" %}</span>
+                    <span class="legende-reservations__note">{% trans "Dates indicatives : elles restent sélectionnables, le contrat est vérifié à l'enregistrement." %}</span>
                 </p>
                 <div class="form-actions">
-                    <a href="{% url 'tableau_bord_locations' %}" class="btn btn--outline">Annuler</a>
-                    <button type="submit" class="btn btn--primary">Enregistrer le contrat</button>
+                    <a href="{% url 'tableau_bord_locations' %}" class="btn btn--outline">{% trans "Annuler" %}</a>
+                    <button type="submit" class="btn btn--primary">{% trans "Enregistrer le contrat" %}</button>
                 </div>
             </form>
         </div>

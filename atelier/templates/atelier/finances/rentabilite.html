@@ -1,20 +1,21 @@
 {% extends 'atelier/base.html' %}
 
-{% block title %}Rentabilité — {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Rentabilité —" %} {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
 
 {% block content %}
 <main class="page fin-page">
     <div class="page-head"><div>
-        <span class="eyebrow">Comptabilité</span>
-        <h1>Rentabilité</h1>
-        <p>Bénéfice de chaque robe sur mesure (prix − tissu − frais rattachés) et amortissement de chaque robe du stock de location. Renseigne les heures de travail dans la fiche robe pour voir ton gain horaire réel.</p>
+        <span class="eyebrow">{% trans "Comptabilité" %}</span>
+        <h1>{% trans "Rentabilité" %}</h1>
+        <p>{% trans "Bénéfice de chaque robe sur mesure (prix − tissu − frais rattachés) et amortissement de chaque robe du stock de location. Renseigne les heures de travail dans la fiche robe pour voir ton gain horaire réel." %}</p>
     </div></div>
     {% include 'atelier/finances/_nav.html' %}
 
     <div class="card">
-        <h4>Robes sur mesure</h4>
+        <h4>{% trans "Robes sur mesure" %}</h4>
         <table class="ledger-table">
-            <thead><tr><th>Robe</th><th class="ledger-amount">Prix</th><th class="ledger-amount">Tissu</th><th class="ledger-amount">Frais</th><th class="ledger-amount">Bénéfice</th><th class="ledger-amount">Heures</th><th class="ledger-amount">Gain / heure</th></tr></thead>
+            <thead><tr><th>{% trans "Robe" %}</th><th class="ledger-amount">{% trans "Prix" %}</th><th class="ledger-amount">{% trans "Tissu" %}</th><th class="ledger-amount">{% trans "Frais" %}</th><th class="ledger-amount">{% trans "Bénéfice" %}</th><th class="ledger-amount">{% trans "Heures" %}</th><th class="ledger-amount">{% trans "Gain / heure" %}</th></tr></thead>
             <tbody>
             {% for r in robes %}
                 <tr>
@@ -26,15 +27,15 @@
                     <td class="ledger-amount">{{ r.heures }}</td>
                     <td class="ledger-amount">{% if r.gain_horaire is None %}—{% else %}{{ r.gain_horaire }} {{ r.symbole }}{% endif %}</td>
                 </tr>
-            {% empty %}<tr><td class="empty-state">Aucune robe.</td></tr>{% endfor %}
+            {% empty %}<tr><td class="empty-state">{% trans "Aucune robe." %}</td></tr>{% endfor %}
             </tbody>
         </table>
     </div>
 
     <div class="card">
-        <h4>Stock de location</h4>
+        <h4>{% trans "Stock de location" %}</h4>
         <table class="ledger-table">
-            <thead><tr><th>Robe</th><th class="ledger-amount">Locations</th><th class="ledger-amount">Revenus</th><th class="ledger-amount">Coût de revient</th><th class="ledger-amount">Solde</th><th class="ledger-amount">Amortie à</th></tr></thead>
+            <thead><tr><th>{% trans "Robe" %}</th><th class="ledger-amount">{% trans "Locations" %}</th><th class="ledger-amount">{% trans "Revenus" %}</th><th class="ledger-amount">{% trans "Coût de revient" %}</th><th class="ledger-amount">{% trans "Solde" %}</th><th class="ledger-amount">{% trans "Amortie à" %}</th></tr></thead>
             <tbody>
             {% for r in stock %}
                 <tr>
@@ -45,10 +46,10 @@
                     <td class="ledger-amount {% if r.solde >= 0 %}ledger-amount--in{% else %}ledger-amount--out{% endif %}">{{ r.solde }} {{ r.symbole }}</td>
                     <td class="ledger-amount">{% if r.amortissement is None %}—{% else %}{{ r.amortissement }} %{% if r.amortie %} ✓{% endif %}{% endif %}</td>
                 </tr>
-            {% empty %}<tr><td class="empty-state">Aucune robe en stock.</td></tr>{% endfor %}
+            {% empty %}<tr><td class="empty-state">{% trans "Aucune robe en stock." %}</td></tr>{% endfor %}
             </tbody>
         </table>
-        <p class="empty-state" style="padding: 8px 0 0; text-align: left;">Seules les locations dans la devise de la robe sont comptées.</p>
+        <p class="empty-state" style="padding: 8px 0 0; text-align: left;">{% trans "Seules les locations dans la devise de la robe sont comptées." %}</p>
     </div>
 </main>
 {% endblock %}

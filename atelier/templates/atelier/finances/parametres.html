@@ -1,20 +1,21 @@
 {% extends 'atelier/base.html' %}
 
-{% block title %}Paramètres finances — {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Paramètres finances —" %} {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
 
 {% block content %}
 <main class="page page--narrow fin-page">
     <div class="page-head"><div>
-        <span class="eyebrow">Comptabilité</span>
-        <h1>Paramètres</h1>
-        <p>Les taux servent uniquement à calculer des totaux globaux en ₪ ; les montants saisis ne sont jamais modifiés.</p>
+        <span class="eyebrow">{% trans "Comptabilité" %}</span>
+        <h1>{% trans "Paramètres" %}</h1>
+        <p>{% trans "Les taux servent uniquement à calculer des totaux globaux en ₪ ; les montants saisis ne sont jamais modifiés." %}</p>
     </div></div>
     {% include 'atelier/finances/_nav.html' %}
     <div class="form-card"><div class="form-card__inner">
         <form method="post">
             {% csrf_token %}
             {{ form.as_p }}
-            <div class="form-actions"><button type="submit" class="btn btn--primary">Enregistrer</button></div>
+            <div class="form-actions"><button type="submit" class="btn btn--primary">{% trans "Enregistrer" %}</button></div>
         </form>
     </div></div>
 </main>

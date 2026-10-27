@@ -1,5 +1,6 @@
 """Formulaire robe sur mesure."""
 from django import forms
+from django.utils.translation import gettext_lazy as _
 
 from ..models import Client, Robe
 from .commun import date_field
@@ -7,8 +8,8 @@ from .commun import date_field
 
 class RobeForm(forms.ModelForm):
     # On applique la même rigueur pour les deux dates de la robe
-    date_commencement = date_field("Date de commencement")
-    date_livraison = date_field("Date de livraison")
+    date_commencement = date_field(_("Date de commencement"))
+    date_livraison = date_field(_("Date de livraison"))
 
     class Meta:
         model = Robe

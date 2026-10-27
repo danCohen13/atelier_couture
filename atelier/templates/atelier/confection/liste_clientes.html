@@ -1,25 +1,26 @@
 {% extends 'atelier/base.html' %}
-{% block title %}Répertoire des clientes — {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Répertoire des clientes —" %} {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
 
 {% block content %}
 <main class="page">
     <div class="page-head">
         <div>
-            <span class="eyebrow">Répertoire</span>
-            <h1>Fichier clientes</h1>
+            <span class="eyebrow">{% trans "Répertoire" %}</span>
+            <h1>{% trans "Fichier clientes" %}</h1>
         </div>
         <div class="page-head__actions">
-            <a href="{% url 'ajouter_client' %}" class="btn btn--primary">+ Nouvelle cliente</a>
+            <a href="{% url 'ajouter_client' %}" class="btn btn--primary">{% trans "+ Nouvelle cliente" %}</a>
         </div>
     </div>
 
     <div class="legend-strip">
         <form method="GET" action="{% url 'liste_clientes' %}" class="search-form">
-            <span class="eyebrow">Rechercher</span>
-            <input type="text" name="q" value="{{ search_query }}" placeholder="Saisir un nom ou un prénom…" class="field-input">
-            <button type="submit" class="btn btn--primary">Filtrer</button>
+            <span class="eyebrow">{% trans "Rechercher" %}</span>
+            <input type="text" name="q" value="{{ search_query }}" placeholder="{% trans "Saisir un nom ou un prénom…" %}" class="field-input">
+            <button type="submit" class="btn btn--primary">{% trans "Filtrer" %}</button>
             {% if search_query %}
-                <a href="{% url 'liste_clientes' %}" class="btn btn--outline" style="color: var(--wine);">Effacer</a>
+                <a href="{% url 'liste_clientes' %}" class="btn btn--outline" style="color: var(--wine);">{% trans "Effacer" %}</a>
             {% endif %}
         </form>
     </div>
@@ -32,11 +33,11 @@
                 {% if cliente.telephone %}{{ cliente.telephone }}<br>{% endif %}
                 {% if cliente.email %}{{ cliente.email }}{% endif %}
             </p>
-            <div class="client-card__cta">Voir le dossier complet →</div>
+            <div class="client-card__cta">{% trans "Voir le dossier complet →" %}</div>
         </a>
         {% empty %}
         <div class="empty-state" style="grid-column: 1 / -1;">
-            Aucune cliente ne correspond à « <em>{{ search_query }}</em> ».
+            {% trans "Aucune cliente ne correspond à «" %} <em>{{ search_query }}</em> ».
         </div>
         {% endfor %}
     </div>

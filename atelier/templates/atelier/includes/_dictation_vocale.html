@@ -1,10 +1,11 @@
+{% load i18n %}
 <!-- 🎙️ COMPOSANT : DICTÉE VOCALE DES MESURES -->
 <div style="background-color: #fcfbf9; border: 1px solid #e6dfd3; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
     <h3 style="margin-top: 0; margin-bottom: 8px; font-size: 1.1em; color: #1a1a1a; display: flex; align-items: center; gap: 8px;">
-        🎙️ Prise de mesures vocale par IA
+        {% trans "🎙️ Prise de mesures vocale par IA" %}
     </h3>
     <p style="color: var(--ink-soft); font-size: 12.5px; margin-bottom: 15px; line-height: 1.4;">
-        Cliquez sur le micro, énoncez vos mesures à voix haute, puis cliquez sur Analyser pour pré-remplir la fiche de la cliente. Dicte uniquement des mesures : ne prononce ni nom ni information personnelle.
+        {% trans "Cliquez sur le micro, énoncez vos mesures à voix haute, puis cliquez sur Analyser pour pré-remplir la fiche de la cliente. Dicte uniquement des mesures : ne prononce ni nom ni information personnelle." %}
     </p>
 
     <div style="display: flex; gap: 10px; align-items: center;">
@@ -13,12 +14,12 @@
         
         <!-- Zone de transcription textuelle -->
         <input type="text" id="voice-transcript" 
-               placeholder="Parlez au micro... (ex: poitrine 92, taille 70, hanches 98)" 
+               placeholder="{% trans "Parlez au micro... (ex: poitrine 92, taille 70, hanches 98)" %}" 
                style="flex-grow: 1; padding: 11px 15px; border: 1px solid #dcd5c9; border-radius: 4px; font-size: 0.95em; background-color: #fff; outline: none; height: 46px; box-sizing: border-box;">
         
         <!-- Bouton d'analyse IA -->
         <button type="button" id="btn-analyser-mesures" class="btn btn--primary" style="height: 46px; padding: 0 20px; font-size: 0.95em;">
-            Analyser
+            {% trans "Analyser" %}
         </button>
     </div>
     
@@ -30,15 +31,23 @@ document.addEventListener('DOMContentLoaded', function() {
     const voiceTranscript = document.getElementById('voice-transcript');
     const btnAnalyser = document.getElementById('btn-analyser-mesures');
     const voiceStatus = document.getElementById('voice-status');
+    const TXT = {
+        vide: "{% trans 'Veuillez dicter ou écrire des mesures d’abord.' as t %}{{ t|escapejs }}",
+        encours: "{% trans '⚡ Extraction en cours par l’IA Gemini...' as t %}{{ t|escapejs }}",
+        reseau: "{% trans 'Erreur de connexion serveur' as t %}{{ t|escapejs }}",
+        succes: "{% trans '🎉 %(n)s mesure(s) injectée(s) avec succès !' as t %}{{ t|escapejs }}",
+        rien: "{% trans '🤔 Aucune mesure reconnue. Essayez de formuler clairement (ex: poitrine 94).' as t %}{{ t|escapejs }}",
+        erreur: "{% trans '❌ Erreur : ' as t %}{{ t|escapejs }}",
+    };
 
     btnAnalyser.addEventListener('click', function() {
         const texte = voiceTranscript.value.trim();
         if (!texte) {
-            updateStatus('Veuillez dicter ou écrire des mesures d\'abord.', '#d9534f');
+            updateStatus(TXT.vide, '#d9534f');
             return;
         }
 
-        updateStatus('⚡ Extraction en cours par l\'IA Gemini...', '#8a7762');
+        updateStatus(TXT.encours, '#8a7762');
         btnAnalyser.disabled = true;
 
         fetch("{% url 'analyser_mesures_ia' %}", {
@@ -50,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
             body: JSON.stringify({ texte: texte })
         })
         .then(response => {
-            if (!response.ok) throw new Error('Erreur de connexion serveur');
+            if (!response.ok) throw new Error(TXT.reseau);
             return response.json();
         })
         .then(data => {
@@ -79,14 +88,14 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             if (champsRemplisCount > 0) {
-                updateStatus(`🎉 ${champsRemplisCount} mesure(s) injectée(s) avec succès !`, '#2e7d32');
+                updateStatus(TXT.succes.replace('%(n)s', champsRemplisCount), '#2e7d32');
                 voiceTranscript.value = ''; // On vide le champ après succès
             } else {
-                updateStatus('🤔 Aucune mesure reconnue. Essayez de formuler clairement (ex: poitrine 94).', '#8a7762');
+                updateStatus(TXT.rien, '#8a7762');
             }
         })
         .catch(error => {
-            updateStatus('❌ Erreur : ' + error.message, '#d9534f');
+            updateStatus(TXT.erreur + error.message, '#d9534f');
         })
         .finally(() => {
             btnAnalyser.disabled = false;

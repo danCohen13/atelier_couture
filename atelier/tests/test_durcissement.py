@@ -3,6 +3,7 @@ import datetime
 from decimal import Decimal
 from unittest import mock
 
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.test import TestCase, override_settings
 from django.urls import reverse
@@ -57,6 +58,7 @@ class LienAdministrationTests(TestCase):
 
 class MessagesTests(TestCase):
     def setUp(self):
+        self.client.cookies[settings.LANGUAGE_COOKIE_NAME] = 'fr'  # ces tests vérifient les textes français
         utilisateur_test('atelier', password='motdepasse123')
         self.client.login(username='atelier', password='motdepasse123')
 
@@ -94,6 +96,7 @@ class BlocageApresEchecsTests(TestCase):
     """django-axes : 5 mauvais mots de passe bloquent la connexion pendant une heure."""
 
     def setUp(self):
+        self.client.cookies[settings.LANGUAGE_COOKIE_NAME] = 'fr'  # ces tests vérifient les textes français
         utilisateur_test('atelier', password='BonMotDePasse123!')
 
     def tenter(self, mot_de_passe, username='atelier'):

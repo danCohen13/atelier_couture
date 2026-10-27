@@ -1,39 +1,40 @@
 {% extends 'atelier/base.html' %}
 
-{% block title %}Catalogue de location — {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Catalogue de location —" %} {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
 
 {% block content %}
 <main class="page">
 
     <div class="page-head">
         <div>
-            <span class="eyebrow">Location &amp; stock</span>
-            <h1>Robes de stock</h1>
-            <p>Pièces physiques disponibles pour le prêt et la location.</p>
+            <span class="eyebrow">{% trans "Location &amp; stock" %}</span>
+            <h1>{% trans "Robes de stock" %}</h1>
+            <p>{% trans "Pièces physiques disponibles pour le prêt et la location." %}</p>
         </div>
         <div class="page-head__actions">
-            <a href="{% url 'tableau_bord_locations' %}" class="btn btn--outline">← Planning</a>
-            <a href="{% url 'ajouter_robe_location' %}" class="btn btn--primary">+ Nouvelle robe de stock</a>
+            <a href="{% url 'tableau_bord_locations' %}" class="btn btn--outline">{% trans "← Planning" %}</a>
+            <a href="{% url 'ajouter_robe_location' %}" class="btn btn--primary">{% trans "+ Nouvelle robe de stock" %}</a>
         </div>
     </div>
 
     <div class="legend-strip">
         <div class="filter-group">
-            <span class="eyebrow">État</span>
-            <a href="?{% if query %}q={{ query|urlencode }}{% endif %}" class="filter-chip {% if not statut_filter %}is-active{% endif %}">Toutes</a>
-            <a href="?statut=DISPONIBLE{% if query %}&amp;q={{ query|urlencode }}{% endif %}" class="filter-chip {% if statut_filter == 'DISPONIBLE' %}is-active{% endif %}">Disponibles</a>
-            <a href="?statut=NETTOYAGE{% if query %}&amp;q={{ query|urlencode }}{% endif %}" class="filter-chip {% if statut_filter == 'NETTOYAGE' %}is-active{% endif %}">Pressing</a>
-            <a href="?statut=REPARATION{% if query %}&amp;q={{ query|urlencode }}{% endif %}" class="filter-chip {% if statut_filter == 'REPARATION' %}is-active{% endif %}">Réparation</a>
-            <a href="?statut=HORS_SERVICE{% if query %}&amp;q={{ query|urlencode }}{% endif %}" class="filter-chip {% if statut_filter == 'HORS_SERVICE' %}is-active{% endif %}">Hors service</a>
+            <span class="eyebrow">{% trans "État" %}</span>
+            <a href="?{% if query %}q={{ query|urlencode }}{% endif %}" class="filter-chip {% if not statut_filter %}is-active{% endif %}">{% trans "Toutes" %}</a>
+            <a href="?statut=DISPONIBLE{% if query %}&amp;q={{ query|urlencode }}{% endif %}" class="filter-chip {% if statut_filter == 'DISPONIBLE' %}is-active{% endif %}">{% trans "Disponibles" %}</a>
+            <a href="?statut=NETTOYAGE{% if query %}&amp;q={{ query|urlencode }}{% endif %}" class="filter-chip {% if statut_filter == 'NETTOYAGE' %}is-active{% endif %}">{% trans "Pressing" %}</a>
+            <a href="?statut=REPARATION{% if query %}&amp;q={{ query|urlencode }}{% endif %}" class="filter-chip {% if statut_filter == 'REPARATION' %}is-active{% endif %}">{% trans "Réparation" %}</a>
+            <a href="?statut=HORS_SERVICE{% if query %}&amp;q={{ query|urlencode }}{% endif %}" class="filter-chip {% if statut_filter == 'HORS_SERVICE' %}is-active{% endif %}">{% trans "Hors service" %}</a>
         </div>
 
         <form method="GET" action="{% url 'catalogue_location' %}" class="catalogue-search">
             {% if statut_filter %}<input type="hidden" name="statut" value="{{ statut_filter }}">{% endif %}
-            <span class="eyebrow">Rechercher</span>
-            <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Modèle ou référence…" class="field-input">
-            <button type="submit" class="btn btn--primary btn--sm">Filtrer</button>
+            <span class="eyebrow">{% trans "Rechercher" %}</span>
+            <input type="text" name="q" value="{{ query|default:'' }}" placeholder="{% trans "Modèle ou référence…" %}" class="field-input">
+            <button type="submit" class="btn btn--primary btn--sm">{% trans "Filtrer" %}</button>
             {% if query %}
-                <a href="?{% if statut_filter %}statut={{ statut_filter }}{% endif %}" class="btn btn--outline btn--sm" style="color: var(--wine);">Effacer</a>
+                <a href="?{% if statut_filter %}statut={{ statut_filter }}{% endif %}" class="btn btn--outline btn--sm" style="color: var(--wine);">{% trans "Effacer" %}</a>
             {% endif %}
         </form>
     </div>
@@ -44,7 +45,7 @@
             {% if robe.photo %}
                 <img src="{{ robe.photo.url }}" class="dress-card__photo" alt="{{ robe.nom_modele }}">
             {% else %}
-                <div class="dress-card__photo--empty">Pas de photo</div>
+                <div class="dress-card__photo--empty">{% trans "Pas de photo" %}</div>
             {% endif %}
 
             <div class="dress-card__body">
@@ -62,24 +63,24 @@
                 </div>
 
                 <h3 class="dress-card__name">{{ robe.nom_modele }}</h3>
-                <p class="dress-card__meta">Taille {{ robe.taille }} · {{ robe.couleur }}</p>
+                <p class="dress-card__meta">{% trans "Taille" %} {{ robe.taille }} · {{ robe.couleur }}</p>
 
                 <div class="dress-card__foot">
                     <div>
                         <span class="dress-card__price">{{ robe.prix_location_defaut }} {{ robe.symbole_devise }}</span>
-                        <span class="dress-card__deposit">Caution {{ robe.caution_defaut }} {{ robe.symbole_devise }}</span>
+                        <span class="dress-card__deposit">{% trans "Caution" %} {{ robe.caution_defaut }} {{ robe.symbole_devise }}</span>
                     </div>
-                    <a href="{% url 'creer_location' %}?robe_id={{ robe.id }}" class="btn btn--outline btn--sm">Louer</a>
+                    <a href="{% url 'creer_location' %}?robe_id={{ robe.id }}" class="btn btn--outline btn--sm">{% trans "Louer" %}</a>
                 </div>
             </div>
         </article>
         {% empty %}
         <div class="empty-state" style="grid-column: 1 / -1;">
             {% if query or statut_filter %}
-                Aucune robe ne correspond à ces critères.
+                {% trans "Aucune robe ne correspond à ces critères." %}
             {% else %}
-                Le catalogue de location est encore vide.<br><br>
-                <a href="{% url 'ajouter_robe_location' %}" class="btn btn--primary">Ajouter une première robe</a>
+                {% trans "Le catalogue de location est encore vide." %}<br><br>
+                <a href="{% url 'ajouter_robe_location' %}" class="btn btn--primary">{% trans "Ajouter une première robe" %}</a>
             {% endif %}
         </div>
         {% endfor %}

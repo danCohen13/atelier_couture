@@ -164,6 +164,13 @@
         document.addEventListener("DOMContentLoaded", function() {
             const cloudName = "t2foyjp2";
             const uploadPreset = "ml_default";
+            const TXT = {
+                modifier: "{% trans 'Modifier la photo' as t %}{{ t|escapejs }}",
+                enregistree: "{% trans 'Image enregistrée' as t %}{{ t|escapejs }}",
+                aucun: "{% trans 'Aucun fichier choisi' as t %}{{ t|escapejs }}",
+                prete: "{% trans 'Image prête' as t %}{{ t|escapejs }}",
+                changer: "{% trans 'Changer la photo' as t %}{{ t|escapejs }}",
+            };
 
             function transformToCloudinaryButton(fieldId, buttonLabel) {
                 const inputField = document.getElementById(fieldId);
@@ -174,11 +181,11 @@
                 const btn = document.createElement("button");
                 btn.type = "button";
                 btn.className = "btn btn--outline cloud-upload-btn";
-                btn.innerText = inputField.value ? "Modifier la photo" : buttonLabel;
+                btn.innerText = inputField.value ? TXT.modifier : buttonLabel;
 
                 const status = document.createElement("span");
                 status.className = "cloud-upload-status" + (inputField.value ? " cloud-upload-status--ready" : "");
-                status.innerText = inputField.value ? "Image enregistrée" : "Aucun fichier choisi";
+                status.innerText = inputField.value ? TXT.enregistree : TXT.aucun;
 
                 inputField.parentNode.insertBefore(btn, inputField.nextSibling);
                 btn.parentNode.insertBefore(status, btn.nextSibling);
@@ -188,22 +195,23 @@
                         cloudName: cloudName,
                         uploadPreset: uploadPreset,
                         sources: ['local'],
+                        language: "{{ LANGUAGE_CODE|escapejs }}",
                         multiple: false,
                         clientAllowedFormats: ["png", "jpg", "jpeg", "webp"]
                     }, (error, result) => {
                         if (!error && result && result.event === "success") {
                             inputField.value = result.info.secure_url;
-                            status.innerText = "Image prête";
+                            status.innerText = TXT.prete;
                             status.className = "cloud-upload-status cloud-upload-status--ready";
-                            btn.innerText = "Changer la photo";
+                            btn.innerText = TXT.changer;
                         }
                     });
                 });
             }
 
-            transformToCloudinaryButton("id_croquis", "Choisir un croquis");
-            transformToCloudinaryButton("id_photo_tissus", "Choisir un tissu");
-            transformToCloudinaryButton("id_justificatif", "Photographier le justificatif");
+            transformToCloudinaryButton("id_croquis", "{% trans 'Choisir un croquis' as t %}{{ t|escapejs }}");
+            transformToCloudinaryButton("id_photo_tissus", "{% trans 'Choisir un tissu' as t %}{{ t|escapejs }}");
+            transformToCloudinaryButton("id_justificatif", "{% trans 'Photographier le justificatif' as t %}{{ t|escapejs }}");
         });
     </script>
 </body>

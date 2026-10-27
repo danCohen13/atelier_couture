@@ -1,5 +1,6 @@
 {% extends 'atelier/base.html' %}
-{% block title %}Validation du code — {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Validation du code —" %} {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
 {# Cette page affiche déjà les messages dans sa carte : on neutralise l'affichage global. #}
 {% block messages %}{% endblock %}
 
@@ -7,10 +8,10 @@
 <main class="page login-page">
     <div class="form-card">
         <div class="form-card__inner">
-            <span class="eyebrow">Réinitialisation</span>
-            <h2>Validation du code</h2>
+            <span class="eyebrow">{% trans "Réinitialisation" %}</span>
+            <h2>{% trans "Validation du code" %}</h2>
             <p class="auth-subtitle">
-                Saisissez le code à 6 chiffres reçu dans votre boîte e-mail.
+                {% trans "Saisissez le code à 6 chiffres reçu dans votre boîte e-mail." %}
             </p>
 
             {% if messages %}
@@ -23,15 +24,15 @@
                 {% csrf_token %}
 
                 <p>
-                    <label for="code" class="field-label--center">Code de vérification (6 chiffres)</label>
+                    <label for="code" class="field-label--center">{% trans "Code de vérification (6 chiffres)" %}</label>
                     <input type="text" id="code" name="code" placeholder="000000" maxlength="6" required class="field-input field-input--code">
                 </p>
 
-                <button type="submit" class="btn btn--primary btn--block">Valider le code</button>
+                <button type="submit" class="btn btn--primary btn--block">{% trans "Valider le code" %}</button>
             </form>
 
             <div class="auth-footer">
-                <a href="{% url 'demander_code_reset' %}">Recevoir un nouveau code</a>
+                <a href="{% url 'demander_code_reset' %}">{% trans "Recevoir un nouveau code" %}</a>
             </div>
         </div>
     </div>

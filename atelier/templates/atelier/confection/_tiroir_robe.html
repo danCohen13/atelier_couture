@@ -1,17 +1,18 @@
+{% load i18n %}
 <tr id="tiroir-{{ robe.id }}" class="drawer-row is-hidden">
     <td colspan="6" class="drawer-cell">
 
         <!-- Bandeau d'actions : s'applique à toute la confection, pas qu'aux finances -->
         <div class="drawer-header">
-            <span class="eyebrow">{{ robe.nom_modele }} — Actions sur cette confection</span>
+            <span class="eyebrow">{{ robe.nom_modele }} {% trans "— Actions sur cette confection" %}</span>
             <div class="drawer-header__actions">
-                <a href="{% url 'modifier_robe' robe.id %}" class="btn btn--outline">Modifier</a>
-                <a href="{% url 'paiements_robe' robe.id %}" class="btn btn--outline">Paiements</a>
+                <a href="{% url 'modifier_robe' robe.id %}" class="btn btn--outline">{% trans "Modifier" %}</a>
+                <a href="{% url 'paiements_robe' robe.id %}" class="btn btn--outline">{% trans "Paiements" %}</a>
                 <form method="POST" action="{% url 'supprimer_robe' robe.id %}" class="inline-form"
-                      data-confirm="Supprimer définitivement cette confection ?"
+                      data-confirm="{% trans "Supprimer définitivement cette confection ?" %}"
                       onsubmit="return confirm(this.dataset.confirm);">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn--outline btn--danger-outline">Supprimer</button>
+                    <button type="submit" class="btn btn--outline btn--danger-outline">{% trans "Supprimer" %}</button>
                 </form>
             </div>
         </div>
@@ -22,51 +23,51 @@
             <div class="drawer-col">
 
                 <div class="card card--flush">
-                    <h4>Finances</h4>
+                    <h4>{% trans "Finances" %}</h4>
                     <div class="finance-line">
-                        <span>Tissu</span>
+                        <span>{% trans "Tissu" %}</span>
                         <strong>{{ robe.cout_tissu }} <span class="currency-symbol">{{ robe.symbole_devise }}</span></strong>
                     </div>
                     <div class="finance-line">
-                        <span>Atelier</span>
+                        <span>{% trans "Atelier" %}</span>
                         <strong>{{ robe.cout_main_doeuvre }} <span class="currency-symbol">{{ robe.symbole_devise }}</span></strong>
                     </div>
                     <div class="finance-total">
-                        <span class="eyebrow">Total</span>
+                        <span class="eyebrow">{% trans "Total" %}</span>
                         <strong>{{ robe.prix_total }} <span class="currency-symbol">{{ robe.symbole_devise }}</span></strong>
                     </div>
                 </div>
 
                 <div class="card style-notebook">
-                    <h4>Carnet de style</h4>
+                    <h4>{% trans "Carnet de style" %}</h4>
                     <div class="style-notebook__slots">
 
                         <div class="style-slot">
-                            <span class="eyebrow style-slot__label">Croquis</span>
+                            <span class="eyebrow style-slot__label">{% trans "Croquis" %}</span>
                             {% if robe.croquis %}
                                 <a href="{{ robe.croquis }}" target="_blank" style="display: block;">
-                                    <img src="{{ robe.croquis }}" alt="Croquis" class="style-slot__img"
+                                    <img src="{{ robe.croquis }}" alt="{% trans "Croquis" %}" class="style-slot__img"
                                          onerror="this.style.display='none'; this.parentElement.nextElementSibling.style.display='flex';">
                                 </a>
-                                <div class="style-slot__broken">Image indisponible</div>
+                                <div class="style-slot__broken">{% trans "Image indisponible" %}</div>
                             {% else %}
                                 <a href="{% url 'modifier_robe' robe.id %}" style="display: block;">
-                                    <div class="style-slot__placeholder">+ Ajouter</div>
+                                    <div class="style-slot__placeholder">{% trans "+ Ajouter" %}</div>
                                 </a>
                             {% endif %}
                         </div>
 
                         <div class="style-slot">
-                            <span class="eyebrow style-slot__label">Tissu</span>
+                            <span class="eyebrow style-slot__label">{% trans "Tissu" %}</span>
                             {% if robe.photo_tissus %}
                                 <a href="{{ robe.photo_tissus }}" target="_blank" style="display: block;">
-                                    <img src="{{ robe.photo_tissus }}" alt="Échantillon" class="style-slot__img"
+                                    <img src="{{ robe.photo_tissus }}" alt="{% trans "Échantillon" %}" class="style-slot__img"
                                          onerror="this.style.display='none'; this.parentElement.nextElementSibling.style.display='flex';">
                                 </a>
-                                <div class="style-slot__broken">Image indisponible</div>
+                                <div class="style-slot__broken">{% trans "Image indisponible" %}</div>
                             {% else %}
                                 <a href="{% url 'modifier_robe' robe.id %}" style="display: block;">
-                                    <div class="style-slot__placeholder">+ Ajouter</div>
+                                    <div class="style-slot__placeholder">{% trans "+ Ajouter" %}</div>
                                 </a>
                             {% endif %}
                         </div>
@@ -78,19 +79,19 @@
 
             <!-- Colonne droite : étapes de fabrication -->
             <div class="card">
-                <h4>Étapes de fabrication</h4>
+                <h4>{% trans "Étapes de fabrication" %}</h4>
                 <div class="step-quickbar">
                     <div class="filter-group" style="margin-bottom: 0;">
-                        <span class="eyebrow" style="margin-right:2px;">Ajouter</span>
-                        <form method="POST" action="{% url 'ajouter_tache_rapide' robe.id 'toile' %}" class="inline-form">{% csrf_token %}<button type="submit" class="step-chip">+ Toile</button></form>
-                        <form method="POST" action="{% url 'ajouter_tache_rapide' robe.id 'coupe' %}" class="inline-form">{% csrf_token %}<button type="submit" class="step-chip">+ Coupe</button></form>
-                        <form method="POST" action="{% url 'ajouter_tache_rapide' robe.id 'assemblage' %}" class="inline-form">{% csrf_token %}<button type="submit" class="step-chip">+ Assemblage</button></form>
-                        <form method="POST" action="{% url 'ajouter_tache_rapide' robe.id 'finitions' %}" class="inline-form">{% csrf_token %}<button type="submit" class="step-chip">+ Finitions</button></form>
+                        <span class="eyebrow" style="margin-right:2px;">{% trans "Ajouter" %}</span>
+                        <form method="POST" action="{% url 'ajouter_tache_rapide' robe.id 'toile' %}" class="inline-form">{% csrf_token %}<button type="submit" class="step-chip">{% trans "+ Toile" %}</button></form>
+                        <form method="POST" action="{% url 'ajouter_tache_rapide' robe.id 'coupe' %}" class="inline-form">{% csrf_token %}<button type="submit" class="step-chip">{% trans "+ Coupe" %}</button></form>
+                        <form method="POST" action="{% url 'ajouter_tache_rapide' robe.id 'assemblage' %}" class="inline-form">{% csrf_token %}<button type="submit" class="step-chip">{% trans "+ Assemblage" %}</button></form>
+                        <form method="POST" action="{% url 'ajouter_tache_rapide' robe.id 'finitions' %}" class="inline-form">{% csrf_token %}<button type="submit" class="step-chip">{% trans "+ Finitions" %}</button></form>
                     </div>
                     <form method="POST" action="{% url 'ajouter_tache_personnalisee' robe.id %}" class="step-custom-form">
                         {% csrf_token %}
-                        <input type="text" name="libelle" placeholder="Étape sur mesure…" required>
-                        <button type="submit" class="btn btn--gold" style="padding:6px 12px;">Ajouter</button>
+                        <input type="text" name="libelle" placeholder="{% trans "Étape sur mesure…" %}" required>
+                        <button type="submit" class="btn btn--gold" style="padding:6px 12px;">{% trans "Ajouter" %}</button>
                     </form>
                 </div>
 
@@ -103,9 +104,9 @@
                                 {% csrf_token %}
                                 <button type="submit" class="pill-btn">
                                     {% if tache.est_faite %}
-                                        <span class="pill-toggle pill-toggle--done">Terminé</span>
+                                        <span class="pill-toggle pill-toggle--done">{% trans "Terminé" %}</span>
                                     {% else %}
-                                        <span class="pill-toggle pill-toggle--todo">À faire</span>
+                                        <span class="pill-toggle pill-toggle--todo">{% trans "À faire" %}</span>
                                     {% endif %}
                                 </button>
                             </form>
@@ -114,12 +115,12 @@
                                   data-confirm="Supprimer l'étape « {{ tache.libelle }} » ?"
                                   onsubmit="return confirm(this.dataset.confirm);">
                                 {% csrf_token %}
-                                <button type="submit" class="delete-link" aria-label="Supprimer l'étape">×</button>
+                                <button type="submit" class="delete-link" aria-label="{% trans "Supprimer l'étape" %}">×</button>
                             </form>
                         </div>
                     </div>
                     {% empty %}
-                    <p class="empty-state" style="padding: 14px 2px; text-align:left;"><em>Aucune étape configurée.</em></p>
+                    <p class="empty-state" style="padding: 14px 2px; text-align:left;"><em>{% trans "Aucune étape configurée." %}</em></p>
                     {% endfor %}
                 </div>
             </div>

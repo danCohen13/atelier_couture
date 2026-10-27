@@ -77,17 +77,17 @@ class CatalogueTests(TestCase):
 
     def test_toutes_les_traductions_hebraiques_sont_remplies_et_compilees(self):
         po = polib.pofile(str(self.RACINE / 'locale/he/LC_MESSAGES/django.po'))
-        manquantes = [e.msgid for e in po if not e.msgstr or 'fuzzy' in e.flags]
+        manquantes = [e.msgid for e in po if not (e.msgstr or all(e.msgstr_plural.values())) or 'fuzzy' in e.flags]
         self.assertEqual(manquantes, [], "Traductions hébraïques manquantes (puis relancer compilemessages)")
         mo = polib.mofile(str(self.RACINE / 'locale/he/LC_MESSAGES/django.mo'))
-        self.assertEqual({e.msgid: e.msgstr for e in mo}, {e.msgid: e.msgstr for e in po},
+        self.assertEqual({e.msgid: (e.msgstr, e.msgstr_plural) for e in mo}, {e.msgid: (e.msgstr, e.msgstr_plural) for e in po},
                          "django.mo n'est pas à jour : python manage.py compilemessages")
 
     def test_catalogue_francais_complet(self):
         """Sans entrée française, Django retomberait sur l'hébreu (langue par défaut)."""
         he = polib.pofile(str(self.RACINE / 'locale/he/LC_MESSAGES/django.po'))
         fr = polib.mofile(str(self.RACINE / 'locale/fr/LC_MESSAGES/django.mo'))
-        absents = {e.msgid for e in he} - {e.msgid for e in fr if e.msgstr == e.msgid}
+        absents = {e.msgid for e in he} - {e.msgid for e in fr if e.msgstr == e.msgid or e.msgstr_plural.get(0) == e.msgid}
         self.assertEqual(absents, set(), "Catalogue français incomplet : python manage.py traductions")
 
 

@@ -14,7 +14,7 @@ class AtelierReglagesForm(forms.ModelForm):
         widgets = {
             'nom': forms.TextInput(attrs={'class': 'field-input'}),
             'contact_confidentialite': forms.TextInput(attrs={
-                'class': 'field-input', 'placeholder': 'contact@exemple.com ou +972…'}),
+                'class': 'field-input', 'placeholder': _('contact@exemple.com ou +972…')}),
         }
 
 

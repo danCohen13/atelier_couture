@@ -1,15 +1,16 @@
 {% extends 'atelier/base.html' %}
 
-{% block title %}Nouvelle cliente — {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Nouvelle cliente —" %} {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
 
 {% block content %}
 <main class="page" style="max-width: 760px;">
     <div class="form-card">
         <div class="form-card__inner">
-            <span class="eyebrow">Fiche cliente</span>
-            <h2>Nouvelle cliente &amp; mensurations</h2>
+            <span class="eyebrow">{% trans "Fiche cliente" %}</span>
+            <h2>{% trans "Nouvelle cliente &amp; mensurations" %}</h2>
             <p style="color: var(--ink-soft); font-size: 13.5px; margin: 0 0 26px;">
-                Ces informations serviront de base à chaque nouvelle confection pour cette cliente.
+                {% trans "Ces informations serviront de base à chaque nouvelle confection pour cette cliente." %}
             </p>
 
             <!-- ✨ On inclut notre module de dictée vocale réutilisable ici ! -->
@@ -19,8 +20,8 @@
                 {% csrf_token %}
                 {{ form.as_p }}
                 <div class="form-actions">
-                    <a href="{% url 'dashboard' %}" class="btn btn--outline">Annuler</a>
-                    <button type="submit" class="btn btn--primary">Enregistrer la cliente</button>
+                    <a href="{% url 'dashboard' %}" class="btn btn--outline">{% trans "Annuler" %}</a>
+                    <button type="submit" class="btn btn--primary">{% trans "Enregistrer la cliente" %}</button>
                 </div>
             </form>
         </div>

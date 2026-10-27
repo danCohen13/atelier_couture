@@ -11,22 +11,23 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
 
 class Atelier(models.Model):
     STATUT_CHOICES = [
-        ('ACTIF', 'Actif'),
-        ('ESSAI', 'En essai'),
-        ('SUSPENDU', 'Suspendu'),
+        ('ACTIF', _('Actif')),
+        ('ESSAI', _('En essai')),
+        ('SUSPENDU', _('Suspendu')),
     ]
     OFFRE_CHOICES = [
-        ('GRATUIT', 'Gratuit (lancement)'),
+        ('GRATUIT', _('Gratuit (lancement)')),
     ]
 
-    nom = models.CharField(max_length=150, verbose_name="Nom de l'atelier")
+    nom = models.CharField(max_length=150, verbose_name=_("Nom de l'atelier"))
     contact_confidentialite = models.CharField(
-        max_length=200, blank=True, verbose_name="Contact pour la protection des données",
-        help_text="E-mail ou téléphone où une cliente peut exercer ses droits (fiche d'information).")
+        max_length=200, blank=True, verbose_name=_("Contact pour la protection des données"),
+        help_text=_("E-mail ou téléphone où une cliente peut exercer ses droits (fiche d'information)."))
     statut = models.CharField(max_length=10, choices=STATUT_CHOICES, default='ACTIF')
     offre = models.CharField(max_length=10, choices=OFFRE_CHOICES, default='GRATUIT')
     cree_le = models.DateTimeField(default=timezone.now)
@@ -52,8 +53,8 @@ class Invitation(models.Model):
     """
     DUREE_JOURS = 7
 
-    email = models.EmailField(verbose_name="Adresse e-mail de la personne invitée")
-    nom_atelier = models.CharField(max_length=150, blank=True, verbose_name="Nom d'atelier proposé")
+    email = models.EmailField(verbose_name=_("Adresse e-mail de la personne invitée"))
+    nom_atelier = models.CharField(max_length=150, blank=True, verbose_name=_("Nom d'atelier proposé"))
     jeton_hash = models.CharField(max_length=64, unique=True, editable=False)
     cree_le = models.DateTimeField(default=timezone.now, editable=False)
     expire_le = models.DateTimeField(editable=False)
@@ -75,7 +76,7 @@ class Invitation(models.Model):
         """Crée l'invitation et renvoie `(invitation, jeton)` : le jeton n'est connu qu'à cet instant."""
         email = email.strip()
         if User.objects.filter(email__iexact=email).exists():
-            raise ValidationError("Un compte existe déjà avec cette adresse e-mail.")
+            raise ValidationError(_("Un compte existe déjà avec cette adresse e-mail."))
         jeton = secrets.token_urlsafe(32)
         invitation = cls.objects.create(
             email=email, nom_atelier=nom_atelier.strip(), jeton_hash=cls.empreinte(jeton),
@@ -98,10 +99,10 @@ class Invitation(models.Model):
 
 class DemandeInvitation(models.Model):
     """Demande faite depuis la page d'accueil. Elle ne crée aucun compte : l'exploitante invite ensuite."""
-    email = models.EmailField(verbose_name="Adresse e-mail")
-    nom_atelier = models.CharField(max_length=150, blank=True, verbose_name="Nom de l'atelier")
+    email = models.EmailField(verbose_name=_("Adresse e-mail"))
+    nom_atelier = models.CharField(max_length=150, blank=True, verbose_name=_("Nom de l'atelier"))
     cree_le = models.DateTimeField(default=timezone.now, editable=False)
-    traitee = models.BooleanField(default=False, verbose_name="Invitation envoyée")
+    traitee = models.BooleanField(default=False, verbose_name=_("Invitation envoyée"))
 
     class Meta:
         ordering = ['traitee', '-cree_le']
@@ -115,8 +116,8 @@ class DemandeInvitation(models.Model):
 class Adhesion(models.Model):
     """Rattache un identifiant à UN atelier. Pour l'instant : une propriétaire par atelier."""
     ROLE_CHOICES = [
-        ('PROPRIETAIRE', 'Propriétaire'),
-        ('EMPLOYE', 'Employée'),
+        ('PROPRIETAIRE', _('Propriétaire')),
+        ('EMPLOYE', _('Employée')),
     ]
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='adhesion')
@@ -124,7 +125,7 @@ class Adhesion(models.Model):
     role = models.CharField(max_length=15, choices=ROLE_CHOICES, default='PROPRIETAIRE')
     langue = models.CharField(
         max_length=5, choices=[('he', 'עברית'), ('fr', 'Français')], default='he',
-        help_text="Langue de l'interface de cette utilisatrice.")
+        help_text=_("Langue de l'interface de cette utilisatrice."))
 
     class Meta:
         verbose_name = "Adhésion"
@@ -173,5 +174,5 @@ class ModeleAtelier(models.Model):
         if not self.atelier_id and len(parents) == 1:
             self.atelier_id = next(iter(parents))
         if parents - {self.atelier_id}:
-            raise ValidationError("Cet élément ne peut pas être lié à un élément d'un autre atelier.")
+            raise ValidationError(_("Cet élément ne peut pas être lié à un élément d'un autre atelier."))
         super().save(*args, **kwargs)

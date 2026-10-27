@@ -6,6 +6,7 @@ import pathlib
 from decimal import Decimal
 from types import SimpleNamespace
 
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.forms import ModelForm
@@ -76,6 +77,7 @@ class IsolationBase(TestCase):
 
 class AccesTests(IsolationBase):
     def test_sans_atelier_acces_refuse(self):
+        self.client.cookies[settings.LANGUAGE_COOKIE_NAME] = 'fr'  # ces tests vérifient les textes français
         User.objects.create_user('orpheline', password='motdepasse123')
         self.connecter('orpheline')
         reponse = self.client.get(reverse('dashboard'))

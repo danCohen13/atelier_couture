@@ -3,6 +3,7 @@ from datetime import timedelta
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
+from django.utils.translation import gettext as _
 
 from .acces import atelier_requis
 from .forms import LocationForm, RetourLocationForm, RobeLocationForm
@@ -37,14 +38,14 @@ def ajouter_robe_location(request):
             robe = form.save(commit=False)
             robe.atelier = request.atelier
             robe.save()
-            messages.success(request, f"La robe {robe.reference_stock} a été ajoutée au stock.")
+            messages.success(request, _("La robe %(ref)s a été ajoutée au stock.") % {'ref': robe.reference_stock})
             return redirect('catalogue_location')
     else:
         form = RobeLocationForm(atelier=request.atelier)
 
     return render(request, 'atelier/location/form_robe_stock.html', {
         'form': form,
-        'titre': "Ajouter une robe au catalogue de location"
+        'titre': _("Ajouter une robe au catalogue de location")
     })
 
 
@@ -112,14 +113,14 @@ def creer_location(request):
         form = LocationForm(request.POST, atelier=request.atelier)
         if form.is_valid():
             location = form.save()
-            messages.success(request, f"Contrat #{location.id} enregistré avec succès.")
+            messages.success(request, _("Contrat #%(id)s enregistré avec succès.") % {'id': location.id})
             return redirect('tableau_bord_locations')
     else:
         form = LocationForm(initial=initial_data, atelier=request.atelier)
 
     return render(request, 'atelier/location/form_location.html', {
         'form': form,
-        'titre': "Établir un nouveau contrat de location",
+        'titre': _("Établir un nouveau contrat de location"),
         'periodes_reservees': periodes_reservees_par_robe(request.atelier),
     })
 
@@ -137,7 +138,7 @@ def enregistrer_retour_location(request, pk):
                 loc.date_retour_effectif = timezone.localdate()
             loc.statut = 'TERMINEE'
             loc.save()
-            messages.success(request, f"Retour validé pour la robe {loc.robe_location.reference_stock}.")
+            messages.success(request, _("Retour validé pour la robe %(ref)s.") % {'ref': loc.robe_location.reference_stock})
             return redirect('tableau_bord_locations')
     else:
         form = RetourLocationForm(instance=location, initial={

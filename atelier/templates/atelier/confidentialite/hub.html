@@ -1,17 +1,18 @@
 {% extends 'atelier/base.html' %}
 
-{% block title %}Confidentialité — {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Confidentialité —" %} {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
 
 {% block content %}
 <main class="page fin-page">
     <div class="page-head">
         <div>
-            <span class="eyebrow">Protection des données</span>
-            <h1>Confidentialité des clientes</h1>
-            <p>Tes clientes te confient leur identité, leurs coordonnées et leurs mesures. La loi israélienne sur la protection de la vie privée te demande de les informer, de protéger ces données et de ne pas les garder sans raison.</p>
+            <span class="eyebrow">{% trans "Protection des données" %}</span>
+            <h1>{% trans "Confidentialité des clientes" %}</h1>
+            <p>{% trans "Tes clientes te confient leur identité, leurs coordonnées et leurs mesures. La loi israélienne sur la protection de la vie privée te demande de les informer, de protéger ces données et de ne pas les garder sans raison." %}</p>
         </div>
         <div class="page-head__actions">
-            <a href="{% url 'confidentialite_fiche_pdf' %}" class="btn btn--primary" target="_blank">Imprimer la fiche d'information</a>
+            <a href="{% url 'confidentialite_fiche_pdf' %}" class="btn btn--primary" target="_blank">{% trans "Imprimer la fiche d'information" %}</a>
         </div>
     </div>
 
@@ -19,37 +20,37 @@
     <div class="fin-alert" role="alert">
         <div class="fin-alert__icon" aria-hidden="true">!</div>
         <div>
-            <strong>Coordonnées à renseigner</strong>
-            <p style="margin: 4px 0 0;">La fiche d'information doit indiquer comment te joindre pour exercer ses droits. Renseigne ton e-mail ou ton téléphone dans le formulaire « Mon atelier » ci-dessous.</p>
+            <strong>{% trans "Coordonnées à renseigner" %}</strong>
+            <p style="margin: 4px 0 0;">{% trans "La fiche d'information doit indiquer comment te joindre pour exercer ses droits. Renseigne ton e-mail ou ton téléphone dans le formulaire « Mon atelier » ci-dessous." %}</p>
         </div>
     </div>
     {% endif %}
 
     <section class="fin-section">
         <div class="fin-section__head"><div>
-            <h2>Mon atelier</h2>
-            <p>Ces informations figurent sur la fiche d'information remise aux clientes.</p>
+            <h2>{% trans "Mon atelier" %}</h2>
+            <p>{% trans "Ces informations figurent sur la fiche d'information remise aux clientes." %}</p>
         </div></div>
         <form method="post" action="{% url 'reglages_atelier' %}" class="card">
             {% csrf_token %}
-            <label class="fin-filters__label" for="{{ form_atelier.nom.id_for_label }}">Nom de l'atelier</label>
+            <label class="fin-filters__label" for="{{ form_atelier.nom.id_for_label }}">{% trans "Nom de l'atelier" %}</label>
             {{ form_atelier.nom }}
-            <label class="fin-filters__label" for="{{ form_atelier.contact_confidentialite.id_for_label }}" style="margin-top: 12px; display: block;">Contact pour exercer ses droits</label>
+            <label class="fin-filters__label" for="{{ form_atelier.contact_confidentialite.id_for_label }}" style="margin-top: 12px; display: block;">{% trans "Contact pour exercer ses droits" %}</label>
             {{ form_atelier.contact_confidentialite }}
-            <button type="submit" class="btn btn--primary" style="margin-top: 14px;">Enregistrer</button>
+            <button type="submit" class="btn btn--primary" style="margin-top: 14px;">{% trans "Enregistrer" %}</button>
         </form>
     </section>
 
     <section class="fin-section">
         <div class="fin-section__head"><div>
-            <h2>1. Informer chaque cliente</h2>
-            <p>Remets la fiche d'information avant de prendre des mesures, puis enregistre la remise sur son dossier.</p>
+            <h2>{% trans "1. Informer chaque cliente" %}</h2>
+            <p>{% trans "Remets la fiche d'information avant de prendre des mesures, puis enregistre la remise sur son dossier." %}</p>
         </div></div>
         <div class="card">
             {% if sans_information %}
-            <p><strong>{{ sans_information }}</strong> dossier{{ sans_information|pluralize }} sans remise de fiche enregistrée. Ouvre le dossier de la cliente et clique sur « marquer comme remise ».</p>
+            <p>{% blocktrans count n=sans_information %}<strong>{{ n }}</strong> dossier sans remise de fiche enregistrée. Ouvre le dossier de la cliente et clique sur « marquer comme remise ».{% plural %}<strong>{{ n }}</strong> dossiers sans remise de fiche enregistrée. Ouvre le dossier de la cliente et clique sur « marquer comme remise ».{% endblocktrans %}</p>
             {% else %}
-            <p>Toutes les clientes ont reçu la fiche d'information.</p>
+            <p>{% trans "Toutes les clientes ont reçu la fiche d'information." %}</p>
             {% endif %}
         </div>
     </section>
@@ -57,14 +58,14 @@
     <section class="fin-section">
         <div class="fin-section__head">
             <div>
-                <h2>2. Dossiers inactifs</h2>
-                <p>Sans activité depuis plus de {{ annees }} an{{ annees|pluralize }} (ni commande, ni location, ni paiement). Efface leurs données personnelles : les montants et commandes restent pour la comptabilité.</p>
+                <h2>{% trans "2. Dossiers inactifs" %}</h2>
+                <p>{% blocktrans count n=annees %}Sans activité depuis plus de {{ n }} an (ni commande, ni location, ni paiement). Efface leurs données personnelles : les montants et commandes restent pour la comptabilité.{% plural %}Sans activité depuis plus de {{ n }} ans (ni commande, ni location, ni paiement). Efface leurs données personnelles : les montants et commandes restent pour la comptabilité.{% endblocktrans %}</p>
             </div>
             <form method="get" class="fin-filters__group">
-                <label class="fin-filters__label" for="annees">Inactif depuis</label>
+                <label class="fin-filters__label" for="annees">{% trans "Inactif depuis" %}</label>
                 <input id="annees" name="annees" type="number" min="1" max="20" value="{{ annees }}" class="field-input" style="width: 80px;">
-                <span class="fin-filters__label">ans</span>
-                <button type="submit" class="btn btn--outline">Afficher</button>
+                <span class="fin-filters__label">{% trans "ans" %}</span>
+                <button type="submit" class="btn btn--outline">{% trans "Afficher" %}</button>
             </form>
         </div>
         <ul class="tx-list">
@@ -72,33 +73,33 @@
             <li class="tx">
                 <div class="tx__main">
                     <span class="tx__title"><a href="{% url 'fiche_cliente' cliente.pk %}">{{ cliente }}</a></span>
-                    <span class="tx__sub">{% if derniere %}Dernière activité : {{ derniere|date:"d/m/Y" }}{% else %}Aucune activité enregistrée{% endif %}</span>
+                    <span class="tx__sub">{% if derniere %}{% trans "Dernière activité :" %} {{ derniere|date:"d/m/Y" }}{% else %}{% trans "Aucune activité enregistrée" %}{% endif %}</span>
                 </div>
                 <div class="tx__side">
                     <form method="post" action="{% url 'supprimer_cliente' cliente.pk %}" class="inline-form"
                           onsubmit="return confirm('Effacer définitivement les données personnelles de {{ cliente|escapejs }} ?');">
-                        {% csrf_token %}<button type="submit" class="delete-link">Effacer ses données</button>
+                        {% csrf_token %}<button type="submit" class="delete-link">{% trans "Effacer ses données" %}</button>
                     </form>
                 </div>
             </li>
             {% empty %}
-            <li class="tx"><div class="tx__main"><span class="tx__sub">Aucun dossier inactif.</span></div></li>
+            <li class="tx"><div class="tx__main"><span class="tx__sub">{% trans "Aucun dossier inactif." %}</span></div></li>
             {% endfor %}
         </ul>
     </section>
 
     <section class="fin-section">
         <div class="fin-section__head"><div>
-            <h2>3. Sécurité et incidents</h2>
-            <p>Note tout incident (téléphone perdu, accès suspect…) dans le registre d'administration. Un incident grave doit être signalé immédiatement à l'Autorité israélienne de protection de la vie privée.</p>
+            <h2>{% trans "3. Sécurité et incidents" %}</h2>
+            <p>{% trans "Note tout incident (téléphone perdu, accès suspect…) dans le registre d'administration. Un incident grave doit être signalé immédiatement à l'Autorité israélienne de protection de la vie privée." %}</p>
         </div></div>
         <div class="card">
             {% if user.is_staff %}
-            <p><a href="{% url 'admin:atelier_incidentsecurite_changelist' %}">Ouvrir le registre des incidents →</a></p>
+            <p><a href="{% url 'admin:atelier_incidentsecurite_changelist' %}">{% trans "Ouvrir le registre des incidents →" %}</a></p>
             {% else %}
-            <p>Le registre des incidents se trouve dans l'espace d'administration.</p>
+            <p>{% trans "Le registre des incidents se trouve dans l'espace d'administration." %}</p>
             {% endif %}
-            <p class="fin-hint">Le document « PROTECTION_DES_DONNEES.md » du dépôt décrit la base de données, les prestataires et la marche à suivre ; relis-le une fois par an.</p>
+            <p class="fin-hint">{% trans "Le document « PROTECTION_DES_DONNEES.md » du dépôt décrit la base de données, les prestataires et la marche à suivre ; relis-le une fois par an." %}</p>
         </div>
     </section>
 </main>

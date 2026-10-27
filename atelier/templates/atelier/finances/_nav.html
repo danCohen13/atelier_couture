@@ -1,7 +1,8 @@
-<nav class="finance-nav" aria-label="Sections des finances">
-    <a href="{% url 'finances' %}" class="filter-chip {% if request.resolver_match.url_name == 'finances' %}is-active{% endif %}">Bilan</a>
-    <a href="{% url 'impayes' %}" class="filter-chip {% if request.resolver_match.url_name == 'impayes' %}is-active{% endif %}">Impayés &amp; prévisions</a>
-    <a href="{% url 'rentabilite' %}" class="filter-chip {% if request.resolver_match.url_name == 'rentabilite' %}is-active{% endif %}">Rentabilité</a>
-    <a href="{% url 'depenses_recurrentes' %}" class="filter-chip {% if request.resolver_match.url_name == 'depenses_recurrentes' %}is-active{% endif %}">Dépenses récurrentes</a>
-    <a href="{% url 'parametres_finance' %}" class="filter-chip {% if request.resolver_match.url_name == 'parametres_finance' %}is-active{% endif %}">Paramètres</a>
+{% load i18n %}
+<nav class="finance-nav" aria-label="{% trans "Sections des finances" %}">
+    <a href="{% url 'finances' %}" class="filter-chip {% if request.resolver_match.url_name == 'finances' %}is-active{% endif %}">{% trans "Bilan" %}</a>
+    <a href="{% url 'impayes' %}" class="filter-chip {% if request.resolver_match.url_name == 'impayes' %}is-active{% endif %}">{% trans "Impayés &amp; prévisions" %}</a>
+    <a href="{% url 'rentabilite' %}" class="filter-chip {% if request.resolver_match.url_name == 'rentabilite' %}is-active{% endif %}">{% trans "Rentabilité" %}</a>
+    <a href="{% url 'depenses_recurrentes' %}" class="filter-chip {% if request.resolver_match.url_name == 'depenses_recurrentes' %}is-active{% endif %}">{% trans "Dépenses récurrentes" %}</a>
+    <a href="{% url 'parametres_finance' %}" class="filter-chip {% if request.resolver_match.url_name == 'parametres_finance' %}is-active{% endif %}">{% trans "Paramètres" %}</a>
 </nav>
