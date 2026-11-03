@@ -185,11 +185,11 @@ class CreancesEtPrevisionnelTests(Base):
                             date_livraison=jour(20), prix_total=Decimal('300'))
         Robe.objects.create(client=self.cliente, nom_modele='D', date_commencement=jour(-5),
                             date_livraison=jour(90), prix_total=Decimal('400'))
-        tranches = {t['label']: t['montants'] for t in compta.previsionnel(compta.creances(atelier_test()))}
-        self.assertEqual(tranches['En retard'][0]['montant'], Decimal('100'))
-        self.assertEqual(tranches['Cette semaine'][0]['montant'], Decimal('200'))
-        self.assertEqual(tranches['Dans le mois'][0]['montant'], Decimal('300'))
-        self.assertEqual(tranches['Plus tard'][0]['montant'], Decimal('400'))
+        tranches = {t['code']: t['montants'] for t in compta.previsionnel(compta.creances(atelier_test()))}
+        self.assertEqual(tranches['retard'][0]['montant'], Decimal('100'))
+        self.assertEqual(tranches['semaine'][0]['montant'], Decimal('200'))
+        self.assertEqual(tranches['mois'][0]['montant'], Decimal('300'))
+        self.assertEqual(tranches['plus_tard'][0]['montant'], Decimal('400'))
 
     def test_pages_impayes_et_finances_affichent(self):
         self.robe(prix='1000', livraison=-5)

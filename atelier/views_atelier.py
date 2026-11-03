@@ -10,6 +10,7 @@ from django.views.decorators.http import require_POST
 from .acces import atelier_requis
 from .forms import ClientForm, RobeForm
 from .models import Client, Robe, Tache
+from .services.aujourdhui import tableau_du_jour
 from .services.extraction import extraire_mesures
 from .services.gemini import ErreurIA
 from .services.pdf import reponse_pdf
@@ -228,3 +229,9 @@ def analyser_mesures_ia(request):
         return JsonResponse(extraire_mesures(texte_mesures))
     except ErreurIA as erreur:
         return JsonResponse({'error': erreur.message}, status=erreur.status)
+
+
+@atelier_requis
+def aujourdhui(request):
+    """Ce qui demande l'attention de l'atelier : retards, aujourd'hui, 7 prochains jours."""
+    return render(request, 'atelier/aujourdhui.html', tableau_du_jour(request.atelier))

@@ -45,7 +45,7 @@ def accepter_invitation(request, jeton):
                 form.add_error('identifiant', _("Cet identifiant est déjà pris."))
             else:
                 login(request, utilisateur, backend='django.contrib.auth.backends.ModelBackend')
-                return redirect('dashboard')
+                return redirect('aujourdhui')
     else:
         form = InscriptionForm(initial={'nom_atelier': invitation.nom_atelier}, email=invitation.email)
 

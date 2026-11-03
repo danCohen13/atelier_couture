@@ -1,0 +1,63 @@
+{% extends 'atelier/base.html' %}
+{% load i18n %}
+{% block title %}{% trans "Aujourd'hui" %} — {{ atelier_courant.nom|default:PRODUIT_NOM }}{% endblock %}
+
+{% block content %}
+<main class="page jour-page">
+    <div class="page-head"><div>
+        <span class="eyebrow">{% now "l j F" %}</span>
+        <h1>{% trans "Aujourd'hui" %}</h1>
+        <p>{% trans "Ce qui demande ton attention : les retards d'abord, puis ce qui est prévu aujourd'hui et cette semaine." %}</p>
+    </div></div>
+
+    {% if vide %}
+    <div class="card jour-vide">
+        <h4>{% trans "Rien d'urgent pour le moment" %}</h4>
+        <p>{% trans "Aucun retard, et rien de prévu dans les 7 prochains jours. Profites-en pour avancer sur une commande." %}</p>
+        <a class="btn btn--outline" href="{% url 'dashboard' %}">{% trans "Voir les commandes en cours" %}</a>
+    </div>
+    {% else %}
+    <div class="jour-resume">
+        <span class="tag tag--urgent">{% blocktrans with n=compteurs.urgent %}{{ n }} à traiter{% endblocktrans %}</span>
+        <span class="tag tag--soon">{% blocktrans with n=compteurs.aujourdhui %}{{ n }} aujourd'hui{% endblocktrans %}</span>
+        <span class="tag tag--ok">{% blocktrans with n=compteurs.semaine %}{{ n }} cette semaine{% endblocktrans %}</span>
+    </div>
+
+    {% for section in sections %}
+    <section class="fin-section jour-section jour-section--{{ section.cle }}">
+        <div class="fin-section__head"><div><h2>{{ section.titre }} <span class="jour-nombre">{{ section.elements|length }}</span></h2></div></div>
+        <ul class="jour-liste">
+            {% for e in section.elements %}
+            <li class="jour-item jour-item--{{ e.genre }}">
+                <a class="jour-item__main" href="{{ e.lien }}">
+                    <span class="jour-item__genre">
+                        {% if e.genre == 'livraison_en_retard' %}{% trans "Livraison en retard" %}
+                        {% elif e.genre == 'retour_en_retard' %}{% trans "Retour en retard" %}
+                        {% elif e.genre == 'retrait_manque' %}{% trans "Retrait manqué" %}
+                        {% elif e.genre == 'paiement_en_retard' %}{% trans "Paiement en retard" %}
+                        {% elif e.genre == 'caution_a_restituer' %}{% trans "Caution à restituer" %}
+                        {% elif e.genre == 'livraison' %}{% trans "Livraison" %}
+                        {% elif e.genre == 'retrait' %}{% trans "Retrait" %}
+                        {% elif e.genre == 'retour' %}{% trans "Retour" %}{% endif %}
+                    </span>
+                    <strong class="jour-item__titre">{{ e.titre }}</strong>
+                    <span class="jour-item__sous">{{ e.cliente }}{% if e.detail %} · {{ e.detail }}{% endif %}</span>
+                </a>
+                <div class="jour-item__cote">
+                    <span class="jour-item__quand">
+                        {% if e.ecart < 0 %}{% blocktrans count n=e.ecart_absolu %}{{ n }} jour de retard{% plural %}{{ n }} jours de retard{% endblocktrans %}
+                        {% elif e.ecart == 0 %}{% trans "Aujourd'hui" %}
+                        {% elif e.ecart == 1 %}{% trans "Demain" %}
+                        {% else %}{% blocktrans with n=e.ecart %}Dans {{ n }} jours{% endblocktrans %}{% endif %}
+                    </span>
+                    <span class="jour-item__date">{{ e.date|date:"d/m/Y" }}</span>
+                    {% if e.telephone %}<a class="jour-item__tel" dir="ltr" href="tel:{{ e.telephone }}" aria-label="{% trans "Appeler" %} {{ e.cliente }}">{{ e.telephone }}</a>{% endif %}
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endfor %}
+    {% endif %}
+</main>
+{% endblock %}

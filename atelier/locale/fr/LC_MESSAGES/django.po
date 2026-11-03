@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-27 11:52+0200\n"
+"POT-Creation-Date: 2026-11-03 18:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -475,6 +475,52 @@ msgstr ""
 msgid "Signalé à l'Autorité le"
 msgstr "Signalé à l'Autorité le"
 
+#, python-format
+msgid "%(n)s étape(s) restante(s)"
+msgstr "%(n)s étape(s) restante(s)"
+
+msgid "À traiter maintenant"
+msgstr "À traiter maintenant"
+
+msgid "Retrait prévu, robe pas encore sortie"
+msgstr "Retrait prévu, robe pas encore sortie"
+
+msgid "Aujourd'hui"
+msgstr "Aujourd'hui"
+
+msgid "Les 7 prochains jours"
+msgstr "Les 7 prochains jours"
+
+msgid "En retard"
+msgstr "En retard"
+
+msgid "Cette semaine"
+msgstr "Cette semaine"
+
+msgid "Dans le mois"
+msgstr "Dans le mois"
+
+msgid "Plus tard"
+msgstr "Plus tard"
+
+#, python-format
+msgid "%(n)s paiement en retard à réclamer"
+msgid_plural "%(n)s paiements en retard à réclamer"
+msgstr[0] "%(n)s paiement en retard à réclamer"
+msgstr[1] "%(n)s paiements en retard à réclamer"
+
+#, python-format
+msgid "%(n)s caution à restituer ou à régulariser"
+msgid_plural "%(n)s cautions à restituer ou à régulariser"
+msgstr[0] "%(n)s caution à restituer ou à régulariser"
+msgstr[1] "%(n)s cautions à restituer ou à régulariser"
+
+#, python-format
+msgid "%(n)s robe louée pas encore rendue"
+msgid_plural "%(n)s robes louées pas encore rendues"
+msgstr[0] "%(n)s robe louée pas encore rendue"
+msgstr[1] "%(n)s robes louées pas encore rendues"
+
 msgid "Clé API Gemini manquante (GEMINI_API_KEY non configurée)"
 msgstr "Clé API Gemini manquante (GEMINI_API_KEY non configurée)"
 
@@ -780,6 +826,69 @@ msgstr "facultatif"
 
 msgid "Demander mon invitation"
 msgstr "Demander mon invitation"
+
+msgid ""
+"Ce qui demande ton attention : les retards d'abord, puis ce qui est prévu "
+"aujourd'hui et cette semaine."
+msgstr ""
+"Ce qui demande ton attention : les retards d'abord, puis ce qui est prévu "
+"aujourd'hui et cette semaine."
+
+msgid "Rien d'urgent pour le moment"
+msgstr "Rien d'urgent pour le moment"
+
+msgid ""
+"Aucun retard, et rien de prévu dans les 7 prochains jours. Profites-en pour "
+"avancer sur une commande."
+msgstr ""
+"Aucun retard, et rien de prévu dans les 7 prochains jours. Profites-en pour "
+"avancer sur une commande."
+
+msgid "Voir les commandes en cours"
+msgstr "Voir les commandes en cours"
+
+#, python-format
+msgid "%(n)s à traiter"
+msgstr "%(n)s à traiter"
+
+#, python-format
+msgid "%(n)s aujourd'hui"
+msgstr "%(n)s aujourd'hui"
+
+#, python-format
+msgid "%(n)s cette semaine"
+msgstr "%(n)s cette semaine"
+
+msgid "Livraison en retard"
+msgstr "Livraison en retard"
+
+msgid "Retour en retard"
+msgstr "Retour en retard"
+
+msgid "Retrait manqué"
+msgstr "Retrait manqué"
+
+msgid "Paiement en retard"
+msgstr "Paiement en retard"
+
+msgid "Caution à restituer"
+msgstr "Caution à restituer"
+
+#, python-format
+msgid "%(n)s jour de retard"
+msgid_plural "%(n)s jours de retard"
+msgstr[0] "%(n)s jour de retard"
+msgstr[1] "%(n)s jours de retard"
+
+msgid "Demain"
+msgstr "Demain"
+
+#, python-format
+msgid "Dans %(n)s jours"
+msgstr "Dans %(n)s jours"
+
+msgid "Appeler"
+msgstr "Appeler"
 
 msgid "Maison &amp; atelier de confection"
 msgstr "Maison &amp; atelier de confection"
@@ -1120,9 +1229,6 @@ msgstr "Réf."
 msgid "au"
 msgstr "au"
 
-msgid "En retard"
-msgstr "En retard"
-
 msgid "Restitution"
 msgstr "Restitution"
 
@@ -1400,9 +1506,6 @@ msgstr "Tableau Excel (CSV)"
 
 msgid "Récapitulatif PDF"
 msgstr "Récapitulatif PDF"
-
-msgid "Aujourd'hui"
-msgstr "Aujourd'hui"
 
 msgid "Ce mois"
 msgstr "Ce mois"

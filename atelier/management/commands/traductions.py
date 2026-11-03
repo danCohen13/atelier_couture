@@ -29,6 +29,7 @@ class Command(BaseCommand):
                     if 'fuzzy' in entree.flags:
                         entree.flags.remove('fuzzy')
                         entree.msgstr = ''
+                        entree.msgstr_plural = {i: '' for i in entree.msgstr_plural}
                 catalogue.save()
             chemin_fr = os.path.join('locale', 'fr', 'LC_MESSAGES', 'django.po')
             catalogue = polib.pofile(chemin_fr)

@@ -14,6 +14,7 @@ from . import (
 urlpatterns = [
     # --- RACINE & ATELIER (views_atelier) ---
     path('', views_atelier.dashboard, name='dashboard'),
+    path('aujourdhui/', views_atelier.aujourdhui, name='aujourdhui'),
     path('client/ajouter/', views_atelier.ajouter_client, name='ajouter_client'),
     path('robe/ajouter/', views_atelier.ajouter_robe, name='ajouter_robe'),
     path('robe/<int:robe_id>/tache-rapide/<str:type_tache>/', views_atelier.ajouter_tache_rapide, name='ajouter_tache_rapide'),

@@ -69,7 +69,7 @@ class AccueilTests(TestCase):
         user = User.objects.create_user('a', password=MDP)
         Adhesion.objects.create(user=user, atelier=atelier)
         reponse = self.client.post(reverse('login'), {'username': 'a', 'password': MDP})
-        self.assertRedirects(reponse, reverse('dashboard'), fetch_redirect_response=False)
+        self.assertRedirects(reponse, reverse('aujourdhui'), fetch_redirect_response=False)
 
 
 class InvitationModeleTests(TestCase):
@@ -113,7 +113,7 @@ class AccepterInvitationTests(TestCase):
 
     def test_inscription_cree_atelier_compte_et_connecte(self):
         reponse = self.client.post(self.url, donnees())
-        self.assertRedirects(reponse, reverse('dashboard'), fetch_redirect_response=False)
+        self.assertRedirects(reponse, reverse('aujourdhui'), fetch_redirect_response=False)
         utilisateur = User.objects.get(username='lea')
         self.assertEqual(utilisateur.email, 'lea@example.com')
         adhesion = utilisateur.adhesion

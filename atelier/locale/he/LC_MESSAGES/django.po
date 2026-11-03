@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Atelier Pro\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-27 11:52+0200\n"
+"POT-Creation-Date: 2026-11-03 18:17+0200\n"
 "PO-Revision-Date: 2026-10-26 19:00+0200\n"
 "Last-Translator: \n"
 "Language-Team: he\n"
@@ -467,6 +467,52 @@ msgstr ""
 msgid "Signalé à l'Autorité le"
 msgstr "דווח לרשות בתאריך"
 
+#, python-format
+msgid "%(n)s étape(s) restante(s)"
+msgstr "%(n)s שלבים נותרו"
+
+msgid "À traiter maintenant"
+msgstr "לטיפול מיידי"
+
+msgid "Retrait prévu, robe pas encore sortie"
+msgstr "האיסוף היה מתוכנן, השמלה עדיין לא יצאה"
+
+msgid "Aujourd'hui"
+msgstr "היום"
+
+msgid "Les 7 prochains jours"
+msgstr "7 הימים הקרובים"
+
+msgid "En retard"
+msgstr "באיחור"
+
+msgid "Cette semaine"
+msgstr "השבוע"
+
+msgid "Dans le mois"
+msgstr "בחודש הקרוב"
+
+msgid "Plus tard"
+msgstr "מאוחר יותר"
+
+#, python-format
+msgid "%(n)s paiement en retard à réclamer"
+msgid_plural "%(n)s paiements en retard à réclamer"
+msgstr[0] "%(n)s תשלום באיחור לגבייה"
+msgstr[1] "%(n)s תשלומים באיחור לגבייה"
+
+#, python-format
+msgid "%(n)s caution à restituer ou à régulariser"
+msgid_plural "%(n)s cautions à restituer ou à régulariser"
+msgstr[0] "%(n)s פיקדון להחזרה או להסדרה"
+msgstr[1] "%(n)s פיקדונות להחזרה או להסדרה"
+
+#, python-format
+msgid "%(n)s robe louée pas encore rendue"
+msgid_plural "%(n)s robes louées pas encore rendues"
+msgstr[0] "%(n)s שמלה מושכרת שטרם הוחזרה"
+msgstr[1] "%(n)s שמלות מושכרות שטרם הוחזרו"
+
 msgid "Clé API Gemini manquante (GEMINI_API_KEY non configurée)"
 msgstr "מפתח ה-API של Gemini חסר (GEMINI_API_KEY לא הוגדר)"
 
@@ -753,6 +799,66 @@ msgstr "לא חובה"
 
 msgid "Demander mon invitation"
 msgstr "לבקשת ההזמנה שלי"
+
+msgid ""
+"Ce qui demande ton attention : les retards d'abord, puis ce qui est prévu "
+"aujourd'hui et cette semaine."
+msgstr ""
+"מה שדורש את תשומת לבך: קודם האיחורים, ואז מה שמתוכנן להיום ולשבוע הקרוב."
+
+msgid "Rien d'urgent pour le moment"
+msgstr "שום דבר דחוף כרגע"
+
+msgid ""
+"Aucun retard, et rien de prévu dans les 7 prochains jours. Profites-en pour "
+"avancer sur une commande."
+msgstr "אין איחורים ואין דבר מתוכנן ב-7 הימים הקרובים. הזדמנות להתקדם בהזמנה."
+
+msgid "Voir les commandes en cours"
+msgstr "לצפייה בהזמנות בתהליך"
+
+#, python-format
+msgid "%(n)s à traiter"
+msgstr "%(n)s לטיפול"
+
+#, python-format
+msgid "%(n)s aujourd'hui"
+msgstr "%(n)s להיום"
+
+#, python-format
+msgid "%(n)s cette semaine"
+msgstr "%(n)s השבוע"
+
+msgid "Livraison en retard"
+msgstr "מסירה באיחור"
+
+msgid "Retour en retard"
+msgstr "החזרה באיחור"
+
+msgid "Retrait manqué"
+msgstr "איסוף שלא התבצע"
+
+msgid "Paiement en retard"
+msgstr "תשלום באיחור"
+
+msgid "Caution à restituer"
+msgstr "פיקדון להחזרה"
+
+#, python-format
+msgid "%(n)s jour de retard"
+msgid_plural "%(n)s jours de retard"
+msgstr[0] "איחור של יום"
+msgstr[1] "איחור של %(n)s ימים"
+
+msgid "Demain"
+msgstr "מחר"
+
+#, python-format
+msgid "Dans %(n)s jours"
+msgstr "בעוד %(n)s ימים"
+
+msgid "Appeler"
+msgstr "התקשרי אל"
 
 msgid "Maison &amp; atelier de confection"
 msgstr "בית אופנה וסדנת תפירה"
@@ -1087,9 +1193,6 @@ msgstr "מס׳"
 msgid "au"
 msgstr "עד"
 
-msgid "En retard"
-msgstr "באיחור"
-
 msgid "Restitution"
 msgstr "החזרה"
 
@@ -1356,9 +1459,6 @@ msgstr "טבלת Excel‏ (CSV)"
 
 msgid "Récapitulatif PDF"
 msgstr "סיכום PDF"
-
-msgid "Aujourd'hui"
-msgstr "היום"
 
 msgid "Ce mois"
 msgstr "החודש"

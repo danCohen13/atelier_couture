@@ -1,5 +1,7 @@
 """Créances, cautions à suivre, prévisionnel et alertes."""
 from django.utils import timezone
+from django.utils.translation import gettext as _
+from django.utils.translation import ngettext
 
 from .conversion import somme_par_devise
 from .ecritures import charger_dossiers
@@ -50,19 +52,20 @@ def cautions_a_suivre(atelier, contrats=None):
 def previsionnel(elements, aujourdhui=None):
     """Entrées d'argent attendues, par tranche d'échéance (sommes par devise)."""
     aujourdhui = aujourdhui or timezone.localdate()
-    tranches = [('En retard', None, -1), ('Cette semaine', 0, 7), ('Dans le mois', 8, 30), ('Plus tard', 31, None)]
+    tranches = [('retard', _('En retard'), None, -1), ('semaine', _('Cette semaine'), 0, 7),
+                ('mois', _('Dans le mois'), 8, 30), ('plus_tard', _('Plus tard'), 31, None)]
     res = []
-    for label, mini, maxi in tranches:
+    for code, label, mini, maxi in tranches:
         couples = []
         for e in elements:
             jours = (e['echeance'] - aujourdhui).days
-            if label == 'En retard':
+            if code == 'retard':
                 ok = jours < 0
             else:
                 ok = jours >= mini and (maxi is None or jours <= maxi)
             if ok:
                 couples.append((e['devise'], e['reste']))
-        res.append({'label': label, 'montants': somme_par_devise(couples)})
+        res.append({'code': code, 'label': label, 'montants': somme_par_devise(couples)})
     return res
 
 
@@ -73,13 +76,16 @@ def alertes(atelier, elements, cautions, aujourdhui=None, contrats=None):
     liste = []
     en_retard = [e for e in elements if e['en_retard']]
     if en_retard:
-        liste.append(f"{len(en_retard)} paiement(s) en retard à réclamer")
+        liste.append(ngettext("%(n)s paiement en retard à réclamer", "%(n)s paiements en retard à réclamer",
+                              len(en_retard)) % {'n': len(en_retard)})
     a_restituer = [c for c in cautions if c['a_restituer']]
     if a_restituer:
-        liste.append(f"{len(a_restituer)} caution(s) à restituer ou à régulariser")
+        liste.append(ngettext("%(n)s caution à restituer ou à régulariser", "%(n)s cautions à restituer ou à régulariser",
+                              len(a_restituer)) % {'n': len(a_restituer)})
     retards = sum(1 for loc in contrats
                   if loc.statut in ('EN_COURS', 'EN_RETARD') and loc.date_retour_effectif is None
                   and loc.date_fin_prevue < aujourdhui)
     if retards:
-        liste.append(f"{retards} robe(s) louée(s) pas encore rendue(s)")
+        liste.append(ngettext("%(n)s robe louée pas encore rendue", "%(n)s robes louées pas encore rendues",
+                              retards) % {'n': retards})
     return liste

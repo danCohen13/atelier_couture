@@ -82,8 +82,13 @@
         <aside class="sidebar">
             <div class="sidebar-title">{% trans "Navigation" %}</div>
             <nav class="sidebar-menu">
+                <!-- Ce qui demande l'attention aujourd'hui -->
+                <a href="{% url 'aujourdhui' %}" class="sidebar-link {% if request.resolver_match.url_name == 'aujourdhui' %}is-active{% endif %}">
+                    {% trans "Aujourd'hui" %}
+                </a>
+
                 <!-- Atelier & confections sur mesure -->
-                <a href="{% url 'dashboard' %}" class="sidebar-link {% if request.resolver_match.url_name != 'finances' and request.resolver_match.url_name != 'planning' and 'location' not in request.resolver_match.url_name and 'confidentialite' not in request.resolver_match.url_name and not section_finances %}is-active{% endif %}">
+                <a href="{% url 'dashboard' %}" class="sidebar-link {% if request.resolver_match.url_name != 'aujourdhui' and request.resolver_match.url_name != 'finances' and request.resolver_match.url_name != 'planning' and 'location' not in request.resolver_match.url_name and 'confidentialite' not in request.resolver_match.url_name and not section_finances %}is-active{% endif %}">
                     {% trans "Atelier &amp; modèles" %}
                 </a>
 
