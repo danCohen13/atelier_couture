@@ -12,6 +12,7 @@ from .ateliers import ModeleAtelier
 
 
 class CodeReinitialisation(models.Model):
+    """Code à 6 chiffres (conservé sous forme de hachage) pour réinitialiser un mot de passe."""
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     code = models.CharField(max_length=6)
     created_at = models.DateTimeField(auto_now_add=True)

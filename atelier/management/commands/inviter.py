@@ -10,6 +10,7 @@ from atelier.models import Invitation
 
 
 class Command(BaseCommand):
+    """Crée une invitation d'inscription et affiche ou envoie le lien."""
     help = "Crée une invitation et affiche le lien à transmettre (affiché une seule fois)."
 
     def add_arguments(self, parser):

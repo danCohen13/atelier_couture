@@ -29,6 +29,7 @@ MOIS_CONSERVES = 12
 
 
 class ErreurSauvegarde(Exception):
+    """Problème de sauvegarde ou de restauration, avec un message lisible."""
     pass
 
 
@@ -90,6 +91,7 @@ def a_supprimer(noms, maintenant=None):
 
 
 class StockageLocal:
+    """Dépôt des sauvegardes dans un dossier de la machine."""
     def __init__(self, dossier):
         self.dossier = Path(dossier)
         self.dossier.mkdir(parents=True, exist_ok=True)
@@ -108,6 +110,7 @@ class StockageLocal:
 
 
 class StockageS3:
+    """Dépôt des sauvegardes dans un bucket compatible S3 (Cloudflare R2, Backblaze B2, AWS…)."""
     def __init__(self):
         import boto3  # chargé seulement ici : inutile pour les sauvegardes locales
         conf = settings

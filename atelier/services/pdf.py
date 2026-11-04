@@ -11,7 +11,7 @@ from django.template.loader import get_template
 from xhtml2pdf import pisa
 
 
-def link_callback(uri, rel):
+def link_callback(uri, _rel):
     """Résout les chemins {% static %} pour que xhtml2pdf trouve le fichier CSS sur le disque."""
     if uri.startswith(settings.STATIC_URL):
         path = os.path.join(settings.STATIC_ROOT, uri.replace(settings.STATIC_URL, ""))

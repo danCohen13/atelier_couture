@@ -15,6 +15,7 @@ class DeviseParDefautMixin:
 
 
 class RobeLocationForm(DeviseParDefautMixin, forms.ModelForm):
+    """Ajout d'une robe au stock de location (référence unique par atelier)."""
     def __init__(self, *args, atelier=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.atelier = atelier
@@ -56,6 +57,7 @@ class RobeLocationForm(DeviseParDefautMixin, forms.ModelForm):
 
 
 class LocationForm(DeviseParDefautMixin, forms.ModelForm):
+    """Contrat de location : refuse un chevauchement avec une autre réservation de la même robe."""
     date_debut = date_field(_("Date de retrait prévue"))
     date_fin_prevue = date_field(_("Date de retour prévue"))
 

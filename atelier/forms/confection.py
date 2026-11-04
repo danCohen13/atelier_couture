@@ -8,6 +8,7 @@ from .commun import date_field
 
 class RobeForm(forms.ModelForm):
     # On applique la même rigueur pour les deux dates de la robe
+    """Création et modification d'une commande sur mesure ; les clientes proposées sont celles de l'atelier."""
     date_commencement = date_field(_("Date de commencement"))
     date_livraison = date_field(_("Date de livraison"))
 

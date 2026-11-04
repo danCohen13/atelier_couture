@@ -9,10 +9,11 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from .ateliers import ModeleAtelier
-from .constantes import DEVISE_CHOICES, SYMBOLES_DEVISE
+from .constantes import DEVISE_CHOICES
+from .mixins import AvecDevise, AvecPaiements
 
 
-class RobeLocation(ModeleAtelier):
+class RobeLocation(AvecDevise, ModeleAtelier):
     """
     Représente une pièce physique en stock destinée à la location.
     """
@@ -76,10 +77,6 @@ class RobeLocation(ModeleAtelier):
     def __str__(self):
         return f"{self.reference_stock} - {self.nom_modele} (T.{self.taille})"
 
-    @property
-    def symbole_devise(self):
-        return SYMBOLES_DEVISE.get(self.devise, '₪')
-
     def est_disponible_sur_periode(self, debut, fin, exclure_location_id=None):
         if self.statut_physique in ['HORS_SERVICE', 'REPARATION']:
             return False
@@ -95,11 +92,10 @@ class RobeLocation(ModeleAtelier):
         return True
 
 
-class Location(ModeleAtelier):
+class Location(AvecDevise, AvecPaiements, ModeleAtelier):
+    """Contrat de location : relie une cliente à une robe du stock pour une période, avec prix et caution."""
+    CHAMP_PRIX = 'prix_convenu'
     PARENTS_ATELIER = ('client', 'robe_location')
-    """
-    Contrat et événement de location reliant une cliente à une robe physique.
-    """
     STATUT_LOCATION_CHOICES = [
         ('RESERVEE', _('Réservée')),
         ('EN_COURS', _('En cours (sortie atelier)')),
@@ -181,10 +177,6 @@ class Location(ModeleAtelier):
         return f"Location #{self.pk} - {self.client} ({self.robe_location.reference_stock})"
 
     @property
-    def symbole_devise(self):
-        return SYMBOLES_DEVISE.get(self.devise, '₪')
-
-    @property
     def caution_gardee(self):
         """Part de la caution conservée par l'atelier (donc un revenu)."""
         if self.caution_statut == 'ENCAISSEE_TOTAL':
@@ -192,14 +184,6 @@ class Location(ModeleAtelier):
         if self.caution_statut == 'ENCAISSEE_PARTIEL':
             return min(self.caution_retenue or Decimal('0'), self.caution_montant or Decimal('0'))
         return Decimal('0')
-
-    @property
-    def total_paye(self):
-        return sum((p.montant for p in self.paiements.all()), Decimal('0'))
-
-    @property
-    def reste_a_payer(self):
-        return (self.prix_convenu or Decimal('0')) - self.total_paye
 
     def clean(self):
         super().clean()

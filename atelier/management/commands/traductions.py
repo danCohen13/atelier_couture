@@ -14,6 +14,7 @@ from django.core.management.base import BaseCommand
 
 
 class Command(BaseCommand):
+    """Met à jour les catalogues de traduction hébreu et français."""
     help = "Extrait les textes à traduire, complète le catalogue français et compile les catalogues."
 
     def handle(self, *args, **options):

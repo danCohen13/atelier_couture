@@ -25,12 +25,14 @@ from .models import (
 
 @admin.register(Atelier)
 class AtelierAdmin(admin.ModelAdmin):
+    """Liste des ateliers clients : statut (actif, essai, suspendu) et offre."""
     list_display = ('nom', 'statut', 'offre', 'cree_le')
     list_filter = ('statut', 'offre')
     search_fields = ('nom',)
 
 
 class InvitationAdminForm(forms.ModelForm):
+    """Formulaire d'invitation : refuse une adresse qui a déjà un compte."""
     class Meta:
         model = Invitation
         fields = ('email', 'nom_atelier')
@@ -106,6 +108,7 @@ class DemandeInvitationAdmin(admin.ModelAdmin):
 
 @admin.register(Adhesion)
 class AdhesionAdmin(admin.ModelAdmin):
+    """Qui appartient à quel atelier, et avec quel rôle."""
     list_display = ('user', 'atelier', 'role')
     list_filter = ('role', 'atelier')
 
@@ -120,21 +123,25 @@ class AdminParAtelier(admin.ModelAdmin):
 
 @admin.register(Client)
 class ClientAdmin(AdminParAtelier):
+    """Consultation des clientes (le travail courant se fait dans l'application, pas ici)."""
     search_fields = ('nom', 'prenom')
 
 
 @admin.register(Robe)
 class RobeAdmin(AdminParAtelier):
+    """Consultation des commandes sur mesure."""
     pass
 
 
 @admin.register(Tache)
 class TacheAdmin(AdminParAtelier):
+    """Consultation des étapes de fabrication."""
     pass
 
 
 @admin.register(RobeLocation)
 class RobeLocationAdmin(AdminParAtelier):
+    """Consultation du stock de robes à louer."""
     list_display = ('reference_stock', 'atelier', 'nom_modele', 'taille', 'couleur', 'prix_location_defaut', 'statut_physique')
     list_filter = ('atelier', 'statut_physique', 'taille', 'couleur')
     search_fields = ('reference_stock', 'nom_modele')
@@ -142,6 +149,7 @@ class RobeLocationAdmin(AdminParAtelier):
 
 @admin.register(Location)
 class LocationAdmin(AdminParAtelier):
+    """Consultation des contrats de location."""
     list_display = ('id', 'atelier', 'client', 'robe_location', 'date_debut', 'date_fin_prevue', 'statut', 'caution_statut')
     list_filter = ('atelier', 'statut', 'caution_statut', 'date_debut')
     search_fields = ('client__nom', 'client__prenom', 'robe_location__reference_stock')
@@ -149,25 +157,30 @@ class LocationAdmin(AdminParAtelier):
 
 @admin.register(Paiement)
 class PaiementAdmin(AdminParAtelier):
+    """Consultation des paiements reçus."""
     pass
 
 
 @admin.register(DepenseRecurrente)
 class DepenseRecurrenteAdmin(AdminParAtelier):
+    """Consultation des dépenses qui se répètent chaque mois."""
     pass
 
 
 @admin.register(Transaction)
 class TransactionAdmin(AdminParAtelier):
+    """Consultation des opérations de finances saisies à la main."""
     pass
 
 
 @admin.register(ParametresFinance)
 class ParametresFinanceAdmin(admin.ModelAdmin):
+    """Taux de change et objectif mensuel de chaque atelier."""
     list_display = ('atelier', 'taux_eur', 'taux_usd', 'objectif_mensuel')
 
 
 @admin.register(IncidentSecurite)
 class IncidentSecuriteAdmin(AdminParAtelier):
+    """Registre des incidents de sécurité (obligation de protection de la vie privée)."""
     list_display = ('date_constat', 'atelier', 'description', 'grave', 'signale_autorite_le')
     list_filter = ('atelier', 'grave')

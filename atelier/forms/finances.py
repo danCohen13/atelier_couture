@@ -7,6 +7,7 @@ from .commun import date_field
 
 
 class TransactionForm(forms.ModelForm):
+    """Saisie d'une recette ou d'une dépense (à la main ou pré-remplie par l'IA)."""
     date = date_field(_("Date"))
 
     class Meta:
@@ -29,6 +30,7 @@ class TransactionForm(forms.ModelForm):
 
 
 class PaiementForm(forms.ModelForm):
+    """Enregistrement d'un paiement reçu sur une commande ou une location."""
     date = date_field(_("Date du paiement"))
 
     class Meta:
@@ -48,6 +50,7 @@ class PaiementForm(forms.ModelForm):
 
 
 class DepenseRecurrenteForm(forms.ModelForm):
+    """Dépense qui se répète chaque mois (loyer, abonnements…)."""
     date_debut = date_field(_("À partir du"))
 
     class Meta:
@@ -74,6 +77,7 @@ class DepenseRecurrenteForm(forms.ModelForm):
 
 
 class ParametresFinanceForm(forms.ModelForm):
+    """Taux de change vers le shekel et objectif de chiffre d'affaires mensuel."""
     class Meta:
         model = ParametresFinance
         fields = ['taux_eur', 'taux_usd', 'objectif_mensuel']

@@ -8,6 +8,7 @@ from ..models import Atelier
 
 
 class AtelierReglagesForm(forms.ModelForm):
+    """Nom de l'atelier et contact imprimé sur la fiche d'information remise aux clientes."""
     class Meta:
         model = Atelier
         fields = ['nom', 'contact_confidentialite']

@@ -1,17 +1,23 @@
 """Confection sur mesure : robes et tâches de fabrication."""
 
-from decimal import Decimal
 
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from .ateliers import ModeleAtelier
-from .constantes import DEVISE_CHOICES, SYMBOLES_DEVISE
+from .constantes import DEVISE_CHOICES
+from .mixins import AvecDevise, AvecPaiements
 
 
-class Robe(ModeleAtelier):
+class Robe(AvecDevise, AvecPaiements, ModeleAtelier):
+    """Une COMMANDE SUR MESURE (une confection) : une robe fabriquée pour une cliente.
+
+    Ne pas confondre avec `RobeLocation` (models/location.py), une robe du STOCK que l'on loue.
+    Le nom `Robe` est historique ; dans l'interface on parle de « confection » ou de « commande ».
+    """
     PARENTS_ATELIER = ('client',)
+    CHAMP_PRIX = 'prix_total'
     DEVISE_CHOICES = DEVISE_CHOICES
 
     client = models.ForeignKey('Client', on_delete=models.CASCADE, related_name='robes')
@@ -30,19 +36,6 @@ class Robe(ModeleAtelier):
     croquis = models.URLField(max_length=500, blank=True, null=True)
     photo_tissus = models.URLField(max_length=500, blank=True, null=True)
     
-    @property
-    def symbole_devise(self):
-        return SYMBOLES_DEVISE.get(self.devise, '₪')
-
-    @property
-    def total_paye(self):
-        """Somme des paiements reçus (utilise le prefetch `paiements` s'il existe)."""
-        return sum((p.montant for p in self.paiements.all()), Decimal('0'))
-
-    @property
-    def reste_a_payer(self):
-        return (self.prix_total or Decimal('0')) - self.total_paye
-
     @property
     def jours_restants(self):
         if self.date_livraison:
@@ -71,6 +64,7 @@ class Robe(ModeleAtelier):
 
 
 class Tache(ModeleAtelier):
+    """Une étape de fabrication d'une commande sur mesure (toile d'essai, coupe, finitions…)."""
     PARENTS_ATELIER = ('robe',)
     robe = models.ForeignKey(Robe, on_delete=models.CASCADE, related_name='taches')
     libelle = models.CharField(max_length=250)

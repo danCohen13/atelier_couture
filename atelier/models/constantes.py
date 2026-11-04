@@ -1,6 +1,5 @@
-from django.utils.translation import gettext_lazy as _
-
 """Devises proposées partout où l'on saisit un montant."""
+from django.utils.translation import gettext_lazy as _
 
 # Devises proposées partout où l'on saisit un montant (confections, locations, stock).
 # Le shekel est la devise par défaut de l'atelier.

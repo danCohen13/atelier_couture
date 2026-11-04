@@ -5,6 +5,7 @@ from atelier.services import sauvegarde as svc
 
 
 class Command(BaseCommand):
+    """Crée une sauvegarde chiffrée de la base et applique la rotation."""
     help = "Crée une sauvegarde chiffrée de la base et applique la rotation (14 jours + 12 mois)."
 
     def add_arguments(self, parser):

@@ -9,6 +9,7 @@ from .ateliers import ModeleAtelier
 
 
 class Client(ModeleAtelier):
+    """Une cliente de l'atelier, avec ses coordonnées et ses mensurations."""
     nom = models.CharField(max_length=100)
     prenom = models.CharField(max_length=100)
     

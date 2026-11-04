@@ -10,6 +10,7 @@ from atelier.services import sauvegarde as svc
 
 
 class Command(BaseCommand):
+    """Restaure une sauvegarde chiffrée dans une base vide."""
     help = "Restaure une sauvegarde chiffrée (dernière par défaut) dans une base vide."
 
     def add_arguments(self, parser):

@@ -11,6 +11,7 @@ MOIS_FR = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
 
 
 class LigneCompte:
+    """Une écriture comptable normalisée (recette ou dépense, automatique ou manuelle)."""
     def __init__(self, date, type, categorie_label, designation, robe, montant, devise=DEVISE_PRINCIPALE,
                  auto=False, source='autre', transaction=None, justificatif=''):
         self.date = date

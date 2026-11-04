@@ -8,6 +8,7 @@ from .commun import date_field
 
 class ClientForm(forms.ModelForm):
     # On configure la date de naissance pour accepter et afficher le format jj/mm/aaaa
+    """Création et modification d'une cliente (coordonnées et mensurations)."""
     date_naissance = date_field(_("Date de naissance"), required=False)
     information_remise_le = date_field(_("Fiche d'information remise le"), required=False)
 

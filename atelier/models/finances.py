@@ -8,10 +8,11 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from .ateliers import Atelier, ModeleAtelier
-from .constantes import SYMBOLES_DEVISE
+from .mixins import AvecDevise
 
 
 class Transaction(ModeleAtelier):
+    """Une recette ou une dépense saisie à la main ; les écritures automatiques viennent des commandes et locations."""
     PARENTS_ATELIER = ('robe', 'location', 'recurrente')
 
     TYPE_CHOICES = [
@@ -65,7 +66,8 @@ class Transaction(ModeleAtelier):
         return f"{self.designation} ({self.montant} ₪)"
 
 
-class Paiement(ModeleAtelier):
+class Paiement(AvecDevise, ModeleAtelier):
+    """Un paiement reçu, rattaché soit à une commande sur mesure, soit à une location."""
     PARENTS_ATELIER = ('robe', 'location')
 
     """Somme reçue d'une cliente (acompte ou solde) pour une robe sur mesure ou une location."""
@@ -101,10 +103,6 @@ class Paiement(ModeleAtelier):
     @property
     def devise(self):
         return self.cible.devise if self.cible else 'ILS'
-
-    @property
-    def symbole_devise(self):
-        return SYMBOLES_DEVISE.get(self.devise, '₪')
 
     def __str__(self):
         return f"Paiement {self.montant} {self.symbole_devise} ({self.date})"

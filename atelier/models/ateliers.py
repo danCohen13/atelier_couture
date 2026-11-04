@@ -15,6 +15,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 class Atelier(models.Model):
+    """Un atelier client du produit : toutes les données métier lui sont rattachées."""
     STATUT_CHOICES = [
         ('ACTIF', _('Actif')),
         ('ESSAI', _('En essai')),
@@ -136,12 +137,14 @@ class Adhesion(models.Model):
 
 
 class AtelierQuerySet(models.QuerySet):
+    """Requêtes réutilisables : `.de(atelier)` limite aux lignes d'un atelier."""
     def de(self, atelier):
         """Seules les lignes de cet atelier. À utiliser pour TOUTE lecture dans une vue ou un service."""
         return self.filter(atelier=atelier)
 
 
 class AtelierManager(models.Manager.from_queryset(AtelierQuerySet)):
+    """Gestionnaire qui ajoute `.de(atelier)` à tous les modèles d'atelier."""
     pass
 
 

@@ -6,6 +6,7 @@ from atelier.models import Adhesion, Atelier
 
 
 class Command(BaseCommand):
+    """Crée un atelier et son compte propriétaire (hors invitation)."""
     help = "Crée un atelier avec un compte propriétaire : creer_atelier 'Nom' identifiant motdepasse [e-mail]"
 
     def add_arguments(self, parser):

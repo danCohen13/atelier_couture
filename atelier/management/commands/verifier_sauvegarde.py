@@ -7,6 +7,7 @@ from atelier.services import sauvegarde as svc
 
 
 class Command(BaseCommand):
+    """Contrôle que la dernière sauvegarde est récente, lisible et non vide."""
     help = "Vérifie que la dernière sauvegarde est récente et déchiffrable."
 
     def add_arguments(self, parser):
