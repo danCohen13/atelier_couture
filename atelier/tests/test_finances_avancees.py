@@ -211,6 +211,42 @@ class RecurrentesTests(Base):
         self.assertEqual(rec.transactions.count(), 3)
         self.assertEqual(compta.generer_depenses_recurrentes(atelier_test(), datetime.date(2026, 4, 2)), 1)
 
+    def test_la_base_refuse_deux_ecritures_pour_la_meme_date(self):
+        """Garde-fou de la base : deux requêtes simultanées ne peuvent pas doubler une dépense."""
+        from django.db import IntegrityError, transaction
+        rec = DepenseRecurrente.objects.create(
+            atelier=atelier_test(), designation='Loyer', montant=Decimal('2000'), jour_du_mois=1,
+            date_debut=datetime.date(2026, 1, 1))
+        compta.generer_depenses_recurrentes(atelier_test(), datetime.date(2026, 1, 15))
+        with self.assertRaises(IntegrityError), transaction.atomic():
+            Transaction.objects.create(
+                atelier=atelier_test(), type='DEPENSE', montant=Decimal('2000'), designation='Loyer',
+                date=datetime.date(2026, 1, 1), recurrente=rec)
+
+    def test_generation_concurrente_ne_cree_pas_de_doublon(self):
+        """Une écriture créée entre la lecture et l'insertion est ignorée au lieu de faire échouer la page."""
+        rec = DepenseRecurrente.objects.create(
+            atelier=atelier_test(), designation='Loyer', montant=Decimal('2000'), jour_du_mois=1,
+            date_debut=datetime.date(2026, 1, 1))
+        vrai = Transaction.objects.bulk_create
+
+        def concurrent(objs, **kw):
+            Transaction.objects.create(
+                atelier=atelier_test(), type='DEPENSE', montant=Decimal('2000'), designation='Loyer',
+                date=datetime.date(2026, 1, 1), recurrente=rec)
+            return vrai(objs, **kw)
+
+        from unittest import mock
+        with mock.patch.object(Transaction.objects, 'bulk_create', concurrent):
+            compta.generer_depenses_recurrentes(atelier_test(), datetime.date(2026, 1, 15))
+        self.assertEqual(rec.transactions.count(), 1)
+
+    def test_ecritures_manuelles_sans_recurrente_restent_possibles(self):
+        for _ in range(2):
+            Transaction.objects.create(atelier=atelier_test(), type='DEPENSE', montant=Decimal('5'),
+                                       designation='Fil', date=datetime.date(2026, 1, 1))
+        self.assertEqual(Transaction.objects.filter(recurrente__isnull=True).count(), 2)
+
     def test_pas_d_ecriture_future_ni_inactive(self):
         DepenseRecurrente.objects.create(atelier=atelier_test(), designation='Futur', montant=Decimal('10'), jour_du_mois=20,
                                          date_debut=datetime.date(2026, 3, 1))

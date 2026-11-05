@@ -1,6 +1,7 @@
 from datetime import timedelta
 
 from django.contrib import messages
+from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.utils.translation import gettext as _
@@ -93,6 +94,13 @@ def periodes_reservees_par_robe(atelier):
     return periodes
 
 
+def _verrouiller_robe(request):
+    """Verrouille (jusqu'à la fin de la transaction) la robe du stock visée par le formulaire, si elle est valide."""
+    identifiant = request.POST.get('robe_location', '')
+    if identifiant.isdigit():
+        list(RobeLocation.objects.de(request.atelier).select_for_update().filter(pk=int(identifiant)))
+
+
 @atelier_requis
 def creer_location(request):
     """Création d'un contrat avec préremplissage automatique si demandé depuis une fiche cliente ou robe."""
@@ -110,11 +118,15 @@ def creer_location(request):
         initial_data['caution_montant'] = robe.caution_defaut
 
     if request.method == 'POST':
-        form = LocationForm(request.POST, atelier=request.atelier)
-        if form.is_valid():
-            location = form.save()
-            messages.success(request, _("Contrat #%(id)s enregistré avec succès.") % {'id': location.id})
-            return redirect('tableau_bord_locations')
+        # Verrou sur la robe du stock : deux contrats simultanés pour la même robe passent l'un
+        # après l'autre, le second voit donc le premier lors du contrôle de chevauchement.
+        with transaction.atomic():
+            _verrouiller_robe(request)
+            form = LocationForm(request.POST, atelier=request.atelier)
+            if form.is_valid():
+                location = form.save()
+                messages.success(request, _("Contrat #%(id)s enregistré avec succès.") % {'id': location.id})
+                return redirect('tableau_bord_locations')
     else:
         form = LocationForm(initial=initial_data, atelier=request.atelier)
 

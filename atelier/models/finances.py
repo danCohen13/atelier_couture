@@ -61,6 +61,11 @@ class Transaction(ModeleAtelier):
 
     class Meta:
         ordering = ['-date', '-id']
+        constraints = [
+            # Une dépense récurrente ne produit qu'une écriture par date, même si deux requêtes
+            # ouvrent la page Finances en même temps (les écritures manuelles n'ont pas de `recurrente`).
+            models.UniqueConstraint(fields=['recurrente', 'date'], name='depense_recurrente_unique_par_date'),
+        ]
 
     def __str__(self):
         return f"{self.designation} ({self.montant} ₪)"

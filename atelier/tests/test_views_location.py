@@ -324,3 +324,48 @@ class LocationViewsTests(TestCase):
         self.client.login(username="couturiere", password="Password123!")
         response = self.client.get(reverse('creer_location'))
         self.assertNotIn(self.robe.id, response.context['periodes_reservees'])
+
+    def _donnees_contrat(self, debut, fin):
+        return {
+            'client': self.cliente.pk, 'robe_location': self.robe.pk,
+            'date_debut': debut.strftime('%d/%m/%Y'), 'date_fin_prevue': fin.strftime('%d/%m/%Y'),
+            'prix_convenu': '220.00', 'devise': 'ILS', 'caution_montant': '600.00',
+            'caution_statut': 'NON_DEPOSEE', 'delai_tampon_jours': 2, 'statut': 'RESERVEE',
+        }
+
+    def test_creation_de_contrat_verrouille_la_robe_du_stock(self):
+        """Le contrôle de chevauchement et l'enregistrement se font sous verrou sur la robe."""
+        from unittest import mock
+
+        from django.db.models.query import QuerySet
+        self.client.login(username="couturiere", password="Password123!")
+        debut = datetime.date.today() + datetime.timedelta(days=30)
+        appels = []
+        vrai = QuerySet.select_for_update
+
+        def espion(qs, *a, **kw):
+            appels.append(qs.model)
+            return vrai(qs, *a, **kw)
+
+        with mock.patch.object(QuerySet, 'select_for_update', espion):
+            r = self.client.post(reverse('creer_location'), self._donnees_contrat(debut, debut + datetime.timedelta(days=2)))
+        self.assertRedirects(r, reverse('tableau_bord_locations'))
+        self.assertIn(RobeLocation, appels)
+        self.assertEqual(Location.objects.filter(date_debut=debut).count(), 1)
+
+    def test_second_contrat_chevauchant_est_refuse(self):
+        self.client.login(username="couturiere", password="Password123!")
+        debut = datetime.date.today() + datetime.timedelta(days=30)
+        donnees = self._donnees_contrat(debut, debut + datetime.timedelta(days=2))
+        self.client.post(reverse('creer_location'), donnees)
+        r = self.client.post(reverse('creer_location'), donnees)
+        self.assertEqual(r.status_code, 200)  # formulaire réaffiché avec l'erreur
+        self.assertEqual(Location.objects.filter(date_debut=debut).count(), 1)
+
+    def test_robe_inconnue_ou_invalide_ne_plante_pas(self):
+        self.client.login(username="couturiere", password="Password123!")
+        debut = datetime.date.today() + datetime.timedelta(days=30)
+        for valeur in ('', 'abc', '999999'):
+            donnees = self._donnees_contrat(debut, debut + datetime.timedelta(days=2))
+            donnees['robe_location'] = valeur
+            self.assertEqual(self.client.post(reverse('creer_location'), donnees).status_code, 200)

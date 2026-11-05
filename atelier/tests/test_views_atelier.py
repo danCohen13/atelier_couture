@@ -94,6 +94,38 @@ class DashboardViewTests(TestCase):
         robes = response.context['robes']
         self.assertEqual(robes[0].nom_modele, "Robe Alpha")
 
+    def test_robe_sans_tache_est_active_et_pas_terminee(self):
+        sans = Robe.objects.create(
+            client=self.cliente, nom_modele="Robe Vide",
+            date_commencement=datetime.date.today(), date_livraison=datetime.date.today())
+        self.assertIn(sans, self.client.get(reverse('dashboard'), {'status': 'actifs'}).context['robes'])
+        self.assertNotIn(sans, self.client.get(reverse('dashboard'), {'status': 'termines'}).context['robes'])
+
+    def test_tri_par_urgence_croissante(self):
+        proche = Robe.objects.create(
+            client=self.cliente, nom_modele="Proche",
+            date_commencement=datetime.date.today(), date_livraison=datetime.date.today() - datetime.timedelta(days=3))
+        robes = list(self.client.get(reverse('dashboard'), {'status': 'toutes', 'tri': 'urgence'}).context['robes'])
+        self.assertEqual(robes[0], proche)
+
+    def test_nombre_de_requetes_constant(self):
+        """Le filtrage se fait en base : ajouter des robes n'ajoute pas de requêtes."""
+        from django.db import connection
+        from django.test.utils import CaptureQueriesContext
+
+        def mesurer():
+            with CaptureQueriesContext(connection) as ctx:
+                self.client.get(reverse('dashboard'), {'status': 'toutes'})
+            return len(ctx)
+
+        avant = mesurer()
+        for i in range(5):
+            r = Robe.objects.create(
+                client=self.cliente, nom_modele=f"R{i}",
+                date_commencement=datetime.date.today(), date_livraison=datetime.date.today())
+            Tache.objects.create(robe=r, libelle="Coupe", est_faite=bool(i % 2))
+        self.assertEqual(mesurer(), avant)
+
 
 class ClientCrudTests(TestCase):
 

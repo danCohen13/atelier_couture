@@ -1,6 +1,7 @@
 import json
 
-from django.db.models import Q
+from django.db.models import Count, F, Q
+from django.db.models.functions import Lower
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
@@ -21,28 +22,33 @@ from .services.pdf import reponse_pdf
 
 @atelier_requis
 def dashboard(request):
-    all_robes = Robe.objects.de(request.atelier).select_related('client').prefetch_related('taches')
+    """Commandes de l'atelier : filtre et tri faits par la base de données.
+
+    L'avancement est compté en SQL (`nb_taches`, `nb_faites`), sans charger toutes les robes pour
+    les filtrer en Python. La propriété `Robe.progression` reste utilisée par le gabarit pour l'affichage.
+    """
     filtre_status = request.GET.get('status', 'actifs')
     tri = request.GET.get('tri', 'urgence')
-    
-    robes_list = list(all_robes)
 
-    # Filtrage basé sur les propriétés magiques du modèle
+    robes = (Robe.objects.de(request.atelier).select_related('client').prefetch_related('taches')
+             .annotate(nb_taches=Count('taches'),
+                       nb_faites=Count('taches', filter=Q(taches__est_faite=True))))
+
     if filtre_status == 'actifs':
-        robes_list = [r for r in robes_list if r.progression < 100]
+        robes = robes.filter(Q(nb_taches=0) | Q(nb_faites__lt=F('nb_taches')))
     elif filtre_status == 'termines':
-        robes_list = [r for r in robes_list if r.progression == 100]
+        robes = robes.filter(nb_taches__gt=0, nb_faites=F('nb_taches'))
 
-    # Tri mécanique
-    if tri == 'urgence':
-        robes_list.sort(key=lambda r: r.jours_restants if r.jours_restants is not None else 99999)
-    elif tri == 'prix':
-        robes_list.sort(key=lambda r: r.prix_total or 0, reverse=True)
-    elif tri == 'modele':
-        robes_list.sort(key=lambda r: r.nom_modele.lower())
+    ordres = {
+        'urgence': ('date_livraison', 'id'),
+        'prix': ('-prix_total', 'id'),
+        'modele': (Lower('nom_modele'), 'id'),
+    }
+    if tri in ordres:
+        robes = robes.order_by(*ordres[tri])
 
     return render(request, 'atelier/confection/dashboard.html', {
-        'robes': robes_list,
+        'robes': robes,
         'current_status': filtre_status,
         'current_tri': tri,
     })

@@ -33,7 +33,8 @@ def generer_depenses_recurrentes(atelier, aujourdhui=None):
                     designation=rec.designation, date=jour, recurrente=rec, atelier=atelier))
             annee, mois = _mois_suivant(annee, mois)
     if a_creer:
-        Transaction.objects.bulk_create(a_creer)
+        # ignore_conflicts : une requête concurrente a pu créer la même écriture entre-temps.
+        Transaction.objects.bulk_create(a_creer, ignore_conflicts=True)
     return len(a_creer)
 
 
